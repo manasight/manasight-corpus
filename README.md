@@ -6,7 +6,7 @@ Sanitized MTG Arena game log corpus for testing [manasight-parser](https://githu
 
 This repository contains sanitized `Player.log` captures from MTG Arena. These files serve as a real-world test corpus for parser smoke testing, ensuring compatibility across game modes, patch versions, and edge cases.
 
-All log files have personally identifiable information (account IDs, display names, tokens) removed via the parser's `scrub` module.
+All log files have personally identifiable information (account IDs, display names, tokens) removed via [manasight-parser](https://github.com/manasight/manasight-parser)'s `scrub` module.
 
 ## How the corpus is consumed
 
