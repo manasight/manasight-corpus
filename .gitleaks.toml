@@ -1,0 +1,13 @@
+# Gitleaks configuration for manasight-corpus
+# https://github.com/gitleaks/gitleaks
+
+title = "manasight-corpus gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+  description = "Global allowlist"
+  paths = [
+    '''\.env\.example''',
+  ]
