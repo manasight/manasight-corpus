@@ -68,6 +68,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-03-17 | `session_2026-03-17_1933_standard-bo1-debug.log` | Standard Bo1 debug session, 1W |
 | 2026-03-21 | `session_2026-03-21_0905_standard-bo3-skeleton.log` | Standard BO3, 0-2 (Skeleton deck) |
 | 2026-04-11 | `session_2026-04-11_1108.log` | Standard Bo3, 0-2 |
+| 2026-04-11 | `session_2026-04-11_1542_adapter-disable.log` | Connection health: adapter disable tests B1/B2/B3 (#528) |
 
 ---
 
@@ -488,3 +489,51 @@ Standard Bo3, lost 0-2. Opponent played a map token in game 1.
 | MatchState | 2 |
 | Rank | 2 |
 | Session | 1 |
+
+---
+
+### Session 2026-04-11_1542_adapter-disable
+
+Connection health log data collection ([manasight-docs#528](https://github.com/manasight/manasight-docs/issues/528), Log 1). Three adapter-disable disconnect tests: B1 (60s, bot), B2 (1s, bot), B3 (10s, ranked). All tests showed instant "Connection Lost" dialog on adapter disable, forfeit on reconnect (kicked to main menu).
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-11 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-11_1542_adapter-disable.log` |
+| Format | Standard Bo1 (2 bot + 1 ranked) |
+| Record | N/A — disconnect testing |
+| Session log size (raw) | 14,602,103 (13.9 MB) |
+| Session log size (gzip) | 1,077,147 (~1.0 MB) |
+| Compression ratio | ~13.5:1 |
+
+#### Test Details
+
+| Test | Method | Duration | Match | Detection | After reconnect |
+|------|--------|----------|-------|-----------|-----------------|
+| B1 | Wi-Fi adapter disable | 60s | Bot | Instant | Forfeit, kicked to menu |
+| B2 | Wi-Fi adapter disable | 1s | Bot | Instant | Forfeit, kicked to menu |
+| B3 | Wi-Fi adapter disable | 10s | Ranked | Instant | Forfeit, kicked to menu |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 322 |
+| Routed | 95 |
+| Unknown | 227 |
+| Timestamp failures | 198 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 21 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 1 |
+| GameState | 89 |
+| Inventory | 5 |
+| MatchState | 5 |
+| Rank | 5 |
+| Session | 25 |
