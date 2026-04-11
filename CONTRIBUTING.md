@@ -19,7 +19,7 @@ This corpus accepts sanitized MTG Arena `Player.log` captures. Each file helps i
 3. Place the compressed file in the `corpus/` directory
 4. Open a pull request against `main`
 
-Sanitization is also applied automatically on merge, so you don't need to get it perfect — but please make a best effort to remove personal information before submitting.
+Sanitization is checked automatically on every PR. If your files need sanitization, the CI workflow will auto-fix them by pushing sanitized versions to your branch. For fork PRs, you may need to enable "Allow edits from maintainers" or run `scrub` locally.
 
 ### What gets sanitized
 

@@ -1,0 +1,155 @@
+name: Check Log Sanitization
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+    # No paths filter — this is a required status check, so it must run on
+    # every PR to avoid blocking PRs that don't touch corpus files.
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Find changed log files
+        id: changed
+        run: |
+          git fetch origin "${{ github.event.pull_request.base.ref }}"
+          FILES=$(git diff --name-only --diff-filter=AM \
+            "origin/${{ github.event.pull_request.base.ref }}"...HEAD \
+            -- 'corpus/*.log.gz' || true)
+          if [ -z "$FILES" ]; then
+            echo "has_files=false" >> "$GITHUB_OUTPUT"
+            echo "No .log.gz files changed — nothing to check"
+          else
+            echo "$FILES" > /tmp/changed_files.txt
+            echo "has_files=true" >> "$GITHUB_OUTPUT"
+            echo "Changed .log.gz files:"
+            echo "$FILES"
+          fi
+
+      - name: Validate file conventions
+        if: steps.changed.outputs.has_files == 'true'
+        run: |
+          ERRORS=false
+          while IFS= read -r file; do
+            basename=$(basename "$file")
+            dir=$(dirname "$file")
+
+            # Must be in corpus/ directory
+            if [ "$dir" != "corpus" ]; then
+              echo "::error file=$file::File must be in corpus/ directory, found in $dir/"
+              ERRORS=true
+            fi
+
+            # Naming convention: session_YYYY-MM-DD_HHMM[_suffix].log.gz
+            if ! echo "$basename" | grep -qE '^session_[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{4}(_[a-zA-Z0-9_-]+)?\.log\.gz$'; then
+              echo "::error file=$file::File name does not match convention: session_YYYY-MM-DD_HHMM[_suffix].log.gz"
+              ERRORS=true
+            fi
+
+            # Size limit: 10 MB compressed
+            SIZE=$(stat -c%s "$file" 2>/dev/null || echo 0)
+            if [ "$SIZE" -gt 10485760 ]; then
+              SIZE_MB=$(echo "scale=1; $SIZE / 1048576" | bc)
+              echo "::error file=$file::File exceeds 10 MB limit (${SIZE_MB} MB compressed)"
+              ERRORS=true
+            fi
+          done < /tmp/changed_files.txt
+
+          if [ "$ERRORS" = true ]; then
+            exit 1
+          fi
+
+      - name: Download scrub
+        if: steps.changed.outputs.has_files == 'true'
+        run: |
+          gh release download --repo manasight/manasight-parser \
+            --pattern 'scrub-linux-x86_64.tar.gz' --dir /tmp --clobber
+          mkdir -p /tmp/scrub-bin
+          tar xzf /tmp/scrub-linux-x86_64.tar.gz -C /tmp/scrub-bin
+          SCRUB=$(find /tmp/scrub-bin -name scrub -type f | head -1)
+          chmod +x "$SCRUB"
+          cp "$SCRUB" /tmp/scrub
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Check and sanitize files
+        if: steps.changed.outputs.has_files == 'true'
+        id: sanitize
+        run: |
+          DIRTY=false
+          while IFS= read -r file; do
+            gunzip -c "$file" > /tmp/original.log
+            /tmp/scrub < /tmp/original.log > /tmp/sanitized.log
+
+            if ! cmp -s /tmp/original.log /tmp/sanitized.log; then
+              echo "Needs sanitization: $file"
+              gzip -c /tmp/sanitized.log > "$file"
+              DIRTY=true
+            else
+              echo "Clean: $file"
+            fi
+            rm -f /tmp/original.log /tmp/sanitized.log
+          done < /tmp/changed_files.txt
+          echo "dirty=$DIRTY" >> "$GITHUB_OUTPUT"
+
+      - name: Push sanitized files
+        if: steps.sanitize.outputs.dirty == 'true'
+        id: push
+        continue-on-error: true
+        env:
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          BASE_REPO: ${{ github.repository }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Validate HEAD_REF contains only safe characters and is not a protected branch.
+          # pull_request_target runs with write permissions, so an attacker who names their
+          # PR branch "main" could otherwise cause this step to push to main.
+          if ! [[ "$HEAD_REF" =~ ^[a-zA-Z0-9_/.-]+$ ]]; then
+            echo "::error::PR branch name contains unsafe characters: $HEAD_REF"
+            exit 1
+          fi
+          if [ "$HEAD_REF" = "main" ] || [ "$HEAD_REF" = "master" ]; then
+            echo "::error::Cannot auto-push to protected branch: $HEAD_REF"
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add corpus/
+          git commit -m "Auto-sanitize log files
+
+          Sanitized by check-log-sanitization workflow using manasight-parser scrub."
+
+          # Push to refs/heads/$HEAD_REF explicitly to ensure we always target a branch ref.
+          if [ "$HEAD_REPO" = "$BASE_REPO" ]; then
+            git push origin "HEAD:refs/heads/$HEAD_REF"
+          else
+            git remote add fork "https://x-access-token:$GH_TOKEN@github.com/$HEAD_REPO.git"
+            git push fork "HEAD:refs/heads/$HEAD_REF"
+          fi
+
+      - name: Fail if dirty and push failed
+        if: steps.sanitize.outputs.dirty == 'true' && steps.push.outcome == 'failure'
+        run: |
+          echo "::error::Log files contain unsanitized PII but auto-fix could not push to the PR branch."
+          echo ""
+          echo "Please either:"
+          echo "  1. Enable 'Allow edits from maintainers' on your fork PR and re-run this check, OR"
+          echo "  2. Sanitize locally:"
+          echo "     gunzip -c file.log.gz | scrub | gzip > file.sanitized.log.gz"
+          echo "     mv file.sanitized.log.gz file.log.gz"
+          echo ""
+          echo "Install scrub from: https://github.com/manasight/manasight-parser/releases"
+          exit 1
