@@ -13,6 +13,7 @@ Thumbs.db
 *.swp
 *.swo
 
-# Claude Code — ignore workspace commands and runtime dirs
-.claude/commands/
+# Claude Code — ignore workspace symlinks and runtime dirs
+.claude/commands/*
+!.claude/commands/harvest-log.md
 .claude/worktrees/
