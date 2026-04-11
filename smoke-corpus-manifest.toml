@@ -79,7 +79,19 @@ size_bytes    = 45991638
 date_captured = "2026-03-22"
 
 [[files]]
+filename      = "session_2026-03-22_0000_feedback-019d1311.log"
+sha256        = "bcb4978b00ea99b96226dc923ee495dc7e14b81ce6714f9c09e576fc6a284ad4"
+size_bytes    = 10493573
+date_captured = "2026-03-22"
+
+[[files]]
 filename      = "session_2026-04-05_1509.log"
 sha256        = "73e5cbd31efffd3a17454bc732b52a963e9c1bb507ba99723daed8057fbfca99"
 size_bytes    = 10585543
+date_captured = "2026-04-05"
+
+[[files]]
+filename      = "session_2026-04-05_0000_feedback-019d5e75.log"
+sha256        = "d85a65a808401efb4cd4804419cdfd54a535e6c6c8f9045cd013ae50e67c1e2d"
+size_bytes    = 25865859
 date_captured = "2026-04-05"
