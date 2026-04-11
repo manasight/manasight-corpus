@@ -1,0 +1,59 @@
+name: Publish Corpus
+
+on:
+  push:
+    branches: [main]
+    paths: ['corpus/**']
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for corpus files
+        id: check
+        run: |
+          COUNT=$(find corpus -name '*.log.gz' -type f | wc -l)
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::notice::No corpus files found — skipping release."
+          else
+            echo "Found $COUNT corpus files"
+          fi
+
+      - name: Build tarball
+        if: steps.check.outputs.count != '0'
+        run: |
+          tar czf /tmp/smoke-data.tar.gz corpus/*.log.gz
+          echo "Tarball contains ${{ steps.check.outputs.count }} log files"
+          ls -lh /tmp/smoke-data.tar.gz
+
+      - name: Determine next version
+        if: steps.check.outputs.count != '0'
+        id: version
+        run: |
+          LATEST=$(git tag -l 'smoke-data-v*' --sort=-v:refname | head -1)
+          if [ -z "$LATEST" ]; then
+            NEXT="smoke-data-v1"
+          else
+            NUM=${LATEST#smoke-data-v}
+            NEXT="smoke-data-v$((NUM + 1))"
+          fi
+          echo "tag=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "Next version: $NEXT"
+
+      - name: Create release
+        if: steps.check.outputs.count != '0'
+        run: |
+          gh release create "${{ steps.version.outputs.tag }}" \
+            /tmp/smoke-data.tar.gz \
+            --title "${{ steps.version.outputs.tag }}" \
+            --notes "Corpus release with ${{ steps.check.outputs.count }} sanitized log files."
+        env:
+          GH_TOKEN: ${{ github.token }}

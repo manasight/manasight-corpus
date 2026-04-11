@@ -1,0 +1,87 @@
+name: Re-sanitize Corpus
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  resanitize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download scrub
+        run: |
+          gh release download --repo manasight/manasight-parser \
+            --pattern 'scrub-linux-x86_64.tar.gz' --dir /tmp --clobber
+          mkdir -p /tmp/scrub-bin
+          tar xzf /tmp/scrub-linux-x86_64.tar.gz -C /tmp/scrub-bin
+          SCRUB=$(find /tmp/scrub-bin -name scrub -type f | head -1)
+          chmod +x "$SCRUB"
+          cp "$SCRUB" /tmp/scrub
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Re-sanitize all files
+        id: sanitize
+        run: |
+          DIRTY=false
+          CHANGED=""
+          shopt -s nullglob
+          for file in corpus/*.log.gz; do
+            gunzip -c "$file" > /tmp/original.log
+            /tmp/scrub < /tmp/original.log > /tmp/sanitized.log
+
+            if ! cmp -s /tmp/original.log /tmp/sanitized.log; then
+              echo "Re-sanitized: $file"
+              gzip -c /tmp/sanitized.log > "$file"
+              DIRTY=true
+              CHANGED="$CHANGED\n- $file"
+            else
+              echo "Clean: $file"
+            fi
+            rm -f /tmp/original.log /tmp/sanitized.log
+          done
+          echo "dirty=$DIRTY" >> "$GITHUB_OUTPUT"
+          {
+            echo "changed<<DELIM"
+            echo -e "$CHANGED"
+            echo "DELIM"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create PR with re-sanitized files
+        if: steps.sanitize.outputs.dirty == 'true'
+        run: |
+          BRANCH="resanitize/$(date +%Y%m%d-%H%M%S)"
+          git checkout -b "$BRANCH"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add corpus/
+          git commit -m "Re-sanitize corpus with latest scrub patterns"
+          git push -u origin "$BRANCH"
+          gh pr create \
+            --title "Re-sanitize corpus with latest scrub patterns" \
+            --body "$(cat <<EOF
+          ## Summary
+
+          Automated re-sanitization of the full corpus using the latest \`scrub\` binary from manasight-parser.
+
+          ### Files re-sanitized
+          ${{ steps.sanitize.outputs.changed }}
+
+          Triggered manually via workflow_dispatch.
+          EOF
+          )"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Report results
+        run: |
+          if [ "${{ steps.sanitize.outputs.dirty }}" = "true" ]; then
+            echo "::notice::Re-sanitization complete — PR created with updated files."
+          else
+            echo "::notice::All corpus files are already clean. No changes needed."
+          fi
