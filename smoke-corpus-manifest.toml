@@ -1,4 +1,4 @@
-corpus_tag = "smoke-data-v0"
+corpus_tag = "manasight-corpus-v1"
 
 [[files]]
 filename      = "session_2026-02-22_0000_ecl-premier-bg-elves.log"
