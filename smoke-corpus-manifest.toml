@@ -5,3 +5,21 @@ filename      = "session_2026-02-22_0000_ecl-premier-bg-elves.log"
 sha256        = "eafde00c07476b44235f9f7a08e61586cbe4c7bcc365f33deb3092e7dfea4f14"
 size_bytes    = 31150988
 date_captured = "2026-02-22"
+
+[[files]]
+filename      = "session_2026-02-22_0000_ecl-premier-uw-merfolk.log"
+sha256        = "1c32399c560369cbe37ec06eb68a4daebc08daea6c3e0458c0ffc3452650f18d"
+size_bytes    = 23690624
+date_captured = "2026-02-22"
+
+[[files]]
+filename      = "session_2026-02-23_0000_standard-bo1.log"
+sha256        = "d84300c94c5c447cd884f6c1a2d2a5304eaf70b1c50ad8eb7bd849424468e095"
+size_bytes    = 16104585
+date_captured = "2026-02-23"
+
+[[files]]
+filename      = "session_2026-03-05_0000.log"
+sha256        = "a4f2b15dafb2b635d4442d490c4f0492422e5575658664bf8133f8d1d67d7ad2"
+size_bytes    = 7545942
+date_captured = "2026-03-05"

@@ -54,11 +54,11 @@ To add a session manually, copy the template below and fill in the fields.
 | Date | Raw File | Description |
 |------|----------|-------------|
 | 2026-02-22 | `session_2026-02-22_0000_ecl-premier-bg-elves.log` | ECL Premier Draft games (1-3), BG Elves |
-| 2026-02-22 | `session_2026-02-22_b.log` | ECL Premier Draft + games (1-3), UW Merfolk |
-| 2026-02-23 | `session_2026-02-23.log` | 2 Standard Bo1 games (Mono-W Aggro, UB Dimir) |
+| 2026-02-22 | `session_2026-02-22_0000_ecl-premier-uw-merfolk.log` | ECL Premier Draft + games (1-3), UW Merfolk |
+| 2026-02-23 | `session_2026-02-23_0000_standard-bo1.log` | 2 Standard Bo1 games (Mono-W Aggro, UB Dimir) |
 | 2026-02-23 | `session_2026-02-23_game01.log` | Segment: Standard Bo1 game 1 |
 | 2026-02-23 | `session_2026-02-23_game02.log` | Segment: Standard Bo1 game 2 |
-| 2026-03-05 | `session_2026-03-05.log` | *(undocumented)* |
+| 2026-03-05 | `session_2026-03-05_0000.log` | *(undocumented)* |
 | 2026-03-06 | `session_2026-03-06.log` | Pick2 Draft only (no games) |
 | 2026-03-06 | `session_2026-03-06_b.log` | Pick2 Draft game 1(0-1) |
 | 2026-03-08 | `session_2026-03-08_1103.log` | Standard Bo1 debug session (LogFileRotated), 1W |
@@ -131,7 +131,7 @@ Pick2 draft only (no games played).
 |-------|-------|
 | Date | 2026-02-23 |
 | MTGA Version | TBD |
-| Raw file | `session_2026-02-23.log` |
+| Raw file | `session_2026-02-23_0000_standard-bo1.log` |
 | Baseline log size | 3,121,214 (3.0 MB) |
 | Total games played | 2 |
 | Session log size (raw) | 16,111,137 (15.4 MB) |
@@ -156,7 +156,7 @@ Record: 1-3.
 |-------|-------|
 | Date | 2026-02-22 |
 | MTGA Version | TBD |
-| Raw file | `session_2026-02-22_b.log` |
+| Raw file | `session_2026-02-22_0000_ecl-premier-uw-merfolk.log` |
 | Format | ECL Premier Draft |
 | Record | 1-3 |
 | Session log size (raw) | 23,726,538 (22.6 MB) |
