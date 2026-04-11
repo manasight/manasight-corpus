@@ -101,3 +101,9 @@ filename      = "session_2026-04-11_1108.log"
 sha256        = "285f18a064f7050bd6fa5ef9a9511eb5d8afd94b9e7b2683d89f69a15399c941"
 size_bytes    = 15086275
 date_captured = "2026-04-11"
+
+[[files]]
+filename      = "session_2026-04-11_1542_adapter-disable.log"
+sha256        = "0561663dd786f61513393f3d341275b3caba74c193fcac0b143a458099ee5668"
+size_bytes    = 14602103
+date_captured = "2026-04-11"
