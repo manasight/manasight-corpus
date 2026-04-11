@@ -53,7 +53,7 @@ To add a session manually, copy the template below and fill in the fields.
 
 | Date | Raw File | Description |
 |------|----------|-------------|
-| 2026-02-22 | `session_2026-02-22_a.log` | ECL Premier Draft games (1-3), BG Elves |
+| 2026-02-22 | `session_2026-02-22_0000_a.log` | ECL Premier Draft games (1-3), BG Elves |
 | 2026-02-22 | `session_2026-02-22_b.log` | ECL Premier Draft + games (1-3), UW Merfolk |
 | 2026-02-23 | `session_2026-02-23.log` | 2 Standard Bo1 games (Mono-W Aggro, UB Dimir) |
 | 2026-02-23 | `session_2026-02-23_game01.log` | Segment: Standard Bo1 game 1 |
@@ -183,7 +183,7 @@ Record: 1-3.
 |-------|-------|
 | Date | 2026-02-22 |
 | MTGA Version | TBD |
-| Raw file | `session_2026-02-22_a.log` |
+| Raw file | `session_2026-02-22_0000_a.log` |
 | Format | ECL Premier Draft |
 | Record | 1-3 |
 | Session log size (raw) | 31,194,170 (29.8 MB) |
