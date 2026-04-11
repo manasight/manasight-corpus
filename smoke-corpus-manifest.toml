@@ -1,1 +1,7 @@
 corpus_tag = "smoke-data-v0"
+
+[[files]]
+filename      = "session_2026-02-22_0000_ecl-premier-bg-elves.log"
+sha256        = "eafde00c07476b44235f9f7a08e61586cbe4c7bcc365f33deb3092e7dfea4f14"
+size_bytes    = 31150988
+date_captured = "2026-02-22"
