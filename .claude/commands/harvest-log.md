@@ -26,6 +26,7 @@ Example: `session_2026-03-06_1830.log` or `session_2026-03-06_1830_draft.log`
 ### Step 2: Copy Player.log
 
 The MTGA Player.log lives at:
+- **Windows path:** `%USERPROFILE%\AppData\LocalLow\Wizards Of The Coast\MTGA\Player.log`
 - **WSL path:** `/mnt/c/Users/<WIN_USER>/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log`
 - **macOS path:** `~/Library/Logs/Wizards Of The Coast/MTGA/Player.log`
 
