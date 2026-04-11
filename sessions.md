@@ -59,14 +59,14 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-02-23 | `session_2026-02-23_game01.log` | Segment: Standard Bo1 game 1 |
 | 2026-02-23 | `session_2026-02-23_game02.log` | Segment: Standard Bo1 game 2 |
 | 2026-03-05 | `session_2026-03-05_0000.log` | *(undocumented)* |
-| 2026-03-06 | `session_2026-03-06.log` | Pick2 Draft only (no games) |
-| 2026-03-06 | `session_2026-03-06_b.log` | Pick2 Draft game 1(0-1) |
-| 2026-03-08 | `session_2026-03-08_1103.log` | Standard Bo1 debug session (LogFileRotated), 1W |
-| 2026-03-11 | `session_2026-03-11_1847.log` | Quick Draft (WG Selesnya), 0-1 |
-| 2026-03-11 | `session_2026-03-11_2124.log` | Traditional Standard Bo3, 2-0 |
+| 2026-03-06 | `session_2026-03-06_0000_pick2-draft-only.log` | Pick2 Draft only (no games) |
+| 2026-03-06 | `session_2026-03-06_0000_pick2-draft-game.log` | Pick2 Draft game 1(0-1) |
+| 2026-03-08 | `session_2026-03-08_1103_standard-bo1-log-rotated.log` | Standard Bo1 debug session (LogFileRotated), 1W |
+| 2026-03-11 | `session_2026-03-11_1847_quick-draft-selesnya.log` | Quick Draft (WG Selesnya), 0-1 |
+| 2026-03-11 | `session_2026-03-11_2124_trad-standard-bo3.log` | Traditional Standard Bo3, 2-0 |
 | 2026-03-15 | `session_2026-03-15_1157_detailed_logs_disabled.log` | Standard Bo1, 1W — **detailed logs disabled** |
-| 2026-03-17 | `session_2026-03-17_1933.log` | Standard Bo1 debug session, 1W |
-| 2026-03-21 | `session_2026-03-21_0905.log` | Standard BO3, 0-2 (Skeleton deck) |
+| 2026-03-17 | `session_2026-03-17_1933_standard-bo1-debug.log` | Standard Bo1 debug session, 1W |
+| 2026-03-21 | `session_2026-03-21_0905_standard-bo3-skeleton.log` | Standard BO3, 0-2 (Skeleton deck) |
 
 ---
 
@@ -80,7 +80,7 @@ Single game following a Pick2 draft. Lost after 15 turns.
 |-------|-------|
 | Date | 2026-03-06 |
 | MTGA Version | TBD |
-| Raw file | `session_2026-03-06_b.log` |
+| Raw file | `session_2026-03-06_0000_pick2-draft-game.log` |
 | Format | Pick2 Draft |
 | Record | 0-1 |
 | Session log size (raw) | 12,048,985 (11.5 MB) |
@@ -119,7 +119,7 @@ Pick2 draft only (no games played).
 |-------|-------|
 | Date | 2026-03-06 |
 | MTGA Version | TBD |
-| Raw file | `session_2026-03-06.log` |
+| Raw file | `session_2026-03-06_0000_pick2-draft-only.log` |
 | Format | Pick2 Draft |
 | Session log size (raw) | 3,276,640 (3.1 MB) |
 
@@ -209,7 +209,7 @@ Debug session testing LogFileRotated event handling. Verified log rotation detec
 |-------|-------|
 | Date | 2026-03-08 |
 | MTGA Version | 2026.57.10.11536 |
-| Raw file | `session_2026-03-08_1103.log` |
+| Raw file | `session_2026-03-08_1103_standard-bo1-log-rotated.log` |
 | Format | Standard Bo1 |
 | Record | 1W |
 | Session log size (raw) | 9,859,259 (9.4 MB) |
@@ -248,7 +248,7 @@ Quick Draft session, WG Selesnya. Lost game 1.
 |-------|-------|
 | Date | 2026-03-11 |
 | MTGA Version | TBD |
-| Raw file | `session_2026-03-11_1847.log` |
+| Raw file | `session_2026-03-11_1847_quick-draft-selesnya.log` |
 | Format | Quick Draft |
 | Archetype | WG (Selesnya) |
 | Record | 0-1 |
@@ -294,7 +294,7 @@ Traditional Standard Bo3, 2-0.
 |-------|-------|
 | Date | 2026-03-11 |
 | MTGA Version | TBD |
-| Raw file | `session_2026-03-11_2124.log` |
+| Raw file | `session_2026-03-11_2124_trad-standard-bo3.log` |
 | Format | Traditional Standard (Bo3) |
 | Record | 2-0 |
 | Session log size (raw) | 11,460,803 (~10.9 MB) |
@@ -379,7 +379,7 @@ Debug session testing a CI build. Standard Bo1, won the game.
 |-------|-------|
 | Date | 2026-03-17 |
 | MTGA Version | TBD |
-| Raw file | `session_2026-03-17_1933.log` |
+| Raw file | `session_2026-03-17_1933_standard-bo1-debug.log` |
 | Format | Standard Bo1 |
 | Record | 1-0 |
 | Session log size (raw) | 12,975,108 (12.4 MB) |
@@ -418,7 +418,7 @@ First BO3 session. Skeleton deck. Lost 0-2.
 |-------|-------|
 | Date | 2026-03-21 |
 | MTGA Version | TBD |
-| Raw file | `session_2026-03-21_0905.log` |
+| Raw file | `session_2026-03-21_0905_standard-bo3-skeleton.log` |
 | Format | Standard BO3 |
 | Record | 0-2 |
 | Session log size (raw) | 8,398,236 (8.0 MB) |
