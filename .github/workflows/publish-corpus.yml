@@ -30,20 +30,20 @@ jobs:
       - name: Build tarball
         if: steps.check.outputs.count != '0'
         run: |
-          tar czf /tmp/smoke-data.tar.gz corpus/*.log.gz
+          tar czf /tmp/manasight-corpus.tar.gz corpus/*.log.gz
           echo "Tarball contains ${{ steps.check.outputs.count }} log files"
-          ls -lh /tmp/smoke-data.tar.gz
+          ls -lh /tmp/manasight-corpus.tar.gz
 
       - name: Determine next version
         if: steps.check.outputs.count != '0'
         id: version
         run: |
-          LATEST=$(git tag -l 'smoke-data-v*' --sort=-v:refname | head -1)
+          LATEST=$(git tag -l 'manasight-corpus-v*' --sort=-v:refname | head -1)
           if [ -z "$LATEST" ]; then
-            NEXT="smoke-data-v1"
+            NEXT="manasight-corpus-v1"
           else
-            NUM=${LATEST#smoke-data-v}
-            NEXT="smoke-data-v$((NUM + 1))"
+            NUM=${LATEST#manasight-corpus-v}
+            NEXT="manasight-corpus-v$((NUM + 1))"
           fi
           echo "tag=$NEXT" >> "$GITHUB_OUTPUT"
           echo "Next version: $NEXT"
@@ -52,7 +52,7 @@ jobs:
         if: steps.check.outputs.count != '0'
         run: |
           gh release create "${{ steps.version.outputs.tag }}" \
-            /tmp/smoke-data.tar.gz \
+            /tmp/manasight-corpus.tar.gz \
             --title "${{ steps.version.outputs.tag }}" \
             --notes "Corpus release with ${{ steps.check.outputs.count }} sanitized log files."
         env:
