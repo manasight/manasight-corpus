@@ -26,17 +26,21 @@ Example: `session_2026-03-06_1830.log` or `session_2026-03-06_1830_draft.log`
 ### Step 2: Copy Player.log
 
 The MTGA Player.log lives at:
-- **Windows path:** `C:\Users\timpc\AppData\LocalLow\Wizards Of The Coast\MTGA\Player.log`
-- **WSL path:** `/mnt/c/Users/timpc/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log`
+- **WSL path:** `/mnt/c/Users/<WIN_USER>/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log`
 - **macOS path:** `~/Library/Logs/Wizards Of The Coast/MTGA/Player.log`
 
-Detect the platform and copy to a temp working directory:
+Detect the platform, resolve the user's home directory, and copy to a temp working directory:
 ```bash
 mkdir -p /tmp/harvest-work
-# WSL
-cp "/mnt/c/Users/timpc/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log" /tmp/harvest-work/<session-name>.log
-# macOS
-cp ~/Library/Logs/Wizards\ Of\ The\ Coast/MTGA/Player.log /tmp/harvest-work/<session-name>.log
+PLATFORM=$(uname -s)
+if [ "$PLATFORM" = "Linux" ] && grep -qi microsoft /proc/version 2>/dev/null; then
+  # WSL — resolve Windows username
+  WIN_USER=$(powershell.exe -NoProfile -Command '[Environment]::UserName' 2>/dev/null | tr -d '\r')
+  cp "/mnt/c/Users/$WIN_USER/AppData/LocalLow/Wizards Of The Coast/MTGA/Player.log" /tmp/harvest-work/<session-name>.log
+else
+  # macOS
+  cp ~/Library/Logs/Wizards\ Of\ The\ Coast/MTGA/Player.log /tmp/harvest-work/<session-name>.log
+fi
 ```
 
 Record the raw file size in bytes and human-readable form.
@@ -86,7 +90,7 @@ If it exists, ask the user whether to overwrite or pick a different suffix.
 
 1. **Create a branch in manasight-corpus:**
 ```bash
-cd /home/timc/git/manasight/manasight-corpus
+cd "$(git rev-parse --show-toplevel)"
 git checkout main && git pull
 git checkout -b add-<session-name>
 ```
@@ -137,7 +141,8 @@ On merge, publish-corpus.yml creates a new release automatically."
 Run the parser router-level smoke test against the **sanitized uncompressed** log for immediate coverage feedback:
 
 ```bash
-cd /home/timc/git/manasight/manasight-parser && MANASIGHT_TEST_LOGS=/tmp/harvest-work/ cargo test smoke_test_router_real_logs -- --nocapture 2>&1
+PARSER_DIR="$(git rev-parse --show-toplevel)/../manasight-parser"
+cd "$PARSER_DIR" && MANASIGHT_TEST_LOGS=/tmp/harvest-work/ cargo test smoke_test_router_real_logs -- --nocapture 2>&1
 ```
 
 From the output, extract the report section for the new file. Parse out:
@@ -167,7 +172,7 @@ Use AskUserQuestion to gather information about the session. Ask all relevant qu
 
 ### Step 9: Update Sessions Doc
 
-Edit `/home/timc/git/manasight/manasight-corpus/sessions.md` (same branch as step 6):
+Edit `sessions.md` in the repo root (same branch as step 6):
 
 1. **Add a new session section** at the end of the Sessions list, following the existing format:
 
