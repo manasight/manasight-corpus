@@ -6,7 +6,7 @@ allowed-tools: Bash(cp:*), Bash(ls:*), Bash(stat:*), Bash(gzip:*), Bash(gunzip:*
 
 # Harvest Log
 
-Save the current MTGA `Player.log`, sanitize it, and open a PR in `manasight-corpus`. On merge, `publish-corpus.yml` creates a release automatically. Also runs a local parser smoke test for immediate coverage feedback and updates `player-log-measurements.md`.
+Save the current MTGA `Player.log`, sanitize it, and open a PR in `manasight-corpus`. On merge, `publish-corpus.yml` creates a release automatically. Also runs a local parser smoke test for immediate coverage feedback and updates `sessions.md`.
 
 ## Arguments
 
@@ -112,7 +112,7 @@ date_captured = "YYYY-MM-DD"
 
 4. **Commit and push:**
 ```bash
-git add corpus/<session-name>.log.gz smoke-corpus-manifest.toml
+git add corpus/<session-name>.log.gz smoke-corpus-manifest.toml sessions.md
 git commit -m "Add <session-name> to corpus"
 git push -u origin add-<session-name>
 ```
@@ -157,7 +157,6 @@ Use AskUserQuestion to gather information about the session. Ask all relevant qu
 
 **If draft events detected** (DraftHuman, DraftBot, DraftComplete):
 - What archetype/colors did you draft?
-- 17lands link (if available)?
 
 **If game events detected** (GameResult, MatchState with count > 0):
 - What was your record (W-L)?
@@ -166,11 +165,11 @@ Use AskUserQuestion to gather information about the session. Ask all relevant qu
 **If no game events detected:**
 - Confirm: "No games detected in the log -- draft/lobby only?"
 
-### Step 9: Update Measurements Doc
+### Step 9: Update Sessions Doc
 
-Edit `/home/timc/git/manasight/manasight-docs/data/player-log-measurements.md`:
+Edit `/home/timc/git/manasight/manasight-corpus/sessions.md` (same branch as step 6):
 
-1. **Add a new session section** before the `### Session Template` block, following the existing format:
+1. **Add a new session section** at the end of the Sessions list, following the existing format:
 
 ```markdown
 ---
@@ -237,5 +236,5 @@ Present a summary:
 | ... | ... |
 
 Corpus PR: <PR URL> (merge to trigger release + parser baseline update)
-Measurements updated: manasight-docs/data/player-log-measurements.md
+Sessions updated: manasight-corpus/sessions.md
 ```
