@@ -67,6 +67,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-03-15 | `session_2026-03-15_1157_detailed_logs_disabled.log` | Standard Bo1, 1W — **detailed logs disabled** |
 | 2026-03-17 | `session_2026-03-17_1933_standard-bo1-debug.log` | Standard Bo1 debug session, 1W |
 | 2026-03-21 | `session_2026-03-21_0905_standard-bo3-skeleton.log` | Standard BO3, 0-2 (Skeleton deck) |
+| 2026-04-11 | `session_2026-04-11_1108.log` | Standard Bo3, 0-2 |
 
 ---
 
@@ -443,6 +444,46 @@ First BO3 session. Skeleton deck. Lost 0-2.
 | EventLifecycle | 2 |
 | GameResult | 2 |
 | GameState | 671 |
+| Inventory | 2 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 1 |
+
+---
+
+### Session 2026-04-11_1108
+
+Standard Bo3, lost 0-2. Opponent played a map token in game 1.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-11 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-11_1108.log` |
+| Format | Standard Bo3 |
+| Record | 0-2 |
+| Session log size (raw) | 15,086,275 (14.4 MB) |
+| Session log size (gzip) | 1,036,930 (~1.0 MB) |
+| Compression ratio | ~14.5:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 1,872 |
+| Routed | 1,770 |
+| Unknown | 102 |
+| Timestamp failures | 67 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 521 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 2 |
+| GameState | 1,762 |
 | Inventory | 2 |
 | MatchState | 2 |
 | Rank | 2 |

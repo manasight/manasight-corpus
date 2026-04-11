@@ -95,3 +95,9 @@ filename      = "session_2026-04-05_0000_feedback-019d5e75.log"
 sha256        = "d85a65a808401efb4cd4804419cdfd54a535e6c6c8f9045cd013ae50e67c1e2d"
 size_bytes    = 25865859
 date_captured = "2026-04-05"
+
+[[files]]
+filename      = "session_2026-04-11_1108.log"
+sha256        = "285f18a064f7050bd6fa5ef9a9511eb5d8afd94b9e7b2683d89f69a15399c941"
+size_bytes    = 15086275
+date_captured = "2026-04-11"
