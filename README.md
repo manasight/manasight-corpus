@@ -8,10 +8,39 @@ This repository contains sanitized `Player.log` captures from MTG Arena. These f
 
 All log files have personally identifiable information (account IDs, display names, tokens) removed via [manasight-parser](https://github.com/manasight/manasight-parser)'s `scrub` module.
 
-## How the corpus is consumed
+## How it works
 
-- **CI smoke tests** — [manasight-parser](https://github.com/manasight/manasight-parser) runs its parser against every file in this corpus to catch regressions
-- **Release tarballs** — tagged releases bundle the corpus for offline testing
+### Adding logs
+
+1. Fork the repo, sanitize your `Player.log` with manasight-parser's `scrub` binary, compress it (`gzip`), and place it in `corpus/`
+2. Open a PR — CI auto-sanitizes files via [`check-log-sanitization.yml`](.github/workflows/check-log-sanitization.yml) and validates naming conventions
+3. See [CONTRIBUTING.md](CONTRIBUTING.md) for details
+
+### Release publishing
+
+When a PR that adds or updates `corpus/` files is merged to `main`, [`publish-corpus.yml`](.github/workflows/publish-corpus.yml) automatically:
+1. Bundles all `corpus/*.log.gz` files into a tarball
+2. Creates a new GitHub release with an auto-incremented tag (`manasight-corpus-v1`, `v2`, ...)
+
+### Automatic parser baseline updates
+
+After publishing a release, the workflow triggers [manasight-parser](https://github.com/manasight/manasight-parser)'s smoke test CI via `repository_dispatch`. The full pipeline:
+
+```
+corpus PR merged → publish-corpus.yml → GitHub Release
+                                       → repository_dispatch → parser smoke test
+                                                              → ratchet comparison
+                                                              → baseline PR (if improved)
+```
+
+This means new log files flow through to parser coverage updates without manual intervention.
+
+### Secrets
+
+| Secret | Repo | Purpose |
+|--------|------|---------|
+| `PARSER_DISPATCH_TOKEN` | manasight-corpus | PAT with `contents: write` on manasight-parser, used to trigger `repository_dispatch` |
+| `BASELINE_PR_TOKEN` | manasight-parser | PAT used by parser CI to open baseline update PRs |
 
 ## Repository structure
 

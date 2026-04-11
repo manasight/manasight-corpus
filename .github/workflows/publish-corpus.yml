@@ -57,3 +57,15 @@ jobs:
             --notes "Corpus release with ${{ steps.check.outputs.count }} sanitized log files."
         env:
           GH_TOKEN: ${{ github.token }}
+
+      # Trigger manasight-parser smoke tests against the new corpus release.
+      # Requires PARSER_DISPATCH_TOKEN: a PAT with write access to
+      # manasight/manasight-parser (contents: write).
+      - name: Trigger parser smoke tests
+        if: steps.check.outputs.count != '0'
+        run: |
+          gh api repos/manasight/manasight-parser/dispatches \
+            -f event_type=corpus-release \
+            -f "client_payload[tag]=${{ steps.version.outputs.tag }}"
+        env:
+          GH_TOKEN: ${{ secrets.PARSER_DISPATCH_TOKEN }}
