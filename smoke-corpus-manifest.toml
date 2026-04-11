@@ -23,3 +23,63 @@ filename      = "session_2026-03-05_0000.log"
 sha256        = "a4f2b15dafb2b635d4442d490c4f0492422e5575658664bf8133f8d1d67d7ad2"
 size_bytes    = 7545942
 date_captured = "2026-03-05"
+
+[[files]]
+filename      = "session_2026-03-06_0000_pick2-draft-only.log"
+sha256        = "4a29596428832f3e89daa76954a761c737109df931f70ea9ef7fcf75a53c6c7f"
+size_bytes    = 3276589
+date_captured = "2026-03-06"
+
+[[files]]
+filename      = "session_2026-03-06_0000_pick2-draft-game.log"
+sha256        = "b2b947c96ee15c66b53262dc50b5bce44ecef1e8bb26725f32cb7b4f496007c8"
+size_bytes    = 12031728
+date_captured = "2026-03-06"
+
+[[files]]
+filename      = "session_2026-03-08_1103_standard-bo1-log-rotated.log"
+sha256        = "ce4e5e729050e7d8a69d0000bef4670d529d8f41c3c9ea38a13f6967ff398e92"
+size_bytes    = 9857419
+date_captured = "2026-03-08"
+
+[[files]]
+filename      = "session_2026-03-11_1847_quick-draft-selesnya.log"
+sha256        = "73f3f1d57bcdbc5743dd98b716ee9b294869aebea16371aaaa16d153619a9be8"
+size_bytes    = 16409603
+date_captured = "2026-03-11"
+
+[[files]]
+filename      = "session_2026-03-11_2124_trad-standard-bo3.log"
+sha256        = "0ea609bb64928a8a17a255675218a254bec03e251d24c91edd6b0e36d99e2065"
+size_bytes    = 11449748
+date_captured = "2026-03-11"
+
+[[files]]
+filename      = "session_2026-03-15_1157_detailed_logs_disabled.log"
+sha256        = "6be4bc61365e26bdf13639d3729fcd12c9bdebbd6728cfabbe945255c34bfa8e"
+size_bytes    = 158660
+date_captured = "2026-03-15"
+
+[[files]]
+filename      = "session_2026-03-17_1933_standard-bo1-debug.log"
+sha256        = "e6b0bafd70c6145f688797916fae0a7ddef342cded6ccf884f041d350c0b88f9"
+size_bytes    = 12972583
+date_captured = "2026-03-17"
+
+[[files]]
+filename      = "session_2026-03-21_0905_standard-bo3-skeleton.log"
+sha256        = "6937647819cccb97e2c8175a2bd9753ce8780e0a76ae397ba6f7a61c7d51dd50"
+size_bytes    = 8393062
+date_captured = "2026-03-21"
+
+[[files]]
+filename      = "session_2026-03-22_1232_debug.log"
+sha256        = "8adbb374652815ce0c70b3f19bbfa1598ae6f68d0e3e014929dd87382330428f"
+size_bytes    = 45991638
+date_captured = "2026-03-22"
+
+[[files]]
+filename      = "session_2026-04-05_1509.log"
+sha256        = "73e5cbd31efffd3a17454bc732b52a963e9c1bb507ba99723daed8057fbfca99"
+size_bytes    = 10585543
+date_captured = "2026-04-05"
