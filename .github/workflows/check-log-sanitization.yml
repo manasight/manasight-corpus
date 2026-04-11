@@ -113,6 +113,18 @@ jobs:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
           GH_TOKEN: ${{ github.token }}
         run: |
+          # Validate HEAD_REF contains only safe characters and is not a protected branch.
+          # pull_request_target runs with write permissions, so an attacker who names their
+          # PR branch "main" could otherwise cause this step to push to main.
+          if ! [[ "$HEAD_REF" =~ ^[a-zA-Z0-9_/.-]+$ ]]; then
+            echo "::error::PR branch name contains unsafe characters: $HEAD_REF"
+            exit 1
+          fi
+          if [ "$HEAD_REF" = "main" ] || [ "$HEAD_REF" = "master" ]; then
+            echo "::error::Cannot auto-push to protected branch: $HEAD_REF"
+            exit 1
+          fi
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add corpus/
@@ -120,11 +132,12 @@ jobs:
 
           Sanitized by check-log-sanitization workflow using manasight-parser scrub."
 
+          # Push to refs/heads/$HEAD_REF explicitly to ensure we always target a branch ref.
           if [ "$HEAD_REPO" = "$BASE_REPO" ]; then
-            git push origin "HEAD:$HEAD_REF"
+            git push origin "HEAD:refs/heads/$HEAD_REF"
           else
             git remote add fork "https://x-access-token:$GH_TOKEN@github.com/$HEAD_REPO.git"
-            git push fork "HEAD:$HEAD_REF"
+            git push fork "HEAD:refs/heads/$HEAD_REF"
           fi
 
       - name: Fail if dirty and push failed
