@@ -72,6 +72,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-11 | `session_2026-04-11_1835_firewall.log` | Connection health: firewall tests C1/C2/E4 (#528) |
 | 2026-04-11 | `session_2026-04-11_1900_clumsy-directional.log` | Connection health: clumsy directional D1/D3/D2 + reconnect edge case (#528) |
 | 2026-04-11 | `session_2026-04-11_1930_clumsy-outbound-ranked.log` | Connection health: clumsy outbound D4 (#528) |
+| 2026-04-12 | `session_2026-04-12_0844_edge-cases.log` | Connection health: edge cases E1/E2 (#528) |
 
 ---
 
@@ -683,3 +684,51 @@ Connection health log data collection ([manasight-docs#528](https://github.com/m
 | MatchState | 1 |
 | Rank | 2 |
 | Session | 4 |
+
+---
+
+### Session 2026-04-12_0844_edge-cases
+
+Connection health log data collection ([manasight-docs#528](https://github.com/manasight/manasight-docs/issues/528), Log 4). Edge case adapter-disable tests: E1 (mulligan phase, bot match), E2 (sideboarding phase, Bo3 ranked). Both showed identical behavior to B-series tests — instant "Connection Lost" dialog, forfeit on reconnect. E3 (between games) skipped as redundant. Includes a full Bo3 game 1 before E2.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-12 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-12_0844_edge-cases.log` |
+| Format | 1 bot match (E1) + 1 Bo3 ranked game 1 + sideboard disconnect (E2) |
+| Record | N/A — disconnect testing |
+| Session log size (raw) | 12,238,957 (11.6 MB) |
+| Session log size (gzip) | 875,904 (~0.8 MB) |
+| Compression ratio | ~13.9:1 |
+
+#### Test Details
+
+| Test | Method | Phase | Behavior |
+|------|--------|-------|----------|
+| E1 | Adapter disable 10s | Mulligan (bot) | Instant "Connection Lost" → forfeit |
+| E2 | Adapter disable 10s | Sideboarding (Bo3 ranked) | Instant "Connection Lost" → forfeit |
+| E3 | — | Between games | Skipped — identical behavior confirmed |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 1,381 |
+| Routed | 1,231 |
+| Unknown | 150 |
+| Timestamp failures | 128 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 476 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 1 |
+| GameState | 1,084 |
+| Inventory | 3 |
+| MatchState | 2 |
+| Rank | 3 |
+| Session | 12 |
