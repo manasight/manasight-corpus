@@ -73,6 +73,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-11 | `session_2026-04-11_1900_clumsy-directional.log` | Connection health: clumsy directional D1/D3/D2 + reconnect edge case (#528) |
 | 2026-04-11 | `session_2026-04-11_1930_clumsy-outbound-ranked.log` | Connection health: clumsy outbound D4 (#528) |
 | 2026-04-12 | `session_2026-04-12_0844_edge-cases.log` | Connection health: edge cases E1/E2 (#528) |
+| 2026-04-12 | `session_2026-04-12_1010_pfctl-bidirectional.log` | Connection health: macOS pfctl bidirectional C1/C2/E4 (#529) |
 
 ---
 
@@ -732,3 +733,60 @@ Connection health log data collection ([manasight-docs#528](https://github.com/m
 | MatchState | 2 |
 | Rank | 3 |
 | Session | 12 |
+
+---
+
+### Session 2026-04-12_1010_pfctl-bidirectional
+
+Connection health macOS test session — pfctl bidirectional block tests (C1, C2, E4) for [#529](https://github.com/manasight/manasight-docs/issues/529). First macOS disconnect data. Key finding: macOS TCP retransmit timeouts are ~3x longer than Windows.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-12 |
+| Platform | macOS Tahoe 26.3, Apple Silicon (aarch64), Wi-Fi (en1) |
+| MTGA Version | Current (native macOS client via Epic) |
+| Raw file | `session_2026-04-12_1010_pfctl-bidirectional.log` |
+| Format | Connection health testing — bot + ranked Standard Bo1 |
+| Record | N/A — disconnect tests |
+| Session log size (raw) | 12,490,831 (11.9 MB) |
+| Session log size (gzip) | 919,798 (~0.9 MB) |
+| Compression ratio | ~13.6:1 |
+
+#### Test Results
+
+| Test | Method | Match | Detection | Behavior |
+|------|--------|-------|:---------:|----------|
+| C1-mac-a | pfctl both 30s | Bot | **None** | Froze 30s → auto-resumed, no disconnect |
+| C1-mac-b | pfctl both 60s | Bot | **~49s** | "Waiting for server" → kicked to menu |
+| C2 | pfctl both 75s | Ranked | **~29s** | Rope warning → "Waiting for server" → kicked |
+| E4 | pfctl both 75s (pre-match) | Pre-match | **~79s** | "Waiting for server" frozen → kicked after block lifted |
+
+#### Key Findings
+
+- **30s bidirectional block = no disconnect on macOS** (Windows: 3-15s detection)
+- **macOS SocketException 10060** (connection timed out) vs Windows 10054 (connection reset)
+- **E4 on macOS: ~79s to fail** (connect timeout) vs Windows: near-instant (WSAEACCES)
+- **closeType:9 for E4** matches Windows (pre-match failure code)
+- **FrontDoor (port 30010) stayed alive** during all matchdoor blocks
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 412 |
+| Routed | 238 |
+| Unknown | 174 |
+| Timestamp failures | 142 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 117 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameState | 243 |
+| Inventory | 4 |
+| MatchState | 2 |
+| Rank | 4 |
+| Session | 14 |
