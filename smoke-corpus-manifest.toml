@@ -131,3 +131,9 @@ filename      = "session_2026-04-12_0844_edge-cases.log"
 sha256        = "eb98620e8afa651667b34eea85d328adc0b4c3d8973154b9be2391066ea5d409"
 size_bytes    = 12238957
 date_captured = "2026-04-12"
+
+[[files]]
+filename      = "session_2026-04-12_1010_pfctl-bidirectional.log"
+sha256        = "205286548dffca55b6c531ce925e076592e9c9ea57eeddd808f069d7d7e544ee"
+size_bytes    = 12490831
+date_captured = "2026-04-12"
