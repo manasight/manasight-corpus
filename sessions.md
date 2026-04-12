@@ -76,6 +76,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-12 | `session_2026-04-12_1010_pfctl-bidirectional.log` | Connection health: macOS pfctl bidirectional C1/C2/E4 (#529) |
 | 2026-04-12 | `session_2026-04-12_1045_pfctl-directional.log` | Connection health: macOS pfctl directional D1/D3/D2/D4 + mid-match recovery (#529) |
 | 2026-04-12 | `session_2026-04-12_1145_wifi-disable.log` | Connection health: macOS Wi-Fi disable B1/B2/B3 — no RST, only B1 (60s) disconnected (#529) |
+| 2026-04-12 | `session_2026-04-12_1240_edge-cases.log` | Connection health: macOS edge cases E1/E2 + broken-reconnect during Bo3 sideboard (#529) |
 
 ---
 
@@ -907,3 +908,59 @@ Connection health macOS test session — Wi-Fi adapter disable tests (B1, B2, B3
 | MatchState | 5 |
 | Rank | 4 |
 | Session | 8 |
+
+---
+
+### Session 2026-04-12_1240_edge-cases
+
+Connection health macOS test session — edge case Wi-Fi disable tests (E1, E2) for [#529](https://github.com/manasight/manasight-docs/issues/529). E3 deferred. Confirms phase-independent disconnect behavior. Major finding: reconnecting to a Bo3 match during sideboarding skips the sideboard phase and produces a frozen UI (broken-reconnect state).
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-12 |
+| Platform | macOS Tahoe 26.3, Apple Silicon (aarch64), Wi-Fi (en1) |
+| MTGA Version | Current (native macOS client via Epic) |
+| Raw file | `session_2026-04-12_1240_edge-cases.log` |
+| Format | Connection health testing — bot match (E1) + Bo3 Traditional (E2) |
+| Record | N/A — disconnect tests |
+| Session log size (raw) | 13,903,912 (13.3 MB) |
+| Session log size (gzip) | 850,792 (~0.8 MB) |
+| Compression ratio | ~16.3:1 |
+
+#### Test Results
+
+| Test | Method | Phase | Detection | Behavior |
+|------|--------|-------|:---------:|----------|
+| E1 | Wi-Fi off 75s | Mulligan (bot) | **~52s** | "Waiting for server" → "Connection Lost" → kicked to menu |
+| E2 | Wi-Fi off 75s | Sideboard (Bo3) | **~60s** | "Connection Lost" → reconnected → sideboard skipped → frozen black screen → inactivity timeout |
+| E3 | — | Between games | — | Deferred |
+
+#### Key Findings
+
+- **Phase-independent detection** — mulligan (~52s) and sideboard (~60s) produce same timing as mid-gameplay (B1: ~52s). Matches Windows finding.
+- **Sideboard skipped on reconnect** — Arena reconnected to active Bo3 match but jumped straight to game 2 without sideboard. Pre-sideboard deck was used. Gameplay-impacting consequence.
+- **Broken-reconnect during Bo3** — after reconnecting and skipping sideboard, game 2 showed frozen black screen (GRE data arriving, UI unresponsive). Same edge case as Windows D2. Match ended via inactivity timeout after 10+ minutes.
+- **Worse outcome than Windows E2** — Windows adapter-disable during sideboard produced instant clean disconnect. macOS slow timeout + reconnect creates broken UI state.
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 553 |
+| Routed | 402 |
+| Unknown | 151 |
+| Timestamp failures | 130 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 199 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 2 |
+| GameState | 412 |
+| Inventory | 3 |
+| MatchState | 4 |
+| Rank | 3 |
+| Session | 15 |
