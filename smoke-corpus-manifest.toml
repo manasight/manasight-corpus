@@ -149,3 +149,9 @@ filename      = "session_2026-04-12_1145_wifi-disable.log"
 sha256        = "9f0eae40c52e62e064a55594f75db827074e2149df9df199c22b335621002489"
 size_bytes    = 18154742
 date_captured = "2026-04-12"
+
+[[files]]
+filename      = "session_2026-04-12_1240_edge-cases.log"
+sha256        = "d53dad78e2f26df0c7dbd77493b4c261ad534c17169b673c1fdd381863d8b05e"
+size_bytes    = 13903912
+date_captured = "2026-04-12"
