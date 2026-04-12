@@ -70,6 +70,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-11 | `session_2026-04-11_1108.log` | Standard Bo3, 0-2 |
 | 2026-04-11 | `session_2026-04-11_1542_adapter-disable.log` | Connection health: adapter disable tests B1/B2/B3 (#528) |
 | 2026-04-11 | `session_2026-04-11_1835_firewall.log` | Connection health: firewall tests C1/C2/E4 (#528) |
+| 2026-04-11 | `session_2026-04-11_1900_clumsy-directional.log` | Connection health: clumsy directional D1/D3/D2 + reconnect edge case (#528) |
 
 ---
 
@@ -562,9 +563,9 @@ Note: first C1 attempt used `-LocalPort` instead of `-RemotePort` and had no eff
 
 | Test | Method | Match | Detection | Behavior |
 |------|--------|-------|-----------|----------|
-| C1 | Firewall block remote port 30003 (both) | Bot | ~few seconds | "Waiting for server" → auto-kicked to menu |
-| C2 | Firewall block remote port 30003 (both) | Ranked | ~2 seconds | "Waiting for server" → auto-kicked to menu |
-| E4 | Firewall block before queueing | Pre-match | ~2 seconds | Queue starts → "Waiting for server" → auto-kicked to menu |
+| C1 | Firewall block remote port 30003 (both) | Bot | ~15s | "Waiting for server" → auto-kicked to menu |
+| C2 | Firewall block remote port 30003 (both) | Ranked | ~3s | "Waiting for server" → auto-kicked to menu |
+| E4 | Firewall block before queueing | Pre-match | instant | Queue starts → "Waiting for server" → auto-kicked to menu |
 
 #### Parser Coverage
 
@@ -587,3 +588,52 @@ Note: first C1 attempt used `-LocalPort` instead of `-RemotePort` and had no eff
 | MatchState | 2 |
 | Rank | 4 |
 | Session | 14 |
+
+---
+
+### Session 2026-04-11_1900_clumsy-directional
+
+Connection health log data collection ([manasight-docs#528](https://github.com/manasight/manasight-docs/issues/528), Log 3). Clumsy directional drop tests: D1 (inbound, bot), D3 (outbound, bot), D2 (inbound, ranked). Also captured a broken-reconnect edge case after D2 where Arena reconnected to the active match but the UI was frozen, resulting in a timeout loss.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-11 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-11_1900_clumsy-directional.log` |
+| Format | Standard Bo1 (2 bot + 1 ranked + 1 broken reconnect) |
+| Record | N/A — disconnect testing |
+| Session log size (raw) | 14,737,598 (14.0 MB) |
+| Session log size (gzip) | 1,101,441 (~1.0 MB) |
+| Compression ratio | ~13.3:1 |
+
+#### Test Details
+
+| Test | Method | Match | Silence Duration | Behavior |
+|------|--------|-------|:----------------:|----------|
+| D1 | Inbound drop 45s | Bot | ~29s | Can't act ~20s → "Waiting for server" → kicked |
+| D3 | Outbound drop 45s | Bot | ~14s | Land played (optimistic) → froze → kicked |
+| D2 | Inbound drop 45s | Ranked | ~22s | Spell cast → hung ~20s → kicked |
+| — | Broken reconnect | Ranked | — | Reconnected to active match, UI frozen, timed out |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 383 |
+| Routed | 165 |
+| Unknown | 218 |
+| Timestamp failures | 188 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 48 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 4 |
+| GameResult | 1 |
+| GameState | 154 |
+| Inventory | 5 |
+| MatchState | 5 |
+| Rank | 5 |
+| Session | 26 |
