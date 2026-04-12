@@ -143,3 +143,9 @@ filename      = "session_2026-04-12_1045_pfctl-directional.log"
 sha256        = "cab6f0d4fd181101cc235c2344f0d80f1aed6df757a09fb796e0ec8237525161"
 size_bytes    = 23458713
 date_captured = "2026-04-12"
+
+[[files]]
+filename      = "session_2026-04-12_1145_wifi-disable.log"
+sha256        = "9f0eae40c52e62e064a55594f75db827074e2149df9df199c22b335621002489"
+size_bytes    = 18154742
+date_captured = "2026-04-12"

@@ -75,6 +75,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-12 | `session_2026-04-12_0844_edge-cases.log` | Connection health: edge cases E1/E2 (#528) |
 | 2026-04-12 | `session_2026-04-12_1010_pfctl-bidirectional.log` | Connection health: macOS pfctl bidirectional C1/C2/E4 (#529) |
 | 2026-04-12 | `session_2026-04-12_1045_pfctl-directional.log` | Connection health: macOS pfctl directional D1/D3/D2/D4 + mid-match recovery (#529) |
+| 2026-04-12 | `session_2026-04-12_1145_wifi-disable.log` | Connection health: macOS Wi-Fi disable B1/B2/B3 — no RST, only B1 (60s) disconnected (#529) |
 
 ---
 
@@ -849,3 +850,60 @@ Connection health macOS test session — pfctl directional drop tests (D1, D3, D
 | MatchState | 8 |
 | Rank | 7 |
 | Session | 30 |
+
+---
+
+### Session 2026-04-12_1145_wifi-disable
+
+Connection health macOS test session — Wi-Fi adapter disable tests (B1, B2, B3) for [#529](https://github.com/manasight/manasight-docs/issues/529). Major finding: macOS Wi-Fi disable does NOT send TCP RST (unlike Windows). Only B1 (60s) caused disconnect; B2 (1s) and B3 (10s) survived because the connection recovered before TCP timeout.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-12 |
+| Platform | macOS Tahoe 26.3, Apple Silicon (aarch64), Wi-Fi (en1) |
+| MTGA Version | Current (native macOS client via Epic) |
+| Raw file | `session_2026-04-12_1145_wifi-disable.log` |
+| Format | Connection health testing — bot + ranked Standard Bo1 |
+| Record | N/A — disconnect tests |
+| Session log size (raw) | 18,154,742 (17.3 MB) |
+| Session log size (gzip) | 1,220,653 (~1.2 MB) |
+| Compression ratio | ~14.9:1 |
+
+#### Test Results
+
+| Test | Method | Match | Duration | Total Downtime | Detection | Behavior |
+|------|--------|-------|----------|:-:|:---------:|----------|
+| B1 | Wi-Fi off | Bot | 60s | ~66s | **~52s** | "Waiting for server" → "Connection Lost" → Reconnect → kicked |
+| B2 | Wi-Fi off (quick) | Bot | 1s | ~7s | **None** | No visible interruption |
+| B3 | Wi-Fi off | Ranked | 10s | ~21s | **None** | Brief pause, then resumed |
+
+#### Key Findings
+
+- **macOS Wi-Fi disable does NOT send TCP RST** — connections go dead silently (SocketException 10049 "address not valid" instead of Windows 10054 "connection reset")
+- **B2 and B3 survived on macOS** (Windows: all three triggered instant disconnect via RST)
+- **macOS adapter-disable behaves like pfctl** (silent drop) not like Windows adapter-disable (instant RST)
+- **B1 showed "Connection Lost" dialog** (same UI as Windows) — this is the adapter-disable-specific response, but only fires if the timeout is actually reached
+- **Two-stage error in B1:** first exception hit a non-game connection (SocketException 10049), second hit matchdoor (10060 timeout)
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 939 |
+| Routed | 790 |
+| Unknown | 149 |
+| Timestamp failures | 112 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 413 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 2 |
+| GameState | 827 |
+| Inventory | 4 |
+| MatchState | 5 |
+| Rank | 4 |
+| Session | 8 |
