@@ -69,6 +69,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-03-21 | `session_2026-03-21_0905_standard-bo3-skeleton.log` | Standard BO3, 0-2 (Skeleton deck) |
 | 2026-04-11 | `session_2026-04-11_1108.log` | Standard Bo3, 0-2 |
 | 2026-04-11 | `session_2026-04-11_1542_adapter-disable.log` | Connection health: adapter disable tests B1/B2/B3 (#528) |
+| 2026-04-11 | `session_2026-04-11_1835_firewall.log` | Connection health: firewall tests C1/C2/E4 (#528) |
 
 ---
 
@@ -537,3 +538,52 @@ Connection health log data collection ([manasight-docs#528](https://github.com/m
 | MatchState | 5 |
 | Rank | 5 |
 | Session | 25 |
+
+---
+
+### Session 2026-04-11_1835_firewall
+
+Connection health log data collection ([manasight-docs#528](https://github.com/manasight/manasight-docs/issues/528), Log 2). Three firewall disconnect tests: C1 (bot), C2 (ranked), E4 (pre-match). All tests showed "Waiting for server" within a few seconds, then auto-kicked to main menu (~2s). No "Connection Lost" dialog (unlike adapter-disable tests).
+
+Note: first C1 attempt used `-LocalPort` instead of `-RemotePort` and had no effect. Fixed to `-RemotePort 30003` for all subsequent tests. The failed attempt is also in the log.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-11 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-11_1835_firewall.log` |
+| Format | Standard Bo1 (1 bot + 1 ranked + 1 pre-match) |
+| Record | N/A — disconnect testing |
+| Session log size (raw) | 11,876,842 (11.3 MB) |
+| Session log size (gzip) | 885,724 (~0.8 MB) |
+| Compression ratio | ~13.4:1 |
+
+#### Test Details
+
+| Test | Method | Match | Detection | Behavior |
+|------|--------|-------|-----------|----------|
+| C1 | Firewall block remote port 30003 (both) | Bot | ~few seconds | "Waiting for server" → auto-kicked to menu |
+| C2 | Firewall block remote port 30003 (both) | Ranked | ~2 seconds | "Waiting for server" → auto-kicked to menu |
+| E4 | Firewall block before queueing | Pre-match | ~2 seconds | Queue starts → "Waiting for server" → auto-kicked to menu |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 313 |
+| Routed | 150 |
+| Unknown | 163 |
+| Timestamp failures | 135 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 81 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameState | 164 |
+| Inventory | 4 |
+| MatchState | 2 |
+| Rank | 4 |
+| Session | 14 |
