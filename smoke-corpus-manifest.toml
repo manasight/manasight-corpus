@@ -107,3 +107,9 @@ filename      = "session_2026-04-11_1542_adapter-disable.log"
 sha256        = "0561663dd786f61513393f3d341275b3caba74c193fcac0b143a458099ee5668"
 size_bytes    = 14602103
 date_captured = "2026-04-11"
+
+[[files]]
+filename      = "session_2026-04-11_1835_firewall.log"
+sha256        = "819e7b05fbe15c8559fd59e71eb9cb9dab863849975c0340b01bd8f9d608e668"
+size_bytes    = 11876842
+date_captured = "2026-04-11"
