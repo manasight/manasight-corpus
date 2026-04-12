@@ -119,3 +119,9 @@ filename      = "session_2026-04-11_1900_clumsy-directional.log"
 sha256        = "d39ae48e9a9fe96fa3f1dd01760f21aa3e6f142b1abe3be901948148220d25b0"
 size_bytes    = 14737598
 date_captured = "2026-04-11"
+
+[[files]]
+filename      = "session_2026-04-11_1930_clumsy-outbound-ranked.log"
+sha256        = "5e6d29696f628a1d0e0c973250023191aeecaa19c17ec1eb781b4208ea048307"
+size_bytes    = 6260667
+date_captured = "2026-04-11"
