@@ -137,3 +137,9 @@ filename      = "session_2026-04-12_1010_pfctl-bidirectional.log"
 sha256        = "205286548dffca55b6c531ce925e076592e9c9ea57eeddd808f069d7d7e544ee"
 size_bytes    = 12490831
 date_captured = "2026-04-12"
+
+[[files]]
+filename      = "session_2026-04-12_1045_pfctl-directional.log"
+sha256        = "cab6f0d4fd181101cc235c2344f0d80f1aed6df757a09fb796e0ec8237525161"
+size_bytes    = 23458713
+date_captured = "2026-04-12"
