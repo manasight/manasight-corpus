@@ -71,6 +71,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-11 | `session_2026-04-11_1542_adapter-disable.log` | Connection health: adapter disable tests B1/B2/B3 (#528) |
 | 2026-04-11 | `session_2026-04-11_1835_firewall.log` | Connection health: firewall tests C1/C2/E4 (#528) |
 | 2026-04-11 | `session_2026-04-11_1900_clumsy-directional.log` | Connection health: clumsy directional D1/D3/D2 + reconnect edge case (#528) |
+| 2026-04-11 | `session_2026-04-11_1930_clumsy-outbound-ranked.log` | Connection health: clumsy outbound D4 (#528) |
 
 ---
 
@@ -637,3 +638,48 @@ Connection health log data collection ([manasight-docs#528](https://github.com/m
 | MatchState | 5 |
 | Rank | 5 |
 | Session | 26 |
+
+---
+
+### Session 2026-04-11_1930_clumsy-outbound-ranked
+
+Connection health log data collection ([manasight-docs#528](https://github.com/manasight/manasight-docs/issues/528), D4). Single clumsy outbound drop test on a ranked match. User saw opponent play a card, then froze 20-30s before being kicked to main screen.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-11 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-11_1930_clumsy-outbound-ranked.log` |
+| Format | Standard Bo1 (1 ranked) |
+| Record | N/A — disconnect testing |
+| Session log size (raw) | 6,260,667 (5.9 MB) |
+| Session log size (gzip) | 470,045 (~0.4 MB) |
+| Compression ratio | ~13.3:1 |
+
+#### Test Details
+
+| Test | Method | Match | Behavior |
+|------|--------|-------|----------|
+| D4 | Outbound drop 45s | Ranked | Saw opponent's card → froze 20-30s → kicked to menu |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 182 |
+| Routed | 100 |
+| Unknown | 82 |
+| Timestamp failures | 62 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 45 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameState | 115 |
+| Inventory | 2 |
+| MatchState | 1 |
+| Rank | 2 |
+| Session | 4 |
