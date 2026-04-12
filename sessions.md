@@ -74,6 +74,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-11 | `session_2026-04-11_1930_clumsy-outbound-ranked.log` | Connection health: clumsy outbound D4 (#528) |
 | 2026-04-12 | `session_2026-04-12_0844_edge-cases.log` | Connection health: edge cases E1/E2 (#528) |
 | 2026-04-12 | `session_2026-04-12_1010_pfctl-bidirectional.log` | Connection health: macOS pfctl bidirectional C1/C2/E4 (#529) |
+| 2026-04-12 | `session_2026-04-12_1045_pfctl-directional.log` | Connection health: macOS pfctl directional D1/D3/D2/D4 + mid-match recovery (#529) |
 
 ---
 
@@ -790,3 +791,61 @@ Connection health macOS test session — pfctl bidirectional block tests (C1, C2
 | MatchState | 2 |
 | Rank | 4 |
 | Session | 14 |
+
+---
+
+### Session 2026-04-12_1045_pfctl-directional
+
+Connection health macOS test session — pfctl directional drop tests (D1, D3, D2, D4) for [#529](https://github.com/manasight/manasight-docs/issues/529). Most important session for GRE silence detection validation. Major finding: macOS Arena successfully reconnects to in-progress ranked matches after disconnect (never observed on Windows).
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-12 |
+| Platform | macOS Tahoe 26.3, Apple Silicon (aarch64), Wi-Fi (en1) |
+| MTGA Version | Current (native macOS client via Epic) |
+| Raw file | `session_2026-04-12_1045_pfctl-directional.log` |
+| Format | Connection health testing — bot + ranked Standard Bo1 |
+| Record | N/A — disconnect tests (won both ranked matches after reconnect) |
+| Session log size (raw) | 23,458,713 (22.4 MB) |
+| Session log size (gzip) | 1,680,054 (~1.6 MB) |
+| Compression ratio | ~14.0:1 |
+
+#### Test Results
+
+| Test | Direction | Match | macOS Detection | Windows Detection | Recovery? |
+|------|-----------|-------|:---:|:---:|:---------:|
+| D1 | Inbound 120s | Bot | **~58s** | ~29s | No (kicked to menu) |
+| D3 | Outbound 90s | Bot | **~42s** | ~14s | No (kicked to menu) |
+| D2 | Inbound 120s | Ranked | **~43s** | ~22s | **Yes — full mid-match recovery** |
+| D4 | Outbound 90s | Ranked | **~46s** | ~19s | **Yes — full mid-match recovery** |
+
+#### Key Findings
+
+- **macOS ~2-3x slower** than Windows across all directional tests
+- **Mid-match recovery on macOS** — both ranked matches (D2, D4) successfully reconnected after block lifted. State machine: `Playing → Disconnected → ConnectedToMatchDoor → Playing`. Never observed on Windows.
+- **Bot matches do NOT recover** — kicked to menu same as Windows
+- **Inbound vs outbound gap smaller on macOS** (~43-58s vs ~42-46s) compared to Windows (~22-29s vs ~14-19s)
+- **Connection health state machine must handle `Disconnected → Playing` recovery**
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 1221 |
+| Routed | 930 |
+| Unknown | 291 |
+| Timestamp failures | 248 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 429 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 4 |
+| GameResult | 2 |
+| GameState | 880 |
+| Inventory | 7 |
+| MatchState | 8 |
+| Rank | 7 |
+| Session | 30 |
