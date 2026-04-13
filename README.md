@@ -35,13 +35,6 @@ corpus PR merged → publish-corpus.yml → GitHub Release
 
 This means new log files flow through to parser coverage updates without manual intervention.
 
-### Secrets
-
-| Secret | Repo | Purpose |
-|--------|------|---------|
-| `PARSER_DISPATCH_TOKEN` | manasight-corpus | PAT with `contents: write` on manasight-parser, used to trigger `repository_dispatch` |
-| `BASELINE_PR_TOKEN` | manasight-parser | PAT used by parser CI to open baseline update PRs |
-
 ## Repository structure
 
 ```text
