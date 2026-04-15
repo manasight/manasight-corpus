@@ -155,3 +155,9 @@ filename      = "session_2026-04-12_1240_edge-cases.log"
 sha256        = "d53dad78e2f26df0c7dbd77493b4c261ad534c17169b673c1fdd381863d8b05e"
 size_bytes    = 13903912
 date_captured = "2026-04-12"
+
+[[files]]
+filename      = "session_2026-04-14_1720.log"
+sha256        = "ff6402797c41ec2683b510fec1101ffdd97dfa586af7fb51ef32c51725fe6383"
+size_bytes    = 4126647
+date_captured = "2026-04-14"
