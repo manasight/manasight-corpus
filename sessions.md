@@ -77,6 +77,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-12 | `session_2026-04-12_1045_pfctl-directional.log` | Connection health: macOS pfctl directional D1/D3/D2/D4 + mid-match recovery (#529) |
 | 2026-04-12 | `session_2026-04-12_1145_wifi-disable.log` | Connection health: macOS Wi-Fi disable B1/B2/B3 — no RST, only B1 (60s) disconnected (#529) |
 | 2026-04-12 | `session_2026-04-12_1240_edge-cases.log` | Connection health: macOS edge cases E1/E2 + broken-reconnect during Bo3 sideboard (#529) |
+| 2026-04-14 | `session_2026-04-14_1720.log` | Inactivity-timer investigation — bot / Play / Ladder BO1 auto-concede mechanics |
 
 ---
 
@@ -964,3 +965,61 @@ Connection health macOS test session — edge case Wi-Fi disable tests (E1, E2) 
 | MatchState | 4 |
 | Rank | 3 |
 | Session | 15 |
+
+---
+
+### Session 2026-04-14_1720
+
+Investigation of Arena inactivity timing / auto-concede mechanics — 4-minute-idle test across bot, unranked Play, and ranked Ladder matches. Findings written up at `manasight-docs/docs/research/2026-04-14_mtga-inactivity-timer-mechanics.md`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-14 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-14_1720.log` |
+| Format | Inactivity-timer investigation — bot / Play / Ladder BO1 |
+| Record | N/A — diagnostic tests |
+| Session log size (raw) | 4,126,647 (4.0 MB) |
+| Session log size (gzip) | 477,876 (~0.5 MB) |
+| Compression ratio | ~8.6:1 |
+
+#### Test Results
+
+| Test | Mode | Scenario | Outcome | Kick mechanism |
+|------|------|----------|---------|----------------|
+| 1 | Bot match | 4-min idle pre-first-action, then manual concede | Concede | — (user-triggered) |
+| 2 | Play queue (vs human) | Full-idle after match start | Timeout loss | `TimerType_Inactivity` 150s |
+| 3 | Ladder BO1 (vs human, iPhone opp) | Full-idle after match start | Timeout match loss | `TimerType_Inactivity` 150s |
+
+#### Key Findings
+
+- **Arena publishes authoritative countdown timers** in the GRE stream: `TimerType_ActivePlayer` (61s, `TakeControl` — AI goldfish auto-passes) and `TimerType_Inactivity` (150s, `Timeout` — match auto-concedes).
+- **Full per-seat timer set** is broadcast as `GREMessageType_TimerStateMessage` (adds `Prologue` 120s, `Epilogue` 145s, `NonActivePlayer` 45s, `Delay` 2s).
+- **Parser extracts `GameStateMessage.timers`** (`manasight-parser/src/parsers/gre/game_state.rs:81,116-175`) but classifies `TimerStateMessage` as noise at `mod.rs:89,98-102,180-190` and drops its payload.
+- **Desktop ignores all timer data** — `manasight-desktop/src-tauri/src/action_log/mappers.rs::map_game_state` makes zero references to `timers`, no overlay countdown component exists.
+- **UI-level hovers do not reset `TimerType_Inactivity`** — only GRE-level actions (pass/play/activate) reset it. Empirically observed: two `ClientToGREUIMessage` onHover events during test 3 did not delay the kick.
+- **Pre-match idle writes zero bytes to Player.log** — no heartbeats, no keepalives; Arena's local logging is fully event-driven.
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 282 |
+| Routed | 168 |
+| Unknown | 114 |
+| Timestamp failures | 91 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 24 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 4 |
+| GameResult | 3 |
+| GameState | 246 |
+| Inventory | 4 |
+| MatchState | 6 |
+| Rank | 4 |
+| Session | 4 |
+| Unknown | 19 |
