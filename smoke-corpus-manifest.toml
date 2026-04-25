@@ -161,3 +161,9 @@ filename      = "session_2026-04-14_1720.log"
 sha256        = "ff6402797c41ec2683b510fec1101ffdd97dfa586af7fb51ef32c51725fe6383"
 size_bytes    = 4126647
 date_captured = "2026-04-14"
+
+[[files]]
+filename      = "session_2026-04-25_0841_deck-management-store.log"
+sha256        = "2c27a9ca78079159d2fb94c2058193a64a0804bda2a46551a9084cf43c9abaaf"
+size_bytes    = 3000051
+date_captured = "2026-04-25"

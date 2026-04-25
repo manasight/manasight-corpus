@@ -78,6 +78,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-12 | `session_2026-04-12_1145_wifi-disable.log` | Connection health: macOS Wi-Fi disable B1/B2/B3 — no RST, only B1 (60s) disconnected (#529) |
 | 2026-04-12 | `session_2026-04-12_1240_edge-cases.log` | Connection health: macOS edge cases E1/E2 + broken-reconnect during Bo3 sideboard (#529) |
 | 2026-04-14 | `session_2026-04-14_1720.log` | Inactivity-timer investigation — bot / Play / Ladder BO1 auto-concede mechanics |
+| 2026-04-25 | `session_2026-04-25_0841_deck-management-store.log` | PR #154 corpus coverage — deck CRUD, store/inbox/pack actions, server-kicked disconnect, 1 conceded Bo1 |
 
 ---
 
@@ -1023,3 +1024,80 @@ Investigation of Arena inactivity timing / auto-concede mechanics — 4-minute-i
 | Rank | 4 |
 | Session | 4 |
 | Unknown | 19 |
+
+---
+
+### Session 2026-04-25_0841_deck-management-store
+
+Comprehensive corpus-coverage session for [manasight-parser PR #154](https://github.com/manasight/manasight-parser/pull/154) (deck collection parser). Goal was to capture every API method touched by deck management, store, inbox, and pack-opening actions to confirm what is logged vs. what is a Player.log blind spot. One Standard Bo1 game played and conceded to capture a second `<== StartHook` after deck changes.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-25 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-25_0841_deck-management-store.log` |
+| Format | Standard Bo1 (1 game, conceded) |
+| Record | 0-1 (concede) |
+| Session log size (raw) | 3,000,051 (2.9 MB) |
+| Session log size (gzip) | 367,251 (~359 KB) |
+| Compression ratio | ~8.1:1 |
+
+#### Actions Tested
+
+| Action | API methods produced | Blind spot? |
+|--------|---------------------|:-----------:|
+| Login / startup | `StartHook` (with `DeckSummaries` + `Decks`), `DeckGetAllPreconDecksV3`, `RankGet*`, `QuestGetQuests`, `PeriodicRewardsGetStatus`, `EventGetCoursesV2`, `EventGetActiveMatches`, `GetFormats`, `GraphGetGraphState` | No |
+| Inbox daily reward claim | None — UI-side only | **Yes** |
+| Open pack (×2, current set + Edge of Eternities) | None — `Client.SceneChange` to `BoosterChamber` only | **Yes** |
+| Spend orbs on mastery pass | `GraphGetGraphState` ×16 (`BattlePass_SOS`, `BattlePass_TMT`) | Partial |
+| Store purchase (cash — Spark bundle) | None directly; reconnect path used `DeckGetDeckSummariesV3` | **Yes** |
+| Store purchase (gold) | None | **Yes** |
+| Store purchase (gems) | None | **Yes** |
+| Sign-in on second device → kicked | `Client.TcpConnection.Close` `status: 7` `"Closed by remote end"` | No |
+| Reconnect after kick | `DeckGetDeckSummariesV3`, `QuestGetQuests`, `PeriodicRewardsGetStatus`, `EventGetCoursesV2` — **no `StartHook`** (fast-reconnect path) | No |
+| Open deck in deckbuilder | `DeckGetDeckSummariesV3` (on Home re-entry) | No |
+| Edit deck (swap card) + save | `DeckUpsertDeckV3` `ActionType: "Updated"` | No |
+| Apply card styles | `DeckUpsertDeckV3` `ActionType: "Updated"` with populated `CardSkins` | No |
+| Delete deck | `DeckDeleteDeck` → bare string `"Success"` | No |
+| Import deck (paste decklist) | `DeckUpsertDeckV3` `ActionType: "Imported"` | No |
+| Create new deck manually | `DeckUpsertDeckV3` `ActionType: "CreatedNew"` | No |
+| Craft cards (wildcard spend) | None | **Yes** |
+| Play + concede Bo1 | Standard match flow + return-to-lobby `StartHook` (post-deck-changes) | No |
+
+#### Notable Findings
+
+- **First-ever captures in corpus** of `DeckGetDeckSummariesV3` (uses `"Summaries"` field), `DeckUpsertDeckV3` (V2→V3 API version bump first seen Apr 14), and the three distinct `ActionType` values: `"Updated"`, `"Imported"`, `"CreatedNew"`.
+- **`DeckGetAllPreconDecksV3`** captured outside the single Apr 14 session that previously had it.
+- **Confirmed Player.log blind spots:** pack opening, store purchases (cash/gold/gems), inbox reward claims, card crafting. None produce any `<==`/`==>` API call — transactions are processed server-side and the client only refreshes UI state locally.
+- **Server-kicked disconnect** (status 7, "Closed by remote end") is a different code path from network-drop disconnects in the existing corpus — no reconnect attempt, since the server explicitly terminated the session.
+- **Fast-reconnect path** uses `DeckGetDeckSummariesV3` instead of a full `StartHook` — first observation of this reconnect flavor.
+- **PR #154 coverage:** two `<== StartHook` events captured (login + post-match-exit), both containing both `"DeckSummaries"` and `"Decks"`. Edge cases (missing `DeckId`, orphaned `DeckId`, non-object `Decks`) confirmed unreachable across all observed payloads — strong candidates for dead-code removal under [#157](https://github.com/manasight/manasight-parser/issues/157).
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 213 |
+| Routed | 49 |
+| Unknown | 164 |
+| Timestamp failures | 119 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 19 |
+| DetailedLoggingStatus | 1 |
+| GameResult | 1 |
+| GameState | 33 |
+| Inventory | 2 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 2 |
+| Unknown | 10 |
+
+#### Games
+
+| # | Format | Your Archetype | Opponent Colors | Result | Turns | P/D | Notes |
+|---|--------|----------------|-----------------|--------|:-----:|:---:|-------|
+| 1 | Standard Bo1 | Unknown | Unknown | Loss (concede) | — | — | Conceded mid-game to trigger a second `StartHook` reflecting in-session deck changes (1 imported, 1 created, 1 deleted) |
