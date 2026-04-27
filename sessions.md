@@ -79,6 +79,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-12 | `session_2026-04-12_1240_edge-cases.log` | Connection health: macOS edge cases E1/E2 + broken-reconnect during Bo3 sideboard (#529) |
 | 2026-04-14 | `session_2026-04-14_1720.log` | Inactivity-timer investigation — bot / Play / Ladder BO1 auto-concede mechanics |
 | 2026-04-25 | `session_2026-04-25_0841_deck-management-store.log` | PR #154 corpus coverage — deck CRUD, store/inbox/pack actions, server-kicked disconnect, 1 conceded Bo1 |
+| 2026-04-26 | `session_2026-04-26_2209.log` | Historic Bo1 (2-4) — live repro session for action log destruction-attribution and event-ordering bugs |
 
 ---
 
@@ -997,7 +998,7 @@ Investigation of Arena inactivity timing / auto-concede mechanics — 4-minute-i
 - **Arena publishes authoritative countdown timers** in the GRE stream: `TimerType_ActivePlayer` (61s, `TakeControl` — AI goldfish auto-passes) and `TimerType_Inactivity` (150s, `Timeout` — match auto-concedes).
 - **Full per-seat timer set** is broadcast as `GREMessageType_TimerStateMessage` (adds `Prologue` 120s, `Epilogue` 145s, `NonActivePlayer` 45s, `Delay` 2s).
 - **Parser extracts `GameStateMessage.timers`** (`manasight-parser/src/parsers/gre/game_state.rs:81,116-175`) but classifies `TimerStateMessage` as noise at `mod.rs:89,98-102,180-190` and drops its payload.
-- **Desktop ignores all timer data** — `manasight-desktop/src-tauri/src/action_log/mappers.rs::map_game_state` makes zero references to `timers`, no overlay countdown component exists.
+- **Desktop ignores all timer data** — the desktop client's game-state mapper makes zero references to `timers`, and no overlay countdown component exists.
 - **UI-level hovers do not reset `TimerType_Inactivity`** — only GRE-level actions (pass/play/activate) reset it. Empirically observed: two `ClientToGREUIMessage` onHover events during test 3 did not delay the kick.
 - **Pre-match idle writes zero bytes to Player.log** — no heartbeats, no keepalives; Arena's local logging is fully event-driven.
 
@@ -1101,3 +1102,70 @@ Comprehensive corpus-coverage session for [manasight-parser PR #154](https://git
 | # | Format | Your Archetype | Opponent Colors | Result | Turns | P/D | Notes |
 |---|--------|----------------|-----------------|--------|:-----:|:---:|-------|
 | 1 | Standard Bo1 | Unknown | Unknown | Loss (concede) | — | — | Conceded mid-game to trigger a second `StartHook` reflecting in-session deck changes (1 imported, 1 created, 1 deleted) |
+
+---
+
+### Session 2026-04-26_2209
+
+Historic Bo1 session captured during `/debug-game` to reproduce an action log destruction-attribution bug. Played a BG midrange brew with **Summon: Bahamut**, **Vraska, Golgari Queen**, **Boseiju, Who Endures**, **Cut Down**, and **Bone Splinters** specifically to exercise the four destruction code paths the bug touches: triggered-ability (saga chapter), spell-driven SBA, channel activated ability, and planeswalker activated ability. Captured **10 misattributions across all four flavors**. Investigation also surfaced a separate event-ordering bug where "died" entries print before the "dealt damage" entry that caused them — observed in the Sparky game 6 (Shock → Stitcher's Supplier).
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-26 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-26_2209.log` |
+| Format | Historic Bo1 |
+| Record | 2-4 |
+| Session log size (raw) | 12,071,107 (11.5 MB) |
+| Session log size (gzip) | 1,091,028 (~1.0 MB) |
+| Compression ratio | ~11.1:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 2,153 |
+| Routed | 1,937 |
+| Unknown | 216 |
+| Timestamp failures | 189 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 1,086 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 8 |
+| GameResult | 6 |
+| GameState | 1,809 |
+| Inventory | 7 |
+| MatchState | 12 |
+| Rank | 7 |
+| Session | 9 |
+| Unknown | 52 |
+
+#### Games
+
+| # | Format | Your Archetype | Opponent Colors | Result | Turns | P/D | Notes |
+|---|--------|----------------|-----------------|--------|:-----:|:---:|-------|
+| 1 | Historic Bo1 | BG Bahamut Reanimator | Sparky (UW Flyers) | Win | 9 | P | Repro: 4× saga-chapter destroy attribution wrong (Warden of Evos, Sworn Guardian, River's Favor, Warden again); 2× Cut Down SBA destroy attribution wrong (Zephyr Gull, Armored Whirl Turtle) |
+| 2 | Historic Bo1 | BG Bahamut Reanimator | UW (Phlage, Force of Negation, Path to Exile) | Loss | 5 | P | Phlage cascade — no destructions to attribute |
+| 3 | Historic Bo1 | BG Bahamut Reanimator | UB Affinity (Drix Interlacer, Thought Monitor, Frogmyr Enforcer, Myr Enforcer) | Loss | 4 | D | Mulled aggressively, ran over by 4-mana 4/4s |
+| 4 | Historic Bo1 | BG Bahamut Reanimator | UR (Lotus Field, Thespian's Stage, Pore Over the Pages, Stock Up) | Loss | 5 | P | Lotus Field combo — Vraska +2 only (no -3 target) |
+| 5 | Historic Bo1 | BG Bahamut Reanimator | BR Aurora Awakener (Death // Life, Agadeem) | Loss | 4 | D | Repro: 1× Boseiju channel destroy attribution wrong (Agadeem, the Undercrypt) — channel from-hand activated ability flavor |
+| 6 | Historic Bo1 | BG Bahamut Reanimator | Sparky (Mono-R Goblins) | Win | 7 | P | Repro: 2× Vraska -3 destroy attribution wrong (Nest Robber, Hurloon Minotaur) — planeswalker activated ability flavor; 2× saga-chapter destroy attribution wrong (Nest Robber, Hurloon Minotaur). Also captured event-ordering bug: Shock→Stitcher's Supplier "died" line printed before "dealt 2 damage" line at 21:18:07 |
+
+#### Issue Repros Captured
+
+Total **10 destruction-attribution misattributions** across 4 flavors:
+
+| Flavor | Count | Cards |
+|--------|-------|-------|
+| Saga chapter (triggered ability) | 6 | Summon: Bahamut II/III destroying various creatures + River's Favor |
+| Spell-driven SBA | 2 | Cut Down (-3/-3 toughness reduction → SBA death) |
+| Channel activated ability | 1 | Boseiju, Who Endures destroying Agadeem, the Undercrypt |
+| Planeswalker activated ability | 2 | Vraska, Golgari Queen -3 destroying Nest Robber, Hurloon Minotaur |
+
+Pattern: in every case, *your* ability destroyed *opponent's* permanent, but the action log attributed the destruction to opponent (the destroyed permanent's owner) instead of to you (the ability source's controller). Reverse polarity (opponent's ability destroys your permanent) was not landed this session and remains an open repro target.
+
+**Event-ordering bug**: 1 capture — Shock killing Stitcher's Supplier (game 6, turn 2 opp, 21:18:07). Order shown was `cast → died → resolved → damage → trigger`; expected `cast → damage → died → resolved → trigger`. Raw GRE in Player.log (gameStateId 71, msgId 108) confirms `DamageDealt` annotation id 143 precedes `ZoneTransfer` annotation id 152, so Arena's order is correct on the wire — bug is in the desktop client's annotation-emission pipeline.
