@@ -80,6 +80,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-14 | `session_2026-04-14_1720.log` | Inactivity-timer investigation — bot / Play / Ladder BO1 auto-concede mechanics |
 | 2026-04-25 | `session_2026-04-25_0841_deck-management-store.log` | PR #154 corpus coverage — deck CRUD, store/inbox/pack actions, server-kicked disconnect, 1 conceded Bo1 |
 | 2026-04-26 | `session_2026-04-26_2209.log` | Historic Bo1 (2-4) — live repro session for action log destruction-attribution and event-ordering bugs |
+| 2026-04-27 | `session_2026-04-27_2230.log` | Standard Bo1 (1-2) — verification session for PR #498/#499/#500 action log attribution fixes |
 
 ---
 
@@ -1169,3 +1170,68 @@ Total **10 destruction-attribution misattributions** across 4 flavors:
 Pattern: in every case, *your* ability destroyed *opponent's* permanent, but the action log attributed the destruction to opponent (the destroyed permanent's owner) instead of to you (the ability source's controller). Reverse polarity (opponent's ability destroys your permanent) was not landed this session and remains an open repro target.
 
 **Event-ordering bug**: 1 capture — Shock killing Stitcher's Supplier (game 6, turn 2 opp, 21:18:07). Order shown was `cast → died → resolved → damage → trigger`; expected `cast → damage → died → resolved → trigger`. Raw GRE in Player.log (gameStateId 71, msgId 108) confirms `DamageDealt` annotation id 143 precedes `ZoneTransfer` annotation id 152, so Arena's order is correct on the wire — bug is in the desktop client's annotation-emission pipeline.
+
+---
+
+### Session 2026-04-27_2230
+
+Manual verification session for PR #498/#499/#500 (action log attribution fixes). Vraska/Boseiju/Bahamut deck targeted at AGENT_DRIVEN destruction (#499) and SBA walk-back (#500). Confirmed Boseiju Channel, Vraska -3, Summon: Bahamut chapters, Bone Splinters, forced-sac via Living End, return via Colossal Skyturtle, Cut Down SBA_ZeroToughness all attribute correctly post-fix. Both Reddit-reported bugs from issue #496 (u/xgolt01: Boseiju channel destroying opp's land; forced sacrifice via opponent's spell) now produce correct "You destroyed" / "Opponent sacrificed" attribution. Build under test: `Manasight_1.1.13_x64-setup.exe` from CI run 25033586212 on branch `issue/497-sba-damage-walkback`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-27 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-27_2230.log` |
+| Format | Standard Bo1 |
+| Record | 1-2 |
+| Session log size (raw) | 12,070,532 (11.5 MB) |
+| Session log size (gzip) | 949,054 (~0.9 MB) |
+| Compression ratio | ~12.7:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 2,189 |
+| Routed | 2,067 |
+| Unknown | 122 |
+| Timestamp failures | 100 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 1,183 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 3 |
+| GameState | 1,999 |
+| Inventory | 4 |
+| MatchState | 6 |
+| Rank | 4 |
+| Session | 4 |
+| Unknown | 26 |
+
+#### Games
+
+| # | Format | Your Archetype | Opponent Colors | Result | Turns | P/D | Notes |
+|---|--------|----------------|-----------------|--------|:-----:|:---:|-------|
+| 1 | Standard Bo1 | BG Bahamut Reanimator | Sparky (Mono-G stompy: Treetop Warden, Woodland Mystic, Rumbling Baloth, Rabid Bite) | Loss | 7 | P | Land-flooded; one Rabid Bite SBA_Damage death of Llanowar Elves but no destruction triggers landed |
+| 2 | Standard Bo1 | BG Bahamut Reanimator | SiniyBoy (Living End cascade: Bloodbraid Marauder, Violent Outburst, Living End) | Loss | 9 | P | Verified: Vraska -3 (×2), Boseiju Channel (×2 — opp lands and Saiba Trespassers), Bone Splinters destroy, Living End forced-sac of your Llanowar Elves correctly attributed to opp, Colossal Skyturtle bounce of your Llanowar Elves correctly attributed to opp |
+| 3 | Standard Bo1 | BG Bahamut Reanimator | Sparky (Mono-G ramp: Woodland Mystic, Ilysian Caryatid, Treetop Warden, Sentinel Spider, Affectionate Indrik) | Win | 16 | P | Verified: Cut Down (×2, including SBA_ZeroToughness destroy with explicit "You destroyed" attribution — first observed visible signal for #500 walk-back), Summon: Bahamut chapter destroys (×7), Vraska -3, Bone Splinters, Zombify reanimate, mutual combat trade |
+
+#### Verification Outcome
+
+| PR | Status | Confidence |
+|----|--------|------------|
+| #498 (retire parallel test pipeline) | N/A in-game (test debt only); behavior unchanged across 3 games | High |
+| #499 (AGENT_DRIVEN attribution) | **Verified** — 7 distinct fix scenarios across 4 categories (Destroy via spell/saga/Channel/planeswalker, Sacrifice forced, Return forced, Discard/Surveil regression) | High |
+| #500 (SBA walk-back) | **Verified for SBA_ZeroToughness** (Cut Down with explicit "You destroyed" attribution); SBA_Damage path indirectly confirmed via shared walker logic but combat-damage death log format hides destroyer | High for SBA_ZeroToughness, indirect for SBA_Damage |
+
+#### Issues Surfaced (not fix-blocking)
+
+| # | Type | Description |
+|---|------|-------------|
+| 1 | Perf | Idle CPU sustained ~14% of one core (memory stable at ~57 MB; no leak). Settled value, not startup transient |
+| 2 | Walker logging | INFO-level log shows annotation counts only, not per-event walker decisions (which path fired). Would help in-session verification |
+| 3 | Action log format asymmetry | Combat-damage SBA_Damage deaths render as "Y died" (no destroyer); spell-driven SBAs (Cut Down) render as "X destroyed Y". Asymmetric visibility of attribution |
