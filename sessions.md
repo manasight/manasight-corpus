@@ -82,6 +82,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-26 | `session_2026-04-26_2209.log` | Historic Bo1 (2-4) — live repro session for action log destruction-attribution and event-ordering bugs |
 | 2026-04-27 | `session_2026-04-27_2230.log` | Standard Bo1 (1-2) — verification session for PR #498/#499/#500 action log attribution fixes |
 | 2026-04-29 | `session_2026-04-29_2128.log` | Alchemy Bo1 (2-0) — Conjure-mechanic capture session |
+| 2026-04-29 | `session_2026-04-29_2201.log` | Alchemy Bo1 (1-0) — Spellbook + Conjure mechanic capture session |
 
 ---
 
@@ -1276,3 +1277,43 @@ Alchemy Bo1 corpus-capture session focused on the Conjure mechanic. Played to su
 | Rank | 3 |
 | Session | 2 |
 | Unknown | 14 |
+
+---
+
+### Session 2026-04-29_2201
+
+Alchemy Bo1 corpus-capture session focused on the Spellbook mechanic, with additional Conjure coverage. Won the single game played.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-29 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-29_2201.log` |
+| Format | Alchemy Bo1 |
+| Record | 1-0 |
+| Session log size (raw) | 6,043,797 (5.8 MB) |
+| Session log size (gzip) | 521,802 (~510 KB) |
+| Compression ratio | ~11.6:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 983 |
+| Routed | 905 |
+| Unknown | 78 |
+| Timestamp failures | 60 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 695 |
+| DetailedLoggingStatus | 1 |
+| GameResult | 1 |
+| GameState | 597 |
+| Inventory | 2 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 2 |
+| Unknown | 10 |
