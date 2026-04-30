@@ -81,6 +81,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-25 | `session_2026-04-25_0841_deck-management-store.log` | PR #154 corpus coverage — deck CRUD, store/inbox/pack actions, server-kicked disconnect, 1 conceded Bo1 |
 | 2026-04-26 | `session_2026-04-26_2209.log` | Historic Bo1 (2-4) — live repro session for action log destruction-attribution and event-ordering bugs |
 | 2026-04-27 | `session_2026-04-27_2230.log` | Standard Bo1 (1-2) — verification session for PR #498/#499/#500 action log attribution fixes |
+| 2026-04-29 | `session_2026-04-29_2128.log` | Alchemy Bo1 (2-0) — Conjure-mechanic capture session |
 
 ---
 
@@ -1235,3 +1236,43 @@ Manual verification session for PR #498/#499/#500 (action log attribution fixes)
 | 1 | Perf | Idle CPU sustained ~14% of one core (memory stable at ~57 MB; no leak). Settled value, not startup transient |
 | 2 | Walker logging | INFO-level log shows annotation counts only, not per-event walker decisions (which path fired). Would help in-session verification |
 | 3 | Action log format asymmetry | Combat-damage SBA_Damage deaths render as "Y died" (no destroyer); spell-driven SBAs (Cut Down) render as "X destroyed Y". Asymmetric visibility of attribution |
+
+---
+
+### Session 2026-04-29_2128
+
+Alchemy Bo1 corpus-capture session focused on the Conjure mechanic. Played to surface various Conjure-trigger flavors (cards conjured into hand/library/battlefield) for parser and action log coverage. Won both games.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-29 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-29_2128.log` |
+| Format | Alchemy Bo1 |
+| Record | 2-0 |
+| Session log size (raw) | 8,719,745 (8.3 MB) |
+| Session log size (gzip) | 704,968 (~688 KB) |
+| Compression ratio | ~12.4:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 1,196 |
+| Routed | 1,110 |
+| Unknown | 86 |
+| Timestamp failures | 66 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 826 |
+| DetailedLoggingStatus | 1 |
+| GameResult | 2 |
+| GameState | 1,145 |
+| Inventory | 3 |
+| MatchState | 4 |
+| Rank | 3 |
+| Session | 2 |
+| Unknown | 14 |
