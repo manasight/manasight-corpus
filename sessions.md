@@ -83,6 +83,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-27 | `session_2026-04-27_2230.log` | Standard Bo1 (1-2) — verification session for PR #498/#499/#500 action log attribution fixes |
 | 2026-04-29 | `session_2026-04-29_2128.log` | Alchemy Bo1 (2-0) — Conjure-mechanic capture session |
 | 2026-04-29 | `session_2026-04-29_2201.log` | Alchemy Bo1 (1-0) — Spellbook + Conjure mechanic capture session |
+| 2026-04-29 | `session_2026-04-29_2311.log` | Standard Bo1 bot matches — mulligan stress testing from full hand down to empty hand |
 
 ---
 
@@ -1317,3 +1318,43 @@ Alchemy Bo1 corpus-capture session focused on the Spellbook mechanic, with addit
 | Rank | 2 |
 | Session | 2 |
 | Unknown | 10 |
+
+---
+
+### Session 2026-04-29_2311
+
+Standard Bo1 bot matches with mulligan stress testing — kept taking mulligans on each new game, going from a full opening hand down to an empty hand. Won each match until the hand was reduced to 3 or fewer cards.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-29 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-29_2311.log` |
+| Format | Standard Bo1 (bot matches) |
+| Record | Won until hand reached 3 or fewer cards (mulligan stress test) |
+| Session log size (raw) | 12,995,334 (12.4 MB) |
+| Session log size (gzip) | 1,174,944 (~1.1 MB) |
+| Compression ratio | ~11.1:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 1,793 |
+| Routed | 1,572 |
+| Unknown | 221 |
+| Timestamp failures | 199 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 919 |
+| DetailedLoggingStatus | 1 |
+| GameResult | 8 |
+| GameState | 2,229 |
+| Inventory | 9 |
+| MatchState | 16 |
+| Rank | 9 |
+| Session | 9 |
+| Unknown | 63 |
