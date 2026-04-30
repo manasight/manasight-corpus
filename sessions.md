@@ -84,6 +84,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-29 | `session_2026-04-29_2128.log` | Alchemy Bo1 (2-0) — Conjure-mechanic capture session |
 | 2026-04-29 | `session_2026-04-29_2201.log` | Alchemy Bo1 (1-0) — Spellbook + Conjure mechanic capture session |
 | 2026-04-29 | `session_2026-04-29_2311.log` | Standard Bo1 bot matches — mulligan stress testing from full hand down to empty hand |
+| 2026-04-30 | `session_2026-04-30_0000.log` | Yorion deck — 1 game, result not recorded |
 
 ---
 
@@ -1358,3 +1359,43 @@ Standard Bo1 bot matches with mulligan stress testing — kept taking mulligans 
 | Rank | 9 |
 | Session | 9 |
 | Unknown | 63 |
+
+---
+
+### Session 2026-04-30_0000
+
+Single game piloting a Yorion deck. Result was not recorded.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-30 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-30_0000.log` |
+| Format | Yorion deck |
+| Record | N/A (not recorded) |
+| Session log size (raw) | 6,656,133 (6.3 MB) |
+| Session log size (gzip) | 511,346 (~500 KB) |
+| Compression ratio | ~13.0:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 638 |
+| Routed | 555 |
+| Unknown | 83 |
+| Timestamp failures | 61 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 359 |
+| DetailedLoggingStatus | 1 |
+| GameResult | 1 |
+| GameState | 654 |
+| Inventory | 2 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 1 |
+| Unknown | 9 |
