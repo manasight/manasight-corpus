@@ -85,6 +85,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-29 | `session_2026-04-29_2201.log` | Alchemy Bo1 (1-0) — Spellbook + Conjure mechanic capture session |
 | 2026-04-29 | `session_2026-04-29_2311.log` | Standard Bo1 bot matches — mulligan stress testing from full hand down to empty hand |
 | 2026-04-30 | `session_2026-04-30_0000.log` | Yorion deck — 1 game, result not recorded |
+| 2026-04-30 | `session_2026-04-30_2304.log` | Standard Bo1 — opponent auto-conceded (healthy connection, opponent idle); rare edge-case log |
 
 ---
 
@@ -1399,3 +1400,48 @@ Single game piloting a Yorion deck. Result was not recorded.
 | Rank | 2 |
 | Session | 1 |
 | Unknown | 9 |
+
+### Session 2026-04-30_2304
+
+Standard Bo1 game where the opponent took no actions and auto-conceded. Connection was healthy on our side throughout. Rare edge case useful for verifying game-entry detection when opponent does nothing.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-04-30 |
+| MTGA Version | TBD |
+| Raw file | `session_2026-04-30_2304.log` |
+| Format | Standard Bo1 |
+| Record | 1-0 (opponent auto-conceded) |
+| Session log size (raw) | 3,132,390 (3.0 MB) |
+| Session log size (gzip) | 384,064 (~375 KB) |
+| Compression ratio | ~8.2:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 145 |
+| Routed | 52 |
+| Unknown | 93 |
+| Timestamp failures | 67 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 19 |
+| DeckCollection | 3 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 4 |
+| GameResult | 1 |
+| GameState | 9 |
+| MatchState | 2 |
+| Rank | 4 |
+| Session | 2 |
+| Unknown | 8 |
+
+#### Games
+
+| # | Format | Your Archetype | Opponent Colors | Result | Turns | P/D | Notes |
+|---|--------|----------------|-----------------|--------|:-----:|:---:|-------|
+| 1 | Standard Bo1 | Unknown | Unknown | Win | ~1 | ? | Opponent did nothing and auto-conceded |

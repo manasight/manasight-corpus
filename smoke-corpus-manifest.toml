@@ -203,3 +203,9 @@ filename      = "session_2026-04-30_0000.log"
 sha256        = "1a480d950152965718d5a94ee87360e45097b60c320e6673170f92f95279c3d2"
 size_bytes    = 6656133
 date_captured = "2026-04-30"
+
+[[files]]
+filename      = "session_2026-04-30_2304.log"
+sha256        = "eaab06f035f0e94418941334a1f1bb97d6a915560ca0aa63456562a3e2b7fe8b"
+size_bytes    = 3132390
+date_captured = "2026-04-30"
