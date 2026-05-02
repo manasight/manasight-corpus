@@ -209,3 +209,21 @@ filename      = "session_2026-04-30_2304.log"
 sha256        = "eaab06f035f0e94418941334a1f1bb97d6a915560ca0aa63456562a3e2b7fe8b"
 size_bytes    = 3132390
 date_captured = "2026-04-30"
+
+[[files]]
+filename      = "session_2026-05-01_1657_sealed-purchase.log"
+sha256        = "834d5834bc5c76ebe85ade4210cbd0a5bec73acb755461fcb196f288fc0bd717"
+size_bytes    = 2066213
+date_captured = "2026-05-01"
+
+[[files]]
+filename      = "session_2026-05-01_1715_sealed-deckbuild.log"
+sha256        = "a6fdef62f83651cc7b424a6f61e5367e0726cba0a39e4b74875fea436c5d2274"
+size_bytes    = 2030941
+date_captured = "2026-05-01"
+
+[[files]]
+filename      = "session_2026-05-01_1751_sealed-matches.log"
+sha256        = "bd1f178d16755a715b449995378898fc3b621b66cc4aa67a25049aee12c15a37"
+size_bytes    = 8170702
+date_captured = "2026-05-01"

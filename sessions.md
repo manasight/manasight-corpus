@@ -86,6 +86,9 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-04-29 | `session_2026-04-29_2311.log` | Standard Bo1 bot matches — mulligan stress testing from full hand down to empty hand |
 | 2026-04-30 | `session_2026-04-30_0000.log` | Yorion deck — 1 game, result not recorded |
 | 2026-04-30 | `session_2026-04-30_2304.log` | Standard Bo1 — opponent auto-conceded (healthy connection, opponent idle); rare edge-case log |
+| 2026-05-01 | `session_2026-05-01_1657_sealed-purchase.log` | Sealed entry: 1 SealedToken paid, 6-pack pool revealed (`Sealed_SOS_20260421`, Lorehold archetype) |
+| 2026-05-01 | `session_2026-05-01_1715_sealed-deckbuild.log` | Sealed deck construction: 40-card "Sealed Deck (3)" submitted via `EventSetDeckV3` |
+| 2026-05-01 | `session_2026-05-01_1751_sealed-matches.log` | Sealed Bo1 matches (2-0): 2 complete games of `Sealed_SOS_20260421`, both wins (concede + lethal) |
 
 ---
 
@@ -1445,3 +1448,129 @@ Standard Bo1 game where the opponent took no actions and auto-conceded. Connecti
 | # | Format | Your Archetype | Opponent Colors | Result | Turns | P/D | Notes |
 |---|--------|----------------|-----------------|--------|:-----:|:---:|-------|
 | 1 | Standard Bo1 | Unknown | Unknown | Win | ~1 | ? | Opponent did nothing and auto-conceded |
+
+---
+
+### Session 2026-05-01_1657_sealed-purchase
+
+Sealed event entry — paid 1 `SealedToken` to enter `Sealed_SOS_20260421` with the Lorehold archetype choice. The full 6-pack sealed pool was revealed in the `EventGetCourse` payload: 4× SOS main collation (`200060`) + 2× SOS bonus (`700035`) + 1× Special Guest (`700035001`) = 85 `grpId` entries. Scene transitioned `Home → SealedBoosterOpen → DeckBuilder`. Process exited before deck submission (deck construction continued in the next session, `2026-05-01_1715_sealed-deckbuild`). Source: archive `UTC_Log - 05-01-2026 23.57.07.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-05-01 |
+| MTGA Version | 2026.58.20.12269 |
+| Source | `UTC_Log - 05-01-2026 23.57.07.log` (archive) |
+| Raw file | `session_2026-05-01_1657_sealed-purchase.log` |
+| Format | Limited Sealed (entry phase only — no matches) |
+| Record | N/A — pre-match capture |
+| Session log size (raw, post-strip) | 2,066,213 (2.0 MB) |
+| Session log size (gzip) | 251,804 (~246 KB) |
+| Compression ratio | ~8.2:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 47 |
+| Routed | 4 |
+| Unknown | 43 |
+| Timestamp failures | 28 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| DeckCollection | 1 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 1 |
+| Rank | 1 |
+
+Low routed/total ratio is expected for the sealed-entry phase — most lines are HTTP API exchanges (`EventJoin`, `EventGetCoursesV2`, `OpenedSealedDeck` / `EventPayEntry` inventory updates) that the router does not currently dispatch as game events.
+
+---
+
+### Session 2026-05-01_1715_sealed-deckbuild
+
+Sealed deck construction phase for the same `Sealed_SOS_20260421` course. `EventSetDeckV3` + `DeckUpsertDeckV3` submitted "Sealed Deck (3)" with a 40-card MainDeck (73 distinct entries; format `DirectGameLimited`; sleeve `CardBack_SOS_457664`). No match play. Final scene transition was `FactionalizedEvent → DeckListViewer`. Source: archive `UTC_Log - 05-02-2026 00.15.14.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-05-01 |
+| MTGA Version | 2026.58.20.12269 |
+| Source | `UTC_Log - 05-02-2026 00.15.14.log` (archive) |
+| Raw file | `session_2026-05-01_1715_sealed-deckbuild.log` |
+| Format | Limited Sealed (deck construction only — no matches) |
+| Record | N/A — pre-match capture |
+| Session log size (raw, post-strip) | 2,030,941 (1.9 MB) |
+| Session log size (gzip) | 251,277 (~245 KB) |
+| Compression ratio | ~8.1:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 52 |
+| Routed | 3 |
+| Unknown | 49 |
+| Timestamp failures | 31 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| DeckCollection | 1 |
+| DetailedLoggingStatus | 1 |
+| Rank | 1 |
+
+Similar to the entry phase, deck-builder API exchanges (`EventSetDeckV3`, `DeckUpsertDeckV3`) are not currently routed as game events.
+
+---
+
+### Session 2026-05-01_1751_sealed-matches
+
+Sealed Bo1 match play for `Sealed_SOS_20260421` — 2 complete matches end-to-end, both won. Match 1 (matchId `017b1408-...`) ended via opponent concede (`ResultReason_Concede`). Match 2 (matchId `dbab7bda-...`) ended via lethal (`ResultReason_Game`); opponent's `platformId: iPad`. Both used `MatchWinCondition_SingleElimination` (Bo1) and `superFormat: SuperFormat_Limited`. Source: archive `UTC_Log - 05-02-2026 00.51.35.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-05-01 |
+| MTGA Version | 2026.58.20.12269 |
+| Source | `UTC_Log - 05-02-2026 00.51.35.log` (archive) |
+| Raw file | `session_2026-05-01_1751_sealed-matches.log` |
+| Format | Limited Sealed Bo1 |
+| Record | 2-0 |
+| Session log size (raw, post-strip) | 8,170,702 (7.8 MB) |
+| Session log size (gzip) | 693,025 (~677 KB) |
+| Compression ratio | ~11.8:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 1,636 |
+| Routed | 1,546 |
+| Unknown | 90 |
+| Timestamp failures | 69 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 770 |
+| DeckCollection | 3 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 2 |
+| GameState | 1450 |
+| MatchState | 4 |
+| Rank | 3 |
+| Session | 2 |
+| Unknown | 12 |
+
+#### Games
+
+| # | Format | Your Archetype | Opponent Colors | Result | Turns | P/D | Notes |
+|---|--------|----------------|-----------------|--------|:-----:|:---:|-------|
+| 1 | Sealed Bo1 | Lorehold (RW) | Unknown | Win | ? | ? | Opponent concede (`ResultReason_Concede`); matchId `017b1408-...` |
+| 2 | Sealed Bo1 | Lorehold (RW) | Unknown | Win | ? | ? | Lethal (`ResultReason_Game`); opponent on iPad; matchId `dbab7bda-...` |
+
+12 Unknown events in the matches log are worth investigating — may include sealed-specific signals not yet recognized by the router.
