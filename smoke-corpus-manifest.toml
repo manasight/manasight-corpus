@@ -227,3 +227,33 @@ filename      = "session_2026-05-01_1751_sealed-matches.log"
 sha256        = "bd1f178d16755a715b449995378898fc3b621b66cc4aa67a25049aee12c15a37"
 size_bytes    = 8170702
 date_captured = "2026-05-01"
+
+[[files]]
+filename      = "session_2026-05-06_0859_phantom-bootstrap-drift.log"
+sha256        = "c16c1401587e825b1784157b1ad690986226c41f5456b35cec6ded6cb9604edf"
+size_bytes    = 5912404
+date_captured = "2026-05-06"
+
+[[files]]
+filename      = "session_2026-05-06_1412_rename-collision-cancelled-cast.log"
+sha256        = "a67e7decac0e8658f9fe478f193598769be19b73307157d2bf5160bf384757e3"
+size_bytes    = 5982296
+date_captured = "2026-05-06"
+
+[[files]]
+filename      = "session_2026-05-06_1746_pr554-fix-delayed-collision-disproof.log"
+sha256        = "71486e62d12ef1c0127094d8dd89009c1f2ef2ffabfa94b166c43b6ba0768b32"
+size_bytes    = 5100902
+date_captured = "2026-05-06"
+
+[[files]]
+filename      = "session_2026-05-06_2224_parser-type-field-drop-trigger.log"
+sha256        = "f890a9788628056ec36fb5b1283c6be012194fc6744fc3a9616e9d159009daa5"
+size_bytes    = 3646288
+date_captured = "2026-05-06"
+
+[[files]]
+filename      = "session_2026-05-06_2344_stale-limbo-rollback-overclear.log"
+sha256        = "948f86c56f97917ded4bcad4b43baa70350f384983030be525a342114a04201f"
+size_bytes    = 3366364
+date_captured = "2026-05-06"

@@ -89,6 +89,11 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-05-01 | `session_2026-05-01_1657_sealed-purchase.log` | Sealed entry: 1 SealedToken paid, 6-pack pool revealed (`Sealed_SOS_20260421`, Lorehold archetype) |
 | 2026-05-01 | `session_2026-05-01_1715_sealed-deckbuild.log` | Sealed deck construction: 40-card "Sealed Deck (3)" submitted via `EventSetDeckV3` |
 | 2026-05-01 | `session_2026-05-01_1751_sealed-matches.log` | Sealed Bo1 matches (2-0): 2 complete games of `Sealed_SOS_20260421`, both wins (concede + lethal) |
+| 2026-05-06 | `session_2026-05-06_0859_phantom-bootstrap-drift.log` | First-game-of-day with 90 deck_tracker drift dumps (gap=-2 to -4); preserves older "phantom-deck-origin" failure mode for regression bisection |
+| 2026-05-06 | `session_2026-05-06_1412_rename-collision-cancelled-cast.log` | Standard match — original repro for the rename-collision bug (cancelled Torch the Tower → Fanatical Firebrand OIC overwrite); drove PR #558 |
+| 2026-05-06 | `session_2026-05-06_1746_pr554-fix-delayed-collision-disproof.log` | Disproof of PR #554's "relocate orphan to old_id" fix — initial cancel looked clean but Warleader's Call OIC + later diffDeleted reaped the orphan |
+| 2026-05-06 | `session_2026-05-06_2224_parser-type-field-drop-trigger.log` | Smoking gun for `manasight-parser#182` — diagnostic logging proved gameStateMessage.type is dropped, gating the rollback-aware fix off in production |
+| 2026-05-06 | `session_2026-05-06_2344_stale-limbo-rollback-overclear.log` | Smoking gun for `manasight-desktop#561` — full GSM payload capture of stale Limbo-history rollback over-clear (12 stale renamed_out IDs, 6 phantoms) |
 
 ---
 
@@ -1572,5 +1577,210 @@ Sealed Bo1 match play for `Sealed_SOS_20260421` — 2 complete matches end-to-en
 |---|--------|----------------|-----------------|--------|:-----:|:---:|-------|
 | 1 | Sealed Bo1 | Lorehold (RW) | Unknown | Win | ? | ? | Opponent concede (`ResultReason_Concede`); matchId `017b1408-...` |
 | 2 | Sealed Bo1 | Lorehold (RW) | Unknown | Win | ? | ? | Lethal (`ResultReason_Game`); opponent on iPad; matchId `dbab7bda-...` |
+
+---
+
+### Session 2026-05-06_0859_phantom-bootstrap-drift
+
+First-game-of-day session that produced 90 `deck_tracker` drift dumps in ~2 minutes with signature `gap=-2 to -4`, `missing=-3 to -6` (extra `is_deck_origin` instances created beyond `original_deck` size, ~47-48 unresolved-`grpId` library entries). Captured before the parser-type-field bug was understood; preserves the older "phantom-deck-origin" failure mode for regression bisection. Source: archive `UTC_Log - 05-06-2026 15.59.01.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-05-06 |
+| MTGA Version | 2026.58.20.12269 |
+| Source | `UTC_Log - 05-06-2026 15.59.01.log` (archive) |
+| Raw file | `session_2026-05-06_0859_phantom-bootstrap-drift.log` |
+| Format | Standard Bo1 (bootstrap drift capture) |
+| Record | N/A — drift-only capture |
+| Session log size (raw, post-strip) | 5,912,404 (5.6 MB) |
+| Session log size (gzip) | 592,543 (~579 KB) |
+| Compression ratio | ~10.0:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 740 |
+| Routed | 624 |
+| Unknown | 116 |
+| Timestamp failures | 95 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 427 |
+| DeckCollection | 4 |
+| DetailedLoggingStatus | 1 |
+| GameResult | 3 |
+| GameState | 651 |
+| MatchState | 6 |
+| Rank | 4 |
+| Session | 3 |
+| Unknown | 23 |
+
+---
+
+### Session 2026-05-06_1412_rename-collision-cancelled-cast
+
+Standard match where the user cast Torch the Tower (`grpId 86855`) at 14:25:47, the cast was rolled back (Full GSM at 14:25:57 returned source 164 to Hand, no `diffDeletedInstanceIds`), then casting Fanatical Firebrand at 14:26:19 triggered an OIC `orig=162 new=376` that silently overwrote the orphan at 376. Drift opened with `gap=+1, missing=+1` and persisted through end of game — the original repro for the rename-collision bug fixed in PR #558. Source: archive `UTC_Log - 05-06-2026 21.12.05.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-05-06 |
+| MTGA Version | 2026.58.20.12269 |
+| Source | `UTC_Log - 05-06-2026 21.12.05.log` (archive) |
+| Raw file | `session_2026-05-06_1412_rename-collision-cancelled-cast.log` |
+| Format | Standard Bo1 |
+| Record | TBD |
+| Session log size (raw, post-strip) | 5,982,296 (5.7 MB) |
+| Session log size (gzip) | 560,952 (~548 KB) |
+| Compression ratio | ~10.7:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 819 |
+| Routed | 734 |
+| Unknown | 85 |
+| Timestamp failures | 72 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 536 |
+| DeckCollection | 3 |
+| DetailedLoggingStatus | 1 |
+| GameResult | 2 |
+| GameState | 706 |
+| MatchState | 4 |
+| Rank | 3 |
+| Session | 2 |
+| Unknown | 20 |
+
+---
+
+### Session 2026-05-06_1746_pr554-fix-delayed-collision-disproof
+
+Test of v1.1.51 (PR #554's "relocate orphan to `old_id`" approach). User cancelled Torch the Tower at 17:55:49, the fix appeared to work at 17:55:52 (no immediate drift), but casting Warleader's Call at 17:58:52 then triggered OIC `orig=285 new=381` that re-collided when Arena later emitted `diffDeletedInstanceIds: [162]` and reaped the orphan. Confirmed PR #554 only delayed the bug rather than fixing it; led to PR #554 being closed and the parser-type-field investigation. Source: archive `UTC_Log - 05-07-2026 00.46.42.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-05-06 |
+| MTGA Version | 2026.58.20.12269 |
+| Source | `UTC_Log - 05-07-2026 00.46.42.log` (archive) |
+| Raw file | `session_2026-05-06_1746_pr554-fix-delayed-collision-disproof.log` |
+| Format | Standard Bo1 |
+| Record | TBD |
+| Session log size (raw, post-strip) | 5,100,902 (4.9 MB) |
+| Session log size (gzip) | 501,403 (~490 KB) |
+| Compression ratio | ~10.2:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 620 |
+| Routed | 537 |
+| Unknown | 83 |
+| Timestamp failures | 65 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 355 |
+| DeckCollection | 3 |
+| DetailedLoggingStatus | 1 |
+| GameResult | 2 |
+| GameState | 576 |
+| MatchState | 4 |
+| Rank | 3 |
+| Session | 2 |
+| Unknown | 14 |
+
+---
+
+### Session 2026-05-06_2224_parser-type-field-drop-trigger
+
+Test of v1.1.52 (PR #555 diagnostic logging). Game with cancelled Burst Lightning + Stadium Headliner / Voice of Victory token creation produced 31 drift dumps, all with `gap=+1, missing=+1`. Diagnostic trace immediately revealed every `step_7_5_rollback_detect gsm_id=N payload_type=game_state_message early_return=true` — proving manasight-parser drops the inner `gameStateMessage.type` field, so the rollback-aware fix's `payload["type"] == "GameStateType_Full"` gate never fires in production. Smoking gun for `manasight-parser#182` and `manasight-desktop#556`. Source: archive `UTC_Log - 05-07-2026 05.24.15.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-05-06 |
+| MTGA Version | 2026.58.20.12269 |
+| Source | `UTC_Log - 05-07-2026 05.24.15.log` (archive) |
+| Raw file | `session_2026-05-06_2224_parser-type-field-drop-trigger.log` |
+| Format | Standard Bo1 |
+| Record | TBD |
+| Session log size (raw, post-strip) | 3,646,288 (3.5 MB) |
+| Session log size (gzip) | 373,413 (~365 KB) |
+| Compression ratio | ~9.8:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 308 |
+| Routed | 248 |
+| Unknown | 60 |
+| Timestamp failures | 47 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 163 |
+| DeckCollection | 2 |
+| DetailedLoggingStatus | 1 |
+| GameResult | 1 |
+| GameState | 276 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 1 |
+| Unknown | 10 |
+
+---
+
+### Session 2026-05-06_2344_stale-limbo-rollback-overclear
+
+Test of v1.1.53 (PR #556 + PR #560 permanent diagnostics). Game with cancelled Burst Lightning + Stadium Headliner produced 73 drift dumps with `gap=-2, missing=-2`. With `MANASIGHT_DECK_TRACE_FULL_PAYLOAD=1` capturing every GSM, Python replay identified GSM 132 (Full snapshot, `msg_id=182`) as the trigger: Arena emitted 12 stale `renamed_out` source IDs in Limbo zone descriptors, step 7.5 over-cleared the skip-list, step 7 re-inserted 6 phantoms. Six phantom `instance_id`s: 161, 164, 280, 282, 289, 302. Smoking gun for `manasight-desktop#561` — captured GSM 131 + GSM 132 payloads are the test fixtures. Source: archive `UTC_Log - 05-07-2026 06.44.58.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-05-06 |
+| MTGA Version | 2026.58.20.12269 |
+| Source | `UTC_Log - 05-07-2026 06.44.58.log` (archive) |
+| Raw file | `session_2026-05-06_2344_stale-limbo-rollback-overclear.log` |
+| Format | Standard Bo1 |
+| Record | TBD |
+| Session log size (raw, post-strip) | 3,366,364 (3.2 MB) |
+| Session log size (gzip) | 363,126 (~355 KB) |
+| Compression ratio | ~9.3:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 283 |
+| Routed | 223 |
+| Unknown | 60 |
+| Timestamp failures | 47 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 140 |
+| DeckCollection | 2 |
+| DetailedLoggingStatus | 1 |
+| GameResult | 1 |
+| GameState | 248 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 1 |
+| Unknown | 10 |
 
 12 Unknown events in the matches log are worth investigating — may include sealed-specific signals not yet recognized by the router.
