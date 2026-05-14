@@ -94,6 +94,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-05-06 | `session_2026-05-06_1746_pr554-fix-delayed-collision-disproof.log` | Disproof of PR #554's "relocate orphan to old_id" fix — initial cancel looked clean but Warleader's Call OIC + later diffDeleted reaped the orphan |
 | 2026-05-06 | `session_2026-05-06_2224_parser-type-field-drop-trigger.log` | Smoking gun for `manasight-parser#182` — diagnostic logging proved gameStateMessage.type is dropped, gating the rollback-aware fix off in production |
 | 2026-05-06 | `session_2026-05-06_2344_stale-limbo-rollback-overclear.log` | Smoking gun for `manasight-desktop#561` — full GSM payload capture of stale Limbo-history rollback over-clear (12 stale renamed_out IDs, 6 phantoms) |
+| 2026-05-13 | `session_2026-05-13_0952_recycle-defect-trigger.log` | Canonical example of the truncation→recycle drift defect (manasight-docs#657 epic); 1 `[Message summarized…]` marker + recycled instance_id 549 across the truncation, 53 drift WARNs follow |
 
 ---
 
@@ -1784,3 +1785,48 @@ Test of v1.1.53 (PR #556 + PR #560 permanent diagnostics). Game with cancelled B
 | Unknown | 10 |
 
 12 Unknown events in the matches log are worth investigating — may include sealed-specific signals not yet recognized by the router.
+
+---
+
+### Session 2026-05-13_0952_recycle-defect-trigger
+
+Canonical example of the truncation→recycle drift defect identified during `/debug-drift` verification of `manasight-desktop#607`. Standard Bo1 vs Sparky (1-0). During turn 6 + turn 8 the user cast Indris, the Hydrostatic Surge twice (4 + 4 conjures into library each, budget grows to 8). At 10:01:12 local (gsm=459, the Voltage Surge resolve event), MTGA emitted a `[Message summarized because one or more GameStateMessages exceeded the 50 GameObject or 50 Annotation limit.]` marker (63 GameObjects + 4 Annotations) — parser silently dropped the GSM. At gsm=473 Arena recycled instance_id 549 (originally cast Voltage Surge instance from gsm=458) for a discard of Slickshot Show-Off; deck_tracker's `rename_instances` overwrote the orphaned 549 entry, producing 53 contiguous `(derived_total=N+1 != expected=N)` drift WARNs across gsm 473-525. Drift "self-heals" at gsm=526 via a coincidental phantom-insert. Full investigation at `manasight-docs/docs/research/2026-05-13_player-log-truncation-correlation.md`. Source: archive `UTC_Log - 05-13-2026 16.52.13.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-05-13 |
+| MTGA Version | TBD |
+| Source | `UTC_Log - 05-13-2026 16.52.13.log` (archive) |
+| Raw file | `session_2026-05-13_0952_recycle-defect-trigger.log` |
+| Format | Standard Bo1 (vs Sparky) |
+| Record | 1-0 |
+| Session log size (raw, post-strip) | 5,961,034 (5.7 MB) |
+| Session log size (gzip) | 518,309 (~507 KB) |
+| Compression ratio | ~11.5:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 830 |
+| Routed | 769 |
+| Unknown | 61 |
+| Timestamp failures | 46 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 596 |
+| DeckCollection | 2 |
+| DetailedLoggingStatus | 1 |
+| GameResult | 1 |
+| GameState | 563 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 1 |
+| Unknown | 9 |
+
+Deck: Grixis spells-leaning Standard (Indris, the Hydrostatic Surge; Voltage Surge; Think Twice; Stock Up; Shellfish Scholar; Fear of Missing Out; Slickshot Show-Off; Lightning Bolt; Dazzling Flameweaver; Torch the Tower; Three Steps Ahead; Refute; Spell Pierce). 60-card deck verified via original_deck = 24 unique grp_ids.
+
+Used as the regression-test fixture for the deck_tracker recycle-defect fix track (`manasight-docs#657` epic, child issues `#658`/`#659`/`#660`).
