@@ -257,3 +257,9 @@ filename      = "session_2026-05-06_2344_stale-limbo-rollback-overclear.log"
 sha256        = "948f86c56f97917ded4bcad4b43baa70350f384983030be525a342114a04201f"
 size_bytes    = 3366364
 date_captured = "2026-05-06"
+
+[[files]]
+filename      = "session_2026-05-13_0952_recycle-defect-trigger.log"
+sha256        = "a7123990a14c8ea3e8e700c41a08b28b9b0c3ade7ef1aea89c4e84725efc301e"
+size_bytes    = 5961034
+date_captured = "2026-05-13"
