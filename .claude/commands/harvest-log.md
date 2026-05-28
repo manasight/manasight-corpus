@@ -16,6 +16,8 @@ UTC_Log content is identical to Player.log content for the same process, modulo 
 
 Archive log directory discovery follows `manasight-desktop/src-tauri/src/archive_logs/mod.rs:120-200`.
 
+> **Native-Linux note:** the Rust resolver `resolve_archive_log_dir` (`archive_logs/mod.rs:143`) currently has only an env-override step plus `#[cfg(target_os = "windows")]` / `#[cfg(target_os = "macos")]` arms — **no native-Linux arm** (it relies on `MANASIGHT_MTGA_INSTALL_DIR` on Linux, else skips). Step 1 below adds standalone Steam/Proton auto-discovery for native Linux so this skill works without that env var; the Rust-side gap is a separate desktop follow-up.
+
 ## Arguments
 
 `$ARGUMENTS` is `[<utc-substring>] [<session-suffix>]`:
@@ -37,14 +39,48 @@ Examples:
 Resolve the archive directory:
 ```bash
 PLATFORM=$(uname -s)
+ARCHIVE_DIR=""
 if [ -n "$MANASIGHT_MTGA_INSTALL_DIR" ]; then
+  # Explicit override (any platform) — point at the MTGA install root.
   ARCHIVE_DIR="$MANASIGHT_MTGA_INSTALL_DIR/MTGA_Data/Logs/Logs"
 elif [ "$PLATFORM" = "Linux" ] && grep -qi microsoft /proc/version 2>/dev/null; then
+  # Windows via WSL
   ARCHIVE_DIR="/mnt/c/Program Files/Wizards of the Coast/MTGA/MTGA_Data/Logs/Logs"
+elif [ "$PLATFORM" = "Linux" ]; then
+  # Native Linux: MTGA runs under Steam/Proton (or Lutris). UTC_Logs live in the
+  # MTGA *install* dir (steamapps/common/MTGA/MTGA_Data/Logs/Logs), NOT the Proton
+  # prefix's AppData. Discover the Steam library hosting MTGA (app 2141910) by
+  # parsing libraryfolders.vdf — it is not always the default ~/.local/share/Steam.
+  # (Same discovery as manasight-parser's Linux log discovery / PR #793.)
+  STEAM_DEFAULT="$HOME/.local/share/Steam"
+  VDF="$STEAM_DEFAULT/steamapps/libraryfolders.vdf"
+  MTGA_LIB=""
+  if [ -f "$VDF" ]; then
+    MTGA_LIB=$(awk '
+      /"path"/ { gsub(/"/, "", $2); path=$2 }
+      /"apps"/ { in_apps=1 }
+      in_apps && /"2141910"/ { print path; exit }
+      /^[[:space:]]*}[[:space:]]*$/ { in_apps=0 }
+    ' "$VDF")
+  fi
+  # Fallback: default library if it actually has the MTGA install.
+  [ -z "$MTGA_LIB" ] && [ -d "$STEAM_DEFAULT/steamapps/common/MTGA" ] && MTGA_LIB="$STEAM_DEFAULT"
+  if [ -n "$MTGA_LIB" ] && [ -d "$MTGA_LIB/steamapps/common/MTGA/MTGA_Data/Logs/Logs" ]; then
+    ARCHIVE_DIR="$MTGA_LIB/steamapps/common/MTGA/MTGA_Data/Logs/Logs"
+  else
+    # Lutris fallback (UNVERIFIED — manasight/manasight-docs#772); guarded by the
+    # -d check below, so a wrong guess simply falls through to the error.
+    ARCHIVE_DIR="$HOME/Games/magic-the-gathering-arena/drive_c/Program Files/Wizards of the Coast/MTGA/MTGA_Data/Logs/Logs"
+  fi
 elif [ "$PLATFORM" = "Darwin" ]; then
   ARCHIVE_DIR="$HOME/Library/Application Support/com.wizards.mtga/Logs/Logs"
 fi
-[ -d "$ARCHIVE_DIR" ] || { echo "Archive dir not found: $ARCHIVE_DIR"; exit 1; }
+[ -n "$ARCHIVE_DIR" ] && [ -d "$ARCHIVE_DIR" ] || {
+  echo "Archive dir not found: ${ARCHIVE_DIR:-<unresolved>}"
+  echo "On native Linux, set MANASIGHT_MTGA_INSTALL_DIR to the MTGA install root"
+  echo "(e.g. <steam_library>/steamapps/common/MTGA) if auto-discovery missed."
+  exit 1
+}
 ```
 
 Parse `$ARGUMENTS` into `UTC_SUBSTRING` and `SUFFIX`:
