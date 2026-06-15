@@ -95,6 +95,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-05-06 | `session_2026-05-06_2224_parser-type-field-drop-trigger.log` | Smoking gun for `manasight-parser#182` — diagnostic logging proved gameStateMessage.type is dropped, gating the rollback-aware fix off in production |
 | 2026-05-06 | `session_2026-05-06_2344_stale-limbo-rollback-overclear.log` | Smoking gun for `manasight-desktop#561` — full GSM payload capture of stale Limbo-history rollback over-clear (12 stale renamed_out IDs, 6 phantoms) |
 | 2026-05-13 | `session_2026-05-13_0952_recycle-defect-trigger.log` | Canonical example of the truncation→recycle drift defect (manasight-docs#657 epic); 1 `[Message summarized…]` marker + recycled instance_id 549 across the truncation, 53 drift WARNs follow |
+| 2026-06-14 | `session_2026-06-14_1409_name-a-card.log` | Standard play Bo1, 1-0 (Boros aggro vs Mono-B devotion). Regression fixture for `manasight-parser#221` — Petrified Hamlet "name a card" (`AnnotationType_ChoiceResult` Domain=13 / `LinkInfo ChooseLinkType=CardName`, named card = Agna Qel'a, locId 1071244) |
 
 ---
 
@@ -1830,3 +1831,49 @@ Canonical example of the truncation→recycle drift defect identified during `/d
 Deck: Grixis spells-leaning Standard (Indris, the Hydrostatic Surge; Voltage Surge; Think Twice; Stock Up; Shellfish Scholar; Fear of Missing Out; Slickshot Show-Off; Lightning Bolt; Dazzling Flameweaver; Torch the Tower; Three Steps Ahead; Refute; Spell Pierce). 60-card deck verified via original_deck = 24 unique grp_ids.
 
 Used as the regression-test fixture for the deck_tracker recycle-defect fix track (`manasight-docs#657` epic, child issues `#658`/`#659`/`#660`).
+
+---
+
+### Session 2026-06-14_1409_name-a-card
+
+Standard play Bo1, 1-0. Boros (R/W) aggro vs Mono-Black devotion. Captured during a `/debug-game` session as the regression fixture for the **"name a card" action-log gap** — the parser extracts the choice annotations (`manasight-parser#221`) and a downstream desktop consumer surfaces the named card in the action log. On turn 1 the opponent's **Petrified Hamlet** (grpId 102718, instance 291) resolved its *"choose a land card name"* ability and named **Agna Qel'a**. The choice rides on `AnnotationType_ChoiceResult` (`Choice_Domain=13` = CardName, `Choice_Value=1071244`) correlated via `AnnotationType_LinkInfo` (`ChooseLinkType="CardName"`, `sourceAbilityGRPID=204544`) — both annotation types are currently dropped by the parser's closed allow-list, so this session exercises the fix end-to-end. Source: archive `UTC_Log - 06-14-2026 21.09.38.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-14 |
+| MTGA Version | TBD |
+| Source | `UTC_Log - 06-14-2026 21.09.38.log` (archive) |
+| Raw file | `session_2026-06-14_1409_name-a-card.log` |
+| Format | Standard play Bo1 (vs Mono-B devotion) |
+| Record | 1-0 |
+| Session log size (raw, post-strip) | 4,294,477 (4.1 MB) |
+| Session log size (gzip) | 420,717 (~411 KB) |
+| Compression ratio | ~10.2:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 508 |
+| Routed | 426 |
+| Unknown | 82 |
+| Timestamp failures | 65 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 118 |
+| DeckCollection | 2 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 1 |
+| GameState | 563 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 2 |
+| Unknown | 7 |
+
+Deck (yours): Boros (R/W) aggro — Voice of Victory, Raphael Tough Turtle, Stadium Headliner, Shocking Sharpshooter, Fanatical Firebrand, Howlsquad Heavy, Warleader's Call, Sunbillow Verge, Mountain. Opponent: Mono-Black devotion — Day of Black Sun, Unholy Annex // Ritual Chamber, Soul-Guide Lantern, Duress, Requiting Hex, Strategic Betrayal, Petrified Hamlet, Fountainport, Deathcap Glade.
+
+Used as the regression-test fixture for the "name a card" action-log fix — parser-side extraction lands in `manasight-parser#221`; downstream desktop surfacing is tracked separately.

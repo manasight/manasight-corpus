@@ -263,3 +263,9 @@ filename      = "session_2026-05-13_0952_recycle-defect-trigger.log"
 sha256        = "a7123990a14c8ea3e8e700c41a08b28b9b0c3ade7ef1aea89c4e84725efc301e"
 size_bytes    = 5961034
 date_captured = "2026-05-13"
+
+[[files]]
+filename      = "session_2026-06-14_1409_name-a-card.log"
+sha256        = "b1bc45d369437d5c632f7d0baae7803d039bff897b7cb4ab04d9d858c77ba8bb"
+size_bytes    = 4294477
+date_captured = "2026-06-14"
