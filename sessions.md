@@ -96,6 +96,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-05-06 | `session_2026-05-06_2344_stale-limbo-rollback-overclear.log` | Smoking gun for `manasight-desktop#561` — full GSM payload capture of stale Limbo-history rollback over-clear (12 stale renamed_out IDs, 6 phantoms) |
 | 2026-05-13 | `session_2026-05-13_0952_recycle-defect-trigger.log` | Canonical example of the truncation→recycle drift defect (manasight-docs#657 epic); 1 `[Message summarized…]` marker + recycled instance_id 549 across the truncation, 53 drift WARNs follow |
 | 2026-06-14 | `session_2026-06-14_1409_name-a-card.log` | Standard play Bo1, 1-0 (Boros aggro vs Mono-B devotion). Regression fixture for `manasight-parser#221` — Petrified Hamlet "name a card" (`AnnotationType_ChoiceResult` Domain=13 / `LinkInfo ChooseLinkType=CardName`, named card = Agna Qel'a, locId 1071244) |
+| 2026-06-17 | `session_2026-06-17_1543_alchemy.log` | Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Alchemy"` carried by **EventSetDeckV3** with `EventName:"Alchemy_Play"` |
 
 ---
 
@@ -1877,3 +1878,48 @@ Standard play Bo1, 1-0. Boros (R/W) aggro vs Mono-Black devotion. Captured durin
 Deck (yours): Boros (R/W) aggro — Voice of Victory, Raphael Tough Turtle, Stadium Headliner, Shocking Sharpshooter, Fanatical Firebrand, Howlsquad Heavy, Warleader's Call, Sunbillow Verge, Mountain. Opponent: Mono-Black devotion — Day of Black Sun, Unholy Annex // Ritual Chamber, Soul-Guide Lantern, Duress, Requiting Hex, Strategic Betrayal, Petrified Hamlet, Fountainport, Deathcap Glade.
 
 Used as the regression-test fixture for the "name a card" action-log fix — parser-side extraction lands in `manasight-parser#221`; downstream desktop surfacing is tracked separately.
+
+---
+
+### Session 2026-06-17_1543_alchemy
+
+Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** deck-submission Format sample for the corpus — captured for `manasight/manasight-corpus#36` to unblock `manasight/manasight-parser#232`. Confirmed live: `Format:"Alchemy"` carried by an **EventSetDeckV3** request with `EventName:"Alchemy_Play"`. Confirms Alchemy routes its precise format through the deck-submission path. Source: archive `UTC_Log - 06-17-2026 22.43.39.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | TBD |
+| Source | `UTC_Log - 06-17-2026 22.43.39.log` (archive) |
+| Raw file | `session_2026-06-17_1543_alchemy.log` |
+| Format | Alchemy (Bo1, Play queue — `EventName: "Alchemy_Play"`) |
+| Record | 1-0 (win) |
+| Session log size (raw, post-strip) | 3,768,657 (3.59 MB) |
+| Session log size (gzip) | 395,239 (~386 KB) |
+| Compression ratio | ~9.5:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 339 |
+| Routed | 273 |
+| Unknown | 66 |
+| Timestamp failures | 47 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 144 |
+| DeckCollection | 2 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 1 |
+| GameState | 306 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 1 |
+| Unknown | 6 |
+
+Deck (yours): Bant (G/W/U) control/conjure — "Bant Conjure" (DeckId `aa16b1ab-...`). Submitted via **EventSetDeckV3** with `EventName:"Alchemy_Play"`; the deck `Summary.Attributes` carry `Format:"Alchemy"`. This is the corpus's first sample proving Alchemy's precise format is surfaced through the deck-submission path (not just the generic event/queue name) — directly relevant to `manasight-parser#232`.
+
