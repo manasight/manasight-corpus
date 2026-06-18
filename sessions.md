@@ -97,6 +97,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-05-13 | `session_2026-05-13_0952_recycle-defect-trigger.log` | Canonical example of the truncation→recycle drift defect (manasight-docs#657 epic); 1 `[Message summarized…]` marker + recycled instance_id 549 across the truncation, 53 drift WARNs follow |
 | 2026-06-14 | `session_2026-06-14_1409_name-a-card.log` | Standard play Bo1, 1-0 (Boros aggro vs Mono-B devotion). Regression fixture for `manasight-parser#221` — Petrified Hamlet "name a card" (`AnnotationType_ChoiceResult` Domain=13 / `LinkInfo ChooseLinkType=CardName`, named card = Agna Qel'a, locId 1071244) |
 | 2026-06-17 | `session_2026-06-17_1543_alchemy.log` | Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Alchemy"` carried by **EventSetDeckV3** with `EventName:"Alchemy_Play"` |
+| 2026-06-17 | `session_2026-06-17_1601_pioneer.log` | Pioneer Bo1 match via the **Explorer_Play** queue (1 game). First `Explorer_Play` sample (`manasight-corpus#36` / `manasight-parser#232`). FINDING: deck "Boros Tokens" is Standard-registered, so its EventSetDeckV3 `Format` attribute reads **`Standard`**, NOT the queue/match format — deck `Format` = the deck's registered build format, while the precise match format rides on `EventName` (`Explorer_Play`) |
 
 ---
 
@@ -1922,4 +1923,51 @@ Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** deck-submis
 | Unknown | 6 |
 
 Deck (yours): Bant (G/W/U) control/conjure — "Bant Conjure" (DeckId `aa16b1ab-...`). Submitted via **EventSetDeckV3** with `EventName:"Alchemy_Play"`; the deck `Summary.Attributes` carry `Format:"Alchemy"`. This is the corpus's first sample proving Alchemy's precise format is surfaced through the deck-submission path (not just the generic event/queue name) — directly relevant to `manasight-parser#232`.
+
+---
+
+### Session 2026-06-17_1601_pioneer
+
+Pioneer match via the **Explorer_Play** queue (Bo1, Play; Arena's internal name for Pioneer is still "Explorer"). 1 game played (result not recorded). First `Explorer_Play` queue sample in the corpus — captured for `manasight/manasight-corpus#36`.
+
+**IMPORTANT FINDING for `manasight/manasight-parser#232`:** the submitted deck ("Boros Tokens") is **Standard-registered**, so the EventSetDeckV3 `Format` attribute reads **`Standard`**, NOT the queue/match format. This shows the deck `Format` attribute = the deck's registered/build format (narrowest legal), not the match format; for format-named queues the precise format is carried by `EventName` (`Explorer_Play`), and the deck `Format` can under-report. Contrast with the `2026-06-17_1543_alchemy` session, where the Alchemy-registered deck's `Format` happened to match the queue. Source: archive `UTC_Log - 06-17-2026 23.01.25.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | TBD |
+| Source | `UTC_Log - 06-17-2026 23.01.25.log` (archive) |
+| Raw file | `session_2026-06-17_1601_pioneer.log` |
+| Format | Pioneer (Bo1, Play queue — internal `EventName: "Explorer_Play"`; Arena's internal name for Pioneer is still "Explorer") |
+| Deck / archetype | Boros Tokens (a Standard-REGISTERED deck) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 5,213,839 (4.97 MB) |
+| Session log size (gzip) | 487,372 (~476 KB) |
+| Compression ratio | ~10.7:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 833 |
+| Routed | 765 |
+| Unknown | 68 |
+| Timestamp failures | 53 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 275 |
+| DeckCollection | 2 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 1 |
+| GameState | 769 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 1 |
+| Unknown | 10 |
+
+Deck (yours): "Boros Tokens" (a **Standard-registered** deck). Submitted via **EventSetDeckV3** with `EventName:"Explorer_Play"`; the deck `Summary.Attributes` carry `Format:"Standard"` (the deck's registered build format), even though the match format is Pioneer. This is the corpus's first `Explorer_Play` sample and demonstrates that the deck-submission `Format` attribute can under-report the actual match format — the precise format must be read from `EventName`. Directly relevant to `manasight-parser#232`.
 

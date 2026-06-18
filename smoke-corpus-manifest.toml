@@ -275,3 +275,9 @@ filename      = "session_2026-06-17_1543_alchemy.log"
 sha256        = "cb5603646163a9d082f1e68e12230ea090e0c07a7816a1e3360f35527f899c4d"
 size_bytes    = 3768657
 date_captured = "2026-06-17"
+
+[[files]]
+filename      = "session_2026-06-17_1601_pioneer.log"
+sha256        = "76479d7f6f7fbc99578943bbb1ce6bb3e38e89db29c77400c234a4255a58f2d2"
+size_bytes    = 5213839
+date_captured = "2026-06-17"
