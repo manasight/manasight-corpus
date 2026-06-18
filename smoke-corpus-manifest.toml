@@ -311,3 +311,15 @@ filename      = "session_2026-06-17_1858_pioneer-ranked-bo3.log"
 sha256        = "1ca0eac048874bba19d0fb3676f7a48432322869ed05de38d60c9627002e1b81"
 size_bytes    = 4390963
 date_captured = "2026-06-17"
+
+[[files]]
+filename      = "session_2026-06-17_1833_standard-brawl.log"
+sha256        = "ba6563b0c5ff98cd3b88f575813a537382bb458714f5146588c061f92691c9b0"
+size_bytes    = 5651607
+date_captured = "2026-06-17"
+
+[[files]]
+filename      = "session_2026-06-17_1847_pioneer-ranked.log"
+sha256        = "ba41283d737730c68adb53ae4ead0971b9f649ba4ea0567f6f0d5f0fc97d00cc"
+size_bytes    = 3714764
+date_captured = "2026-06-17"

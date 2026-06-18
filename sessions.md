@@ -103,6 +103,8 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-06-17 | `session_2026-06-17_1655_timeless.log` | Timeless Bo1 Play match, Mardu Energy (Lurrus companion), 1 game played. First **Timeless** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Timeless"` carried by **EventSetDeckV3** with `EventName:"Timeless_Play"`. Confirms Timeless is a distinct deck-`Format` value (unlike Explorer/Pioneer → `Historic`) |
 | 2026-06-17 | `session_2026-06-17_1615_pioneer-historic.log` | Pioneer Bo1 Play (`EventName:"Explorer_Play"`), Rakdos Fling, 1 game (result not recorded). KEY `manasight-parser#232` evidence — a Pioneer-legal deck submits with deck `Format:"Historic"`, proving non-Standard Pioneer collapses to Historic; only `Explorer_Play` signals Pioneer (`manasight-corpus#36`) |
 | 2026-06-17 | `session_2026-06-17_1601_pioneer.log` | Pioneer Bo1 match via the **Explorer_Play** queue (1 game). First `Explorer_Play` sample (`manasight-corpus#36` / `manasight-parser#232`). FINDING: deck "Boros Tokens" is Standard-registered, so its EventSetDeckV3 `Format` attribute reads **`Standard`**, NOT the queue/match format — deck `Format` = the deck's registered build format, while the precise match format rides on `EventName` (`Explorer_Play`) |
+| 2026-06-17 | `session_2026-06-17_1833_standard-brawl.log` | Standard Brawl Bo1 (`EventName:"Play_Brawl"`), "Getting the Gaang Together" 60-card singleton+commander, 1 game. First **Standard Brawl** sample (`manasight-corpus#36`) — `Format:"Brawl"` (distinct from `HistoricBrawl`) via **EventSetDeckV3**; resolves the phantom-`Play_Brawl` hole; `Deck.CommandZone` populated |
+| 2026-06-17 | `session_2026-06-17_1847_pioneer-ranked.log` | Pioneer Ranked Bo1 (`EventName:"Explorer_Ladder"`, `ranked=true`), Rakdos Fling, 1 game. First authoritative ranked non-Standard `*_Ladder` sample (`manasight-corpus#36`) — deck `Format:"Historic"` (non-Standard Pioneer collapses to Historic) |
 
 ---
 
@@ -2200,3 +2202,93 @@ First authoritative **`Traditional_<Fmt>_Ladder`** sample in the corpus (the ent
 Deck (yours): **Rakdos Fling** (DeckId `46309f58-2bb1-4a46-89a3-575bd6fd93af`) — an Explorer/Pioneer-legal build (the Traditional Pioneer ladder accepted it) but registered as **Historic**. Submitted via **EventSetDeckV3** with `EventName:"Traditional_Explorer_Ladder"`, while the deck `Summary.Attributes` carry `Format:"Historic"`. The single (EventName, Format) deck-submission pair in this log is `(Traditional_Explorer_Ladder, Historic)`. The GRE `matchWinCondition` is `MatchWinCondition_Best2of3` (Bo3), confirming Traditional = best-of-3. This is the corpus's first `Traditional_<Fmt>_Ladder` sample — the entire non-Standard Traditional family was previously grammar-predicted only. It proves the `[Traditional_][<format>_]<queue>` grammar production composes for a non-Standard format (mode=TraditionalRanked, format=Pioneer from `EventName`, ranked=true, best_of=3), consistent with the Bo1 `Explorer_Ladder`/`Explorer_Play` captures where the same Pioneer deck collapses to `Historic`. Pairs with `session_2026-06-17_1847_pioneer-ranked` (Bo1 `Explorer_Ladder`). Captured for `manasight/manasight-corpus#36`; design: `docs/architecture/match-format-event-decoding.md` (manasight-docs).
 
 Deck (yours): "Boros Tokens" (R/W, DeckId `4c088509-...`). Submitted via the **only** `==> EventSetDeckV3` request in the log, with `EventName:"Constructed_Event_2026"`; the deck `Summary.Attributes` carry `Format:"Standard"`. The many other `EventName` strings in the log (`Alchemy_Play`, `Historic_Ladder`, `Constructed_BestOf3`, …) are event-catalog listings from `EventGetCourses`-style payloads, not deck submissions. This is the corpus's first `_Event`-family deck-submission sample, validating the `Constructed_Event_<year>` grammar production for `manasight/manasight-corpus#36`.
+
+---
+
+### Session 2026-06-17_1833_standard-brawl
+
+First **Standard Brawl** sample in the corpus. `EventName:"Play_Brawl"` → deck `Format:"Brawl"` (distinct from `HistoricBrawl`). This **resolves the schema-validation "phantom `Play_Brawl`" hole**: `Play_Brawl` previously appeared only in `EventGetCoursesV2` course-catalog noise; this is the first authoritative `Play_Brawl` submission, so `format=Brawl` is `format_source=EventName`, not a convention guess. 60-card singleton + commander (`Deck.CommandZone` populated). Pairs with `session_2026-06-17_1708_brawl` (`Play_Brawl_Historic` → `HistoricBrawl`, 100-card) — both Brawl variants now authoritatively confirmed. Captured for `manasight/manasight-corpus#36`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | TBD |
+| Source | `UTC_Log - 06-18-2026 01.33.29.log` (archive) |
+| Raw file | `session_2026-06-17_1833_standard-brawl.log` |
+| Format | Standard Brawl (Bo1 — `EventName: "Play_Brawl"`); 60-card singleton + commander |
+| Deck / archetype | "Getting the Gaang Together" (60-card singleton; commander cardId 97511) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 5,651,607 (5.39 MB) |
+| Session log size (gzip) | 515,178 (~0.49 MB) |
+| Compression ratio | ~11.0:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 966 |
+| Routed | 851 |
+| Unknown | 115 |
+| Timestamp failures | 83 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| GameState | 821 |
+| ClientAction | 347 |
+| DeckCollection | 2 |
+| EventLifecycle | 2 |
+| MatchState | 2 |
+| Rank | 2 |
+| GameResult | 1 |
+| DetailedLoggingStatus | 1 |
+| Session | 1 |
+| Unknown | 10 |
+
+Deck (yours): "Getting the Gaang Together" (60-card singleton + commander). Submitted via **EventSetDeckV3** with `EventName:"Play_Brawl"`; the deck `Summary.Attributes` carry `Format:"Brawl"`, and `Deck.CommandZone` holds the commander (`[{cardId: 97511, quantity: 1}]`) alongside a 59-card `MainDeck` (60 total). This is the corpus's first authoritative `Play_Brawl` submission, confirming `Play_Brawl → Brawl` (the smaller "Standard Brawl") as distinct from `Play_Brawl_Historic → HistoricBrawl` — and resolving the schema-validation "phantom `Play_Brawl`" hole (it was previously seen only in noisy `EventGetCoursesV2` course listings).
+
+---
+
+### Session 2026-06-17_1847_pioneer-ranked
+
+First authoritative **ranked, non-Standard** sample in the corpus. `EventName:"Explorer_Ladder"` (Pioneer Ranked Bo1, `ranked=true`) → deck `Format:"Historic"` (the Rakdos Fling Pioneer deck collapses to Historic, consistent with the unranked `Explorer_Play` capture). Previously `Explorer_Ladder` appeared only in `EventGetCoursesV2` course-catalog noise; this is the first authoritative submission to it, confirming the `<Fmt>_Ladder` ranked-queue family and reaffirming that Pioneer is identifiable only via `EventName` (no `Explorer` deck-`Format` exists). Pairs with `session_2026-06-17_1858_pioneer-ranked-bo3` (`Traditional_Explorer_Ladder`, Bo3). Captured for `manasight/manasight-corpus#36`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | 2026.60.0.4950 |
+| Source | `UTC_Log - 06-18-2026 01.47.31.log` (archive) |
+| Raw file | `session_2026-06-17_1847_pioneer-ranked.log` |
+| Format | Pioneer Ranked Bo1 (`EventName: "Explorer_Ladder"`, `ranked=true`, `MatchWinCondition_SingleElimination`) |
+| Deck / archetype | Rakdos Fling (Explorer/Pioneer-legal; registers as Historic) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 3,714,764 (3.54 MB) |
+| Session log size (gzip) | 407,487 (~398 KB) |
+| Compression ratio | ~9.1:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 478 |
+| Routed | 410 |
+| Unknown | 68 |
+| Timestamp failures | 51 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| GameState | 305 |
+| ClientAction | 232 |
+| DeckCollection | 2 |
+| EventLifecycle | 2 |
+| MatchState | 2 |
+| Rank | 2 |
+| GameResult | 1 |
+| DetailedLoggingStatus | 1 |
+| Session | 1 |
+| Unknown | 9 |
+
+Deck (yours): "Rakdos Fling" — an Explorer/Pioneer-legal build (the ranked Pioneer ladder accepted it) but registered as **Historic**. Submitted via **EventSetDeckV3** with `EventName:"Explorer_Ladder"`, while the deck `Summary.Attributes` carry `Format:"Historic"`. The single (EventName, Format) deck-submission pair is `(Explorer_Ladder, Historic)`. This is the corpus's first authoritative *ranked* non-Standard sample — confirming the `<Fmt>_Ladder` ranked-queue family and that the Pioneer signal lives only on `EventName` (the deck collapses to `Historic`). Pairs with the unranked `session_2026-06-17_1615_pioneer-historic` (`Explorer_Play`) and the Bo3 `session_2026-06-17_1858_pioneer-ranked-bo3` (`Traditional_Explorer_Ladder`).
