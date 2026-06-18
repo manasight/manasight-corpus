@@ -1930,61 +1930,19 @@ Deck (yours): Bant (G/W/U) control/conjure — "Bant Conjure" (DeckId `aa16b1ab-
 
 ---
 
-### Session 2026-06-17_1720_standard-event
-
-First authoritative **`_Event` queue-family** sample in the corpus. A Standard constructed EVENT (from the Events tab) submitted its deck to `EventName: "Constructed_Event_2026"` with deck `Format: "Standard"`. Confirms the constructed-event naming form: `Constructed_Event_<year>` — the unprefixed `Constructed_` = Standard (same 'bare = Standard' convention as `Play`/`Ladder`), with a version/year suffix (`_2026`). This is a GENERIC queue (format comes from the deck, like `Constructed_BestOf3`), not a format-bearing one; the format-prefixed event forms (`Alchemy_Event`, `Historic_Event`) remain uncaptured. Validates the `_Event` grammar production flagged as the highest-frequency real-world miss in the schema design (docs/architecture/match-format-event-decoding.md). Captured for `manasight/manasight-corpus#36`. Source: archive `UTC_Log - 06-18-2026 00.20.33.log`.
-### Session 2026-06-17_1708_brawl
-
-First **Brawl** deck-submission Format sample in the corpus. `Format:"HistoricBrawl"` via **EventSetDeckV3**, `EventName:"Play_Brawl_Historic"`. NOTE: the authoritative submission EventName `Play_Brawl_Historic` is MORE SPECIFIC than the bare `Play_Brawl` that appears in EventGetCoursesV2 course-catalog listings — it distinguishes Historic Brawl from Standard Brawl. Confirms HistoricBrawl is a distinct deck-`Format` value (commander/singleton deck). Captured for `manasight/manasight-corpus#36`; data for `manasight/manasight-parser#232`. Completes the 4-format gap set (Alchemy, Pioneer, Timeless, Brawl). Source: archive `UTC_Log - 06-18-2026 00.08.00.log`.
-### Session 2026-06-17_1655_timeless
-
-First **Timeless** deck-submission Format sample in the corpus. `Format:"Timeless"` via **EventSetDeckV3**, `EventName:"Timeless_Play"`. The deck registered as Timeless because it contains Timeless-only cards (Ragavan = Historic-banned, Modern Horizons 3 staples, Strip Mine). KEY: confirms **Timeless IS a distinct deck-`Format` value** — unlike Explorer/Pioneer, which collapses to `Historic` (see session_2026-06-17_1615_pioneer-historic). Captured for `manasight/manasight-corpus#36`; data for `manasight/manasight-parser#232`. Source: archive `UTC_Log - 06-17-2026 23.55.35.log`.
-### Session 2026-06-17_1615_pioneer-historic
-
-Second Pioneer/`Explorer_Play` sample, and the KEY evidence for `manasight/manasight-parser#232`'s format model. The deck "Rakdos Fling" is a legal Explorer/Pioneer deck (the `Explorer_Play` queue accepted it), yet its **EventSetDeckV3** `Format` attribute reads **`Historic`**, not Explorer/Pioneer. Proves there is NO Explorer/Pioneer deck-`Format` value — a non-Standard Pioneer deck collapses to `Historic`; the only Pioneer signal is `EventName:"Explorer_Play"`. Pairs with `session_2026-06-17_1601_pioneer` (a Standard-registered deck in the same queue → `Format:Standard`). Together they show deck `Format` = deck build legality, NOT the match/queue format. Captured for `manasight/manasight-corpus#36`. Source: archive `UTC_Log - 06-17-2026 23.15.49.log`.
 ### Session 2026-06-17_1601_pioneer
 
 Pioneer match via the **Explorer_Play** queue (Bo1, Play; Arena's internal name for Pioneer is still "Explorer"). 1 game played (result not recorded). First `Explorer_Play` queue sample in the corpus — captured for `manasight/manasight-corpus#36`.
 
-**IMPORTANT FINDING for `manasight/manasight-parser#232`:** the submitted deck ("Boros Tokens") is **Standard-registered**, so the EventSetDeckV3 `Format` attribute reads **`Standard`**, NOT the queue/match format. This shows the deck `Format` attribute = the deck's registered/build format (narrowest legal), not the match format; for format-named queues the precise format is carried by `EventName` (`Explorer_Play`), and the deck `Format` can under-report. Contrast with the `2026-06-17_1543_alchemy` session, where the Alchemy-registered deck's `Format` happened to match the queue. Source: archive `UTC_Log - 06-17-2026 23.01.25.log`.
+**IMPORTANT FINDING for `manasight/manasight-parser#232`:** the submitted deck ("Boros Tokens") is **Standard-registered**, so the EventSetDeckV3 `Format` attribute reads **`Standard`**, NOT the queue/match format. The deck `Format` attribute = the deck's registered/build format (narrowest legal), not the match format; for format-named queues the precise format is carried by `EventName` (`Explorer_Play`), and the deck `Format` can under-report. Contrast with `2026-06-17_1543_alchemy`, where the Alchemy-registered deck's `Format` happened to match the queue.
 
 | Field | Value |
 |-------|-------|
 | Date | 2026-06-17 |
-| MTGA Version | 2026.60.0.4 |
-| Source | `UTC_Log - 06-18-2026 00.20.33.log` (archive) |
-| Raw file | `session_2026-06-17_1720_standard-event.log` |
-| Format | Standard constructed Event (`EventName: "Constructed_Event_2026"`; deck `Format: "Standard"`; Bo1 `MatchWinCondition_SingleElimination`) |
-| Deck | Boros Tokens (Standard-registered) |
-| Record | 1 game played (result not recorded) |
-| Session log size (raw, post-strip) | 4,449,576 (4.24 MB) |
-| Session log size (gzip) | 456,832 (~446 KB) |
-| Compression ratio | ~9.7:1 |
 | MTGA Version | TBD |
-| Source | `UTC_Log - 06-18-2026 00.08.00.log` (archive) |
-| Raw file | `session_2026-06-17_1708_brawl.log` |
-| Format | Historic Brawl (Bo1 — `EventName: "Play_Brawl_Historic"`) |
-| Record | 1 game played (result not recorded) |
-| Session log size (raw, post-strip) | 4,259,777 (4.06 MB) |
-| Session log size (gzip) | 438,647 (~428 KB) |
-| Compression ratio | ~9.7:1 |
-| Source | `UTC_Log - 06-17-2026 23.55.35.log` (archive) |
-| Raw file | `session_2026-06-17_1655_timeless.log` |
-| Format | Timeless (Bo1, Play queue — `EventName: "Timeless_Play"`) |
-| Record | 1 game played (result not recorded) |
-| Session log size (raw, post-strip) | 4,289,930 (4.09 MB) |
-| Session log size (gzip) | 448,451 (~438 KB) |
-| Compression ratio | ~9.6:1 |
-| Source | `UTC_Log - 06-17-2026 23.15.49.log` (archive) |
-| Raw file | `session_2026-06-17_1615_pioneer-historic.log` |
-| Format | Pioneer (Bo1, Play queue — internal `EventName: "Explorer_Play"`) |
-| Record | 1 game played (result not recorded) |
-| Session log size (raw, post-strip) | 4,700,389 (4.48 MB) |
-| Session log size (gzip) | 462,627 (~452 KB) |
-| Compression ratio | ~10.2:1 |
 | Source | `UTC_Log - 06-17-2026 23.01.25.log` (archive) |
 | Raw file | `session_2026-06-17_1601_pioneer.log` |
-| Format | Pioneer (Bo1, Play queue — internal `EventName: "Explorer_Play"`; Arena's internal name for Pioneer is still "Explorer") |
+| Format | Pioneer (Bo1, Play queue — internal `EventName: "Explorer_Play"`) |
 | Deck / archetype | Boros Tokens (a Standard-REGISTERED deck) |
 | Record | 1 game played (result not recorded) |
 | Session log size (raw, post-strip) | 5,213,839 (4.97 MB) |
@@ -1995,22 +1953,6 @@ Pioneer match via the **Explorer_Play** queue (Bo1, Play; Arena's internal name 
 
 | Metric | Value |
 |--------|------:|
-| Total entries | 399 |
-| Routed | 316 |
-| Unknown | 83 |
-| Timestamp failures | 69 |
-| Total entries | 645 |
-| Routed | 567 |
-| Unknown | 78 |
-| Timestamp failures | 59 |
-| Total entries | 806 |
-| Routed | 631 |
-| Unknown | 175 |
-| Timestamp failures | 147 |
-| Total entries | 713 |
-| Routed | 627 |
-| Unknown | 86 |
-| Timestamp failures | 63 |
 | Total entries | 833 |
 | Routed | 765 |
 | Unknown | 68 |
@@ -2020,38 +1962,195 @@ Pioneer match via the **Explorer_Play** queue (Bo1, Play; Arena's internal name 
 
 | Event Type | Count |
 |------------|------:|
-| ClientAction | 138 |
-| ClientAction | 217 |
-| ClientAction | 269 |
-| ClientAction | 283 |
+| GameState | 769 |
 | ClientAction | 275 |
 | DeckCollection | 2 |
-| DetailedLoggingStatus | 1 |
 | EventLifecycle | 2 |
+| MatchState | 2 |
+| Rank | 2 |
 | GameResult | 1 |
-| GameState | 411 |
-| MatchState | 2 |
-| Rank | 2 |
-| Session | 3 |
-| Unknown | 13 |
+| DetailedLoggingStatus | 1 |
+| Session | 1 |
+| Unknown | 10 |
 
-Deck (yours): "Boros Tokens" (R/W, DeckId `4c088509-...`). Submitted via the **only** `==> EventSetDeckV3` request in the log, with `EventName:"Constructed_Event_2026"`; the deck `Summary.Attributes` carry `Format:"Standard"`. The many other `EventName` strings in the log (`Alchemy_Play`, `Historic_Ladder`, `Constructed_BestOf3`, …) are event-catalog listings from `EventGetCourses`-style payloads, not deck submissions. This is the corpus's first `_Event`-family deck-submission sample, validating the `Constructed_Event_<year>` grammar production for `manasight/manasight-corpus#36`.
-| GameState | 549 |
-| GameState | 548 |
+Deck (yours): "Boros Tokens" (a **Standard-registered** deck). Submitted via **EventSetDeckV3** with `EventName:"Explorer_Play"`; the deck `Summary.Attributes` carry `Format:"Standard"` (the deck's registered build format), even though the match format is Pioneer. This is the corpus's first `Explorer_Play` sample and demonstrates that the deck-submission `Format` attribute can under-report the actual match format — the precise format must be read from `EventName`. Directly relevant to `manasight-parser#232`.
+
+---
+
+### Session 2026-06-17_1615_pioneer-historic
+
+Second Pioneer/`Explorer_Play` sample, and the KEY evidence for `manasight/manasight-parser#232`'s format model. The deck "Rakdos Fling" is a legal Explorer/Pioneer deck (the `Explorer_Play` queue accepted it), yet its **EventSetDeckV3** `Format` attribute reads **`Historic`**, not Explorer/Pioneer. Proves there is NO Explorer/Pioneer deck-`Format` value — a non-Standard Pioneer deck collapses to `Historic`; the only Pioneer signal is `EventName:"Explorer_Play"`. Pairs with `session_2026-06-17_1601_pioneer` (a Standard-registered deck in the same queue → `Format:Standard`). Together they show deck `Format` = deck build legality, NOT the match/queue format. Captured for `manasight/manasight-corpus#36`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | TBD |
+| Source | `UTC_Log - 06-17-2026 23.15.49.log` (archive) |
+| Raw file | `session_2026-06-17_1615_pioneer-historic.log` |
+| Format | Pioneer (Bo1, Play queue — internal `EventName: "Explorer_Play"`) |
+| Deck / archetype | Rakdos Fling (Explorer/Pioneer-legal; registers as Historic) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 4,700,389 (4.48 MB) |
+| Session log size (gzip) | 462,627 (~452 KB) |
+| Compression ratio | ~10.2:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 713 |
+| Routed | 627 |
+| Unknown | 86 |
+| Timestamp failures | 63 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| GameState | 578 |
+| ClientAction | 283 |
+| DeckCollection | 2 |
+| EventLifecycle | 2 |
 | MatchState | 2 |
 | Rank | 2 |
+| GameResult | 1 |
+| DetailedLoggingStatus | 1 |
+| Session | 1 |
+| Unknown | 10 |
+
+Deck (yours): "Rakdos Fling" (Rakdos prowess/aggro; DeckId `46309f58-...`) — an Explorer/Pioneer-legal build (the `Explorer_Play` queue accepted it) but registered as **Historic**. Submitted via **EventSetDeckV3** with `EventName:"Explorer_Play"`, while the deck `Summary.Attributes` carry `Format:"Historic"`. This is the KEY evidence for `manasight-parser#232`: there is no `Explorer`/`Pioneer` deck-`Format` value — a non-Standard Pioneer deck collapses to `Historic`, so the only Pioneer signal is the queue's `EventName:"Explorer_Play"`. The single (EventName, Format) deck-submission pair in this log is `(Explorer_Play, Historic)`. Pairs with `session_2026-06-17_1601_pioneer` (Standard-registered deck in the same queue → `Format:Standard`) to show deck `Format` reflects deck build legality, NOT match/queue format.
+
+---
+
+### Session 2026-06-17_1655_timeless
+
+First **Timeless** deck-submission Format sample in the corpus. `Format:"Timeless"` via **EventSetDeckV3**, `EventName:"Timeless_Play"`. The deck registered as Timeless because it contains Timeless-only cards (Ragavan = Historic-banned, Modern Horizons 3 staples, Strip Mine). KEY: confirms **Timeless IS a distinct deck-`Format` value** — unlike Explorer/Pioneer, which collapses to `Historic` (see `session_2026-06-17_1615_pioneer-historic`). Captured for `manasight/manasight-corpus#36`; data for `manasight/manasight-parser#232`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | TBD |
+| Source | `UTC_Log - 06-17-2026 23.55.35.log` (archive) |
+| Raw file | `session_2026-06-17_1655_timeless.log` |
+| Format | Timeless (Bo1, Play queue — `EventName: "Timeless_Play"`) |
+| Deck / archetype | Mardu Energy Timeless (Lurrus companion; Timeless-only cards) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 4,289,930 (4.09 MB) |
+| Session log size (gzip) | 448,451 (~438 KB) |
+| Compression ratio | ~9.6:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 806 |
+| Routed | 631 |
+| Unknown | 175 |
+| Timestamp failures | 147 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| GameState | 548 |
+| ClientAction | 269 |
+| DeckCollection | 2 |
+| EventLifecycle | 2 |
+| MatchState | 2 |
+| Rank | 2 |
+| GameResult | 1 |
+| DetailedLoggingStatus | 1 |
 | Session | 1 |
 | Unknown | 6 |
 
 Deck (yours): **Mardu Energy Timeless** (Lurrus of the Dream-Den companion; Lurrus card 71293 appears in both `Sideboard` and `Companions`). DeckId `43c54f3b-...`, submitted via **EventSetDeckV3** with `EventName:"Timeless_Play"`; the deck `Summary.Attributes` carry `Format:"Timeless"`. The deck registered as Timeless because it contains Timeless-only cards — Ragavan (Historic-banned), Modern Horizons 3 staples, Strip Mine. This is the corpus's first sample confirming **Timeless is a distinct deck-`Format` value**, unlike Explorer/Pioneer which collapses to `Historic` (cf. `session_2026-06-17_1615_pioneer-historic`) — directly relevant to `manasight-parser#232`.
-| GameState | 578 |
-| GameState | 769 |
+
+---
+
+### Session 2026-06-17_1708_brawl
+
+First **Brawl** deck-submission Format sample in the corpus. `Format:"HistoricBrawl"` via **EventSetDeckV3**, `EventName:"Play_Brawl_Historic"`. NOTE: the authoritative submission EventName `Play_Brawl_Historic` is MORE SPECIFIC than the bare `Play_Brawl` that appears in EventGetCoursesV2 course-catalog listings — it distinguishes Historic Brawl from Standard Brawl. Confirms HistoricBrawl is a distinct deck-`Format` value (commander/singleton deck). Captured for `manasight/manasight-corpus#36`; data for `manasight/manasight-parser#232`. Completes the 4-format gap set (Alchemy, Pioneer, Timeless, Brawl).
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | TBD |
+| Source | `UTC_Log - 06-18-2026 00.08.00.log` (archive) |
+| Raw file | `session_2026-06-17_1708_brawl.log` |
+| Format | Historic Brawl (Bo1 — `EventName: "Play_Brawl_Historic"`) |
+| Deck / archetype | Hei Bai, Forest Guardian (100-card singleton commander) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 4,259,777 (4.06 MB) |
+| Session log size (gzip) | 438,647 (~428 KB) |
+| Compression ratio | ~9.7:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 645 |
+| Routed | 567 |
+| Unknown | 78 |
+| Timestamp failures | 59 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| GameState | 549 |
+| ClientAction | 217 |
+| DeckCollection | 2 |
+| EventLifecycle | 2 |
 | MatchState | 2 |
 | Rank | 2 |
+| GameResult | 1 |
+| DetailedLoggingStatus | 1 |
 | Session | 1 |
 | Unknown | 10 |
 
 Deck (yours): **Hei Bai, Forest Guardian** (100-card singleton commander Brawl deck). Submitted via **EventSetDeckV3** with `EventName:"Play_Brawl_Historic"`; the deck `Summary.Attributes` carry `Format:"HistoricBrawl"`. The submission payload carries a populated `Deck.CommandZone` (`[{cardId: 98284, quantity: 1}]` — the commander) alongside a 99-card `MainDeck`, confirming the command-zone schema for singleton/commander formats. The authoritative submission `EventName` (`Play_Brawl_Historic`) is more specific than the bare `Play_Brawl` seen in `EventGetCoursesV2` course-catalog listings, distinguishing Historic Brawl from Standard Brawl. This completes the corpus's 4-format deck-submission gap set (Alchemy, Pioneer, Timeless, Brawl) — directly relevant to `manasight-parser#232`.
-Deck (yours): "Rakdos Fling" (Rakdos prowess/aggro; DeckId `46309f58-...`) — an Explorer/Pioneer-legal build (the `Explorer_Play` queue accepted it) but registered as **Historic**. Submitted via **EventSetDeckV3** with `EventName:"Explorer_Play"`, while the deck `Summary.Attributes` carry `Format:"Historic"`. This is the KEY evidence for `manasight-parser#232`: there is no `Explorer`/`Pioneer` deck-`Format` value — a non-Standard Pioneer deck collapses to `Historic`, so the only Pioneer signal is the queue's `EventName:"Explorer_Play"`. The single (EventName, Format) deck-submission pair in this log is `(Explorer_Play, Historic)`. Pairs with `session_2026-06-17_1601_pioneer` (Standard-registered deck in the same queue → `Format:Standard`) to show deck `Format` reflects deck build legality, NOT match/queue format.
-Deck (yours): "Boros Tokens" (a **Standard-registered** deck). Submitted via **EventSetDeckV3** with `EventName:"Explorer_Play"`; the deck `Summary.Attributes` carry `Format:"Standard"` (the deck's registered build format), even though the match format is Pioneer. This is the corpus's first `Explorer_Play` sample and demonstrates that the deck-submission `Format` attribute can under-report the actual match format — the precise format must be read from `EventName`. Directly relevant to `manasight-parser#232`.
 
+---
+
+### Session 2026-06-17_1720_standard-event
+
+First authoritative **`_Event` queue-family** sample in the corpus. A Standard constructed EVENT (from the Events tab) submitted its deck to `EventName: "Constructed_Event_2026"` with deck `Format: "Standard"`. Confirms the constructed-event naming form: `Constructed_Event_<year>` — the unprefixed `Constructed_` = Standard (same "bare = Standard" convention as `Play`/`Ladder`), with a version/year suffix (`_2026`). This is a GENERIC queue (format comes from the deck, like `Constructed_BestOf3`), not a format-bearing one; the format-prefixed event forms (`Alchemy_Event`, `Historic_Event`) remain uncaptured. Validates the `_Event` grammar production flagged as the highest-frequency real-world miss in the schema design (`docs/architecture/match-format-event-decoding.md` in manasight-docs). Captured for `manasight/manasight-corpus#36`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | 2026.60.0.4 |
+| Source | `UTC_Log - 06-18-2026 00.20.33.log` (archive) |
+| Raw file | `session_2026-06-17_1720_standard-event.log` |
+| Format | Standard constructed Event (`EventName: "Constructed_Event_2026"`; deck `Format: "Standard"`; Bo1 `MatchWinCondition_SingleElimination`) |
+| Deck / archetype | Boros Tokens (Standard-registered) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 4,449,576 (4.24 MB) |
+| Session log size (gzip) | 456,832 (~446 KB) |
+| Compression ratio | ~9.7:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 399 |
+| Routed | 316 |
+| Unknown | 83 |
+| Timestamp failures | 69 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| GameState | 411 |
+| ClientAction | 138 |
+| DeckCollection | 2 |
+| EventLifecycle | 2 |
+| MatchState | 2 |
+| Rank | 2 |
+| GameResult | 1 |
+| DetailedLoggingStatus | 1 |
+| Session | 3 |
+| Unknown | 13 |
+
+Deck (yours): "Boros Tokens" (R/W, DeckId `4c088509-...`). Submitted via the **only** `==> EventSetDeckV3` request in the log, with `EventName:"Constructed_Event_2026"`; the deck `Summary.Attributes` carry `Format:"Standard"`. The many other `EventName` strings in the log (`Alchemy_Play`, `Historic_Ladder`, `Constructed_BestOf3`, …) are event-catalog listings from `EventGetCourses`-style payloads, not deck submissions. This is the corpus's first `_Event`-family deck-submission sample, validating the `Constructed_Event_<year>` grammar production for `manasight/manasight-corpus#36`.
