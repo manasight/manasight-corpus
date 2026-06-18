@@ -105,6 +105,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-06-17 | `session_2026-06-17_1601_pioneer.log` | Pioneer Bo1 match via the **Explorer_Play** queue (1 game). First `Explorer_Play` sample (`manasight-corpus#36` / `manasight-parser#232`). FINDING: deck "Boros Tokens" is Standard-registered, so its EventSetDeckV3 `Format` attribute reads **`Standard`**, NOT the queue/match format — deck `Format` = the deck's registered build format, while the precise match format rides on `EventName` (`Explorer_Play`) |
 | 2026-06-17 | `session_2026-06-17_1833_standard-brawl.log` | Standard Brawl Bo1 (`EventName:"Play_Brawl"`), "Getting the Gaang Together" 60-card singleton+commander, 1 game. First **Standard Brawl** sample (`manasight-corpus#36`) — `Format:"Brawl"` (distinct from `HistoricBrawl`) via **EventSetDeckV3**; resolves the phantom-`Play_Brawl` hole; `Deck.CommandZone` populated |
 | 2026-06-17 | `session_2026-06-17_1847_pioneer-ranked.log` | Pioneer Ranked Bo1 (`EventName:"Explorer_Ladder"`, `ranked=true`), Rakdos Fling, 1 game. First authoritative ranked non-Standard `*_Ladder` sample (`manasight-corpus#36`) — deck `Format:"Historic"` (non-Standard Pioneer collapses to Historic) |
+| 2026-06-17 | `session_2026-06-17_2005_pioneer-play-bo3.log` | Pioneer **unranked Bo3** (`EventName:"Traditional_Explorer_Play"`, `ranked=false`), Rakdos Fling, 1 match. First authoritative **`Traditional_<Fmt>_Play`** sample (`manasight-corpus#36`) — deck `Format:"Historic"` (Pioneer deck collapses to Historic), GRE `matchWinCondition: Best2of3`. Confirms `Traditional_<Fmt>_Play` (unranked Bo3) is distinct from `Traditional_<Fmt>_Ladder` (ranked Bo3); completes the four-way Pioneer queue matrix (`Explorer_Play`/`Explorer_Ladder`/`Traditional_Explorer_Play`/`Traditional_Explorer_Ladder`) |
 
 ---
 
@@ -2292,3 +2293,48 @@ First authoritative **ranked, non-Standard** sample in the corpus. `EventName:"E
 | Unknown | 9 |
 
 Deck (yours): "Rakdos Fling" — an Explorer/Pioneer-legal build (the ranked Pioneer ladder accepted it) but registered as **Historic**. Submitted via **EventSetDeckV3** with `EventName:"Explorer_Ladder"`, while the deck `Summary.Attributes` carry `Format:"Historic"`. The single (EventName, Format) deck-submission pair is `(Explorer_Ladder, Historic)`. This is the corpus's first authoritative *ranked* non-Standard sample — confirming the `<Fmt>_Ladder` ranked-queue family and that the Pioneer signal lives only on `EventName` (the deck collapses to `Historic`). Pairs with the unranked `session_2026-06-17_1615_pioneer-historic` (`Explorer_Play`) and the Bo3 `session_2026-06-17_1858_pioneer-ranked-bo3` (`Traditional_Explorer_Ladder`).
+
+---
+
+### Session 2026-06-17_2005_pioneer-play-bo3
+
+Pioneer **unranked Bo3** (`EventName: "Traditional_Explorer_Play"`, `ranked=false`) → deck `Format: "Historic"` (Rakdos Fling Pioneer deck collapses to Historic, consistent with every Pioneer capture). Confirms the `Traditional_<Fmt>_Play` (unranked Bo3) form is **distinct** from `Traditional_<Fmt>_Ladder` (ranked Bo3). With this, **all four Pioneer queue variants are authoritative**: `Explorer_Play` (Bo1 unranked), `Explorer_Ladder` (Bo1 ranked), `Traditional_Explorer_Play` (Bo3 unranked), `Traditional_Explorer_Ladder` (Bo3 ranked). Captured for `manasight/manasight-corpus#36`; design: docs/architecture/match-format-event-decoding.md.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | 2026.60.0.4950 |
+| Source | `UTC_Log - 06-18-2026 03.05.55.log` (archive) |
+| Raw file | `session_2026-06-17_2005_pioneer-play-bo3.log` |
+| Format | Pioneer Traditional Play Bo3 — UNRANKED (`EventName: "Traditional_Explorer_Play"`, `ranked=false`, `MatchWinCondition_Best2of3`) |
+| Deck / archetype | Rakdos Fling (Explorer/Pioneer-legal; registers as Historic) |
+| Record | 1 match played (result not recorded) |
+| Session log size (raw, post-strip) | 7,925,889 (7.56 MB) |
+| Session log size (gzip) | 674,661 (~659 KB) |
+| Compression ratio | ~11.75:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 1536 |
+| Routed | 1466 |
+| Unknown | 70 |
+| Timestamp failures | 52 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| GameState | 1602 |
+| ClientAction | 666 |
+| GameResult | 3 |
+| DeckCollection | 2 |
+| EventLifecycle | 2 |
+| MatchState | 2 |
+| Rank | 2 |
+| DetailedLoggingStatus | 1 |
+| Session | 1 |
+| Unknown | 10 |
+
+Deck (yours): "Rakdos Fling" — an Explorer/Pioneer-legal build but registered as **Historic**. Submitted via **EventSetDeckV3** with `EventName:"Traditional_Explorer_Play"`, while the deck `Summary.Attributes` carry `Format:"Historic"`. The single (EventName, Format) deck-submission pair is `(Traditional_Explorer_Play, Historic)`; GRE `matchWinCondition: MatchWinCondition_Best2of3` confirms **Bo3**. This is the corpus's first authoritative **`Traditional_<Fmt>_Play`** (unranked Bo3) sample, completing the four-way Pioneer queue matrix: it sits opposite the ranked Bo3 `session_2026-06-17_1858_pioneer-ranked-bo3` (`Traditional_Explorer_Ladder`), and pairs with the Bo1 unranked `session_2026-06-17_1615_pioneer-historic` (`Explorer_Play`) and Bo1 ranked `session_2026-06-17_1847_pioneer-ranked` (`Explorer_Ladder`).
