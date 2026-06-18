@@ -97,6 +97,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-05-13 | `session_2026-05-13_0952_recycle-defect-trigger.log` | Canonical example of the truncation→recycle drift defect (manasight-docs#657 epic); 1 `[Message summarized…]` marker + recycled instance_id 549 across the truncation, 53 drift WARNs follow |
 | 2026-06-14 | `session_2026-06-14_1409_name-a-card.log` | Standard play Bo1, 1-0 (Boros aggro vs Mono-B devotion). Regression fixture for `manasight-parser#221` — Petrified Hamlet "name a card" (`AnnotationType_ChoiceResult` Domain=13 / `LinkInfo ChooseLinkType=CardName`, named card = Agna Qel'a, locId 1071244) |
 | 2026-06-17 | `session_2026-06-17_1543_alchemy.log` | Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Alchemy"` carried by **EventSetDeckV3** with `EventName:"Alchemy_Play"` |
+| 2026-06-17 | `session_2026-06-17_1858_pioneer-ranked-bo3.log` | Pioneer Traditional Ranked **Bo3** (`EventName:"Traditional_Explorer_Ladder"`, `ranked=true`), Rakdos Fling, 1 match. First authoritative **`Traditional_<Fmt>_Ladder`** sample (`manasight-corpus#36`) — deck `Format:"Historic"` (Pioneer deck collapses to Historic), GRE `matchWinCondition: Best2of3`. Proves `[Traditional_][<format>_]<queue>` composes for a non-Standard format; pairs with the Bo1 `Explorer_Ladder` capture |
 | 2026-06-17 | `session_2026-06-17_1720_standard-event.log` | Standard constructed Event (Boros Tokens), 1 game. First **`_Event` queue-family** sample (`manasight-corpus#36`) — `EventName:"Constructed_Event_2026"` submitted via **EventSetDeckV3** with deck `Format:"Standard"`; Bo1 `MatchWinCondition_SingleElimination` |
 | 2026-06-17 | `session_2026-06-17_1708_brawl.log` | Historic Brawl Bo1 Play, Hei Bai Forest Guardian commander deck. First **Brawl** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"HistoricBrawl"` carried by **EventSetDeckV3** with `EventName:"Play_Brawl_Historic"` (+ populated `CommandZone`). Completes the 4-format gap set |
 | 2026-06-17 | `session_2026-06-17_1655_timeless.log` | Timeless Bo1 Play match, Mardu Energy (Lurrus companion), 1 game played. First **Timeless** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Timeless"` carried by **EventSetDeckV3** with `EventName:"Timeless_Play"`. Confirms Timeless is a distinct deck-`Format` value (unlike Explorer/Pioneer → `Historic`) |
@@ -2152,5 +2153,50 @@ First authoritative **`_Event` queue-family** sample in the corpus. A Standard c
 | DetailedLoggingStatus | 1 |
 | Session | 3 |
 | Unknown | 13 |
+
+---
+
+### Session 2026-06-17_1858_pioneer-ranked-bo3
+
+First authoritative **`Traditional_<Fmt>_Ladder`** sample in the corpus (the entire non-Standard Traditional family was previously grammar-predicted only). `EventName: "Traditional_Explorer_Ladder"` (Pioneer Ranked **Bo3**, `ranked=true`) -> deck `Format: "Historic"` (Rakdos Fling Pioneer deck collapses to Historic, consistent with the Bo1 `Explorer_Ladder` and `Explorer_Play` captures). Proves the `[Traditional_][<format>_]<queue>` grammar production composes for a non-Standard format: mode=TraditionalRanked, format=Pioneer (from EventName), ranked=true, best_of=3. Pairs with `session_2026-06-17_1847_pioneer-ranked` (Bo1 `Explorer_Ladder`). Captured for `manasight/manasight-corpus#36`; design: docs/architecture/match-format-event-decoding.md.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | 2026.60.0.4950 |
+| Source | `UTC_Log - 06-18-2026 01.58.24.log` (archive) |
+| Raw file | `session_2026-06-17_1858_pioneer-ranked-bo3.log` |
+| Format | Pioneer Traditional Ranked Bo3 (`EventName: "Traditional_Explorer_Ladder"`; deck `Format: "Historic"`; GRE `matchWinCondition: Best2of3`) |
+| Deck / archetype | Rakdos Fling (Explorer/Pioneer-legal; registers as Historic) |
+| Record | 1 match played (result not recorded) |
+| Session log size (raw, post-strip) | 4,390,963 (4.19 MB) |
+| Session log size (gzip) | 438,802 (~429 KB) |
+| Compression ratio | ~10.0:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 465 |
+| Routed | 404 |
+| Unknown | 61 |
+| Timestamp failures | 44 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| GameState | 538 |
+| ClientAction | 185 |
+| DeckCollection | 2 |
+| EventLifecycle | 2 |
+| GameResult | 2 |
+| MatchState | 2 |
+| Rank | 2 |
+| DetailedLoggingStatus | 1 |
+| Session | 1 |
+| Unknown | 6 |
+
+Deck (yours): **Rakdos Fling** (DeckId `46309f58-2bb1-4a46-89a3-575bd6fd93af`) — an Explorer/Pioneer-legal build (the Traditional Pioneer ladder accepted it) but registered as **Historic**. Submitted via **EventSetDeckV3** with `EventName:"Traditional_Explorer_Ladder"`, while the deck `Summary.Attributes` carry `Format:"Historic"`. The single (EventName, Format) deck-submission pair in this log is `(Traditional_Explorer_Ladder, Historic)`. The GRE `matchWinCondition` is `MatchWinCondition_Best2of3` (Bo3), confirming Traditional = best-of-3. This is the corpus's first `Traditional_<Fmt>_Ladder` sample — the entire non-Standard Traditional family was previously grammar-predicted only. It proves the `[Traditional_][<format>_]<queue>` grammar production composes for a non-Standard format (mode=TraditionalRanked, format=Pioneer from `EventName`, ranked=true, best_of=3), consistent with the Bo1 `Explorer_Ladder`/`Explorer_Play` captures where the same Pioneer deck collapses to `Historic`. Pairs with `session_2026-06-17_1847_pioneer-ranked` (Bo1 `Explorer_Ladder`). Captured for `manasight/manasight-corpus#36`; design: `docs/architecture/match-format-event-decoding.md` (manasight-docs).
 
 Deck (yours): "Boros Tokens" (R/W, DeckId `4c088509-...`). Submitted via the **only** `==> EventSetDeckV3` request in the log, with `EventName:"Constructed_Event_2026"`; the deck `Summary.Attributes` carry `Format:"Standard"`. The many other `EventName` strings in the log (`Alchemy_Play`, `Historic_Ladder`, `Constructed_BestOf3`, …) are event-catalog listings from `EventGetCourses`-style payloads, not deck submissions. This is the corpus's first `_Event`-family deck-submission sample, validating the `Constructed_Event_<year>` grammar production for `manasight/manasight-corpus#36`.

@@ -305,3 +305,9 @@ filename      = "session_2026-06-17_1720_standard-event.log"
 sha256        = "c74fa46b584535181bde6b4305e9702cb31568a518a6c31846fad38b79b47142"
 size_bytes    = 4449576
 date_captured = "2026-06-17"
+
+[[files]]
+filename      = "session_2026-06-17_1858_pioneer-ranked-bo3.log"
+sha256        = "1ca0eac048874bba19d0fb3676f7a48432322869ed05de38d60c9627002e1b81"
+size_bytes    = 4390963
+date_captured = "2026-06-17"
