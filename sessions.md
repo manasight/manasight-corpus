@@ -97,6 +97,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-05-13 | `session_2026-05-13_0952_recycle-defect-trigger.log` | Canonical example of the truncation→recycle drift defect (manasight-docs#657 epic); 1 `[Message summarized…]` marker + recycled instance_id 549 across the truncation, 53 drift WARNs follow |
 | 2026-06-14 | `session_2026-06-14_1409_name-a-card.log` | Standard play Bo1, 1-0 (Boros aggro vs Mono-B devotion). Regression fixture for `manasight-parser#221` — Petrified Hamlet "name a card" (`AnnotationType_ChoiceResult` Domain=13 / `LinkInfo ChooseLinkType=CardName`, named card = Agna Qel'a, locId 1071244) |
 | 2026-06-17 | `session_2026-06-17_1543_alchemy.log` | Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Alchemy"` carried by **EventSetDeckV3** with `EventName:"Alchemy_Play"` |
+| 2026-06-17 | `session_2026-06-17_1655_timeless.log` | Timeless Bo1 Play match, Mardu Energy (Lurrus companion), 1 game played. First **Timeless** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Timeless"` carried by **EventSetDeckV3** with `EventName:"Timeless_Play"`. Confirms Timeless is a distinct deck-`Format` value (unlike Explorer/Pioneer → `Historic`) |
 
 ---
 
@@ -1922,4 +1923,48 @@ Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** deck-submis
 | Unknown | 6 |
 
 Deck (yours): Bant (G/W/U) control/conjure — "Bant Conjure" (DeckId `aa16b1ab-...`). Submitted via **EventSetDeckV3** with `EventName:"Alchemy_Play"`; the deck `Summary.Attributes` carry `Format:"Alchemy"`. This is the corpus's first sample proving Alchemy's precise format is surfaced through the deck-submission path (not just the generic event/queue name) — directly relevant to `manasight-parser#232`.
+
+---
+
+### Session 2026-06-17_1655_timeless
+
+First **Timeless** deck-submission Format sample in the corpus. `Format:"Timeless"` via **EventSetDeckV3**, `EventName:"Timeless_Play"`. The deck registered as Timeless because it contains Timeless-only cards (Ragavan = Historic-banned, Modern Horizons 3 staples, Strip Mine). KEY: confirms **Timeless IS a distinct deck-`Format` value** — unlike Explorer/Pioneer, which collapses to `Historic` (see session_2026-06-17_1615_pioneer-historic). Captured for `manasight/manasight-corpus#36`; data for `manasight/manasight-parser#232`. Source: archive `UTC_Log - 06-17-2026 23.55.35.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | TBD |
+| Source | `UTC_Log - 06-17-2026 23.55.35.log` (archive) |
+| Raw file | `session_2026-06-17_1655_timeless.log` |
+| Format | Timeless (Bo1, Play queue — `EventName: "Timeless_Play"`) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 4,289,930 (4.09 MB) |
+| Session log size (gzip) | 448,451 (~438 KB) |
+| Compression ratio | ~9.6:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 806 |
+| Routed | 631 |
+| Unknown | 175 |
+| Timestamp failures | 147 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 269 |
+| DeckCollection | 2 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 1 |
+| GameState | 548 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 1 |
+| Unknown | 6 |
+
+Deck (yours): **Mardu Energy Timeless** (Lurrus of the Dream-Den companion; Lurrus card 71293 appears in both `Sideboard` and `Companions`). DeckId `43c54f3b-...`, submitted via **EventSetDeckV3** with `EventName:"Timeless_Play"`; the deck `Summary.Attributes` carry `Format:"Timeless"`. The deck registered as Timeless because it contains Timeless-only cards — Ragavan (Historic-banned), Modern Horizons 3 staples, Strip Mine. This is the corpus's first sample confirming **Timeless is a distinct deck-`Format` value**, unlike Explorer/Pioneer which collapses to `Historic` (cf. `session_2026-06-17_1615_pioneer-historic`) — directly relevant to `manasight-parser#232`.
 
