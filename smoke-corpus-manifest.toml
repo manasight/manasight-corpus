@@ -277,6 +277,9 @@ size_bytes    = 3768657
 date_captured = "2026-06-17"
 
 [[files]]
+filename      = "session_2026-06-17_1720_standard-event.log"
+sha256        = "c74fa46b584535181bde6b4305e9702cb31568a518a6c31846fad38b79b47142"
+size_bytes    = 4449576
 filename      = "session_2026-06-17_1708_brawl.log"
 sha256        = "82cb74bcab28a55dea70872c4ee4e6ddbfbcc6a44d49891cc90b74c5bdc2fb99"
 size_bytes    = 4259777
