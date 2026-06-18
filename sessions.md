@@ -97,6 +97,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-05-13 | `session_2026-05-13_0952_recycle-defect-trigger.log` | Canonical example of the truncation→recycle drift defect (manasight-docs#657 epic); 1 `[Message summarized…]` marker + recycled instance_id 549 across the truncation, 53 drift WARNs follow |
 | 2026-06-14 | `session_2026-06-14_1409_name-a-card.log` | Standard play Bo1, 1-0 (Boros aggro vs Mono-B devotion). Regression fixture for `manasight-parser#221` — Petrified Hamlet "name a card" (`AnnotationType_ChoiceResult` Domain=13 / `LinkInfo ChooseLinkType=CardName`, named card = Agna Qel'a, locId 1071244) |
 | 2026-06-17 | `session_2026-06-17_1543_alchemy.log` | Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Alchemy"` carried by **EventSetDeckV3** with `EventName:"Alchemy_Play"` |
+| 2026-06-17 | `session_2026-06-17_1615_pioneer-historic.log` | Pioneer Bo1 Play (`EventName:"Explorer_Play"`), Rakdos Fling, 1 game (result not recorded). KEY `manasight-parser#232` evidence — a Pioneer-legal deck submits with deck `Format:"Historic"`, proving non-Standard Pioneer collapses to Historic; only `Explorer_Play` signals Pioneer (`manasight-corpus#36`) |
 | 2026-06-17 | `session_2026-06-17_1601_pioneer.log` | Pioneer Bo1 match via the **Explorer_Play** queue (1 game). First `Explorer_Play` sample (`manasight-corpus#36` / `manasight-parser#232`). FINDING: deck "Boros Tokens" is Standard-registered, so its EventSetDeckV3 `Format` attribute reads **`Standard`**, NOT the queue/match format — deck `Format` = the deck's registered build format, while the precise match format rides on `EventName` (`Explorer_Play`) |
 
 ---
@@ -1926,6 +1927,9 @@ Deck (yours): Bant (G/W/U) control/conjure — "Bant Conjure" (DeckId `aa16b1ab-
 
 ---
 
+### Session 2026-06-17_1615_pioneer-historic
+
+Second Pioneer/`Explorer_Play` sample, and the KEY evidence for `manasight/manasight-parser#232`'s format model. The deck "Rakdos Fling" is a legal Explorer/Pioneer deck (the `Explorer_Play` queue accepted it), yet its **EventSetDeckV3** `Format` attribute reads **`Historic`**, not Explorer/Pioneer. Proves there is NO Explorer/Pioneer deck-`Format` value — a non-Standard Pioneer deck collapses to `Historic`; the only Pioneer signal is `EventName:"Explorer_Play"`. Pairs with `session_2026-06-17_1601_pioneer` (a Standard-registered deck in the same queue → `Format:Standard`). Together they show deck `Format` = deck build legality, NOT the match/queue format. Captured for `manasight/manasight-corpus#36`. Source: archive `UTC_Log - 06-17-2026 23.15.49.log`.
 ### Session 2026-06-17_1601_pioneer
 
 Pioneer match via the **Explorer_Play** queue (Bo1, Play; Arena's internal name for Pioneer is still "Explorer"). 1 game played (result not recorded). First `Explorer_Play` queue sample in the corpus — captured for `manasight/manasight-corpus#36`.
@@ -1936,6 +1940,13 @@ Pioneer match via the **Explorer_Play** queue (Bo1, Play; Arena's internal name 
 |-------|-------|
 | Date | 2026-06-17 |
 | MTGA Version | TBD |
+| Source | `UTC_Log - 06-17-2026 23.15.49.log` (archive) |
+| Raw file | `session_2026-06-17_1615_pioneer-historic.log` |
+| Format | Pioneer (Bo1, Play queue — internal `EventName: "Explorer_Play"`) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 4,700,389 (4.48 MB) |
+| Session log size (gzip) | 462,627 (~452 KB) |
+| Compression ratio | ~10.2:1 |
 | Source | `UTC_Log - 06-17-2026 23.01.25.log` (archive) |
 | Raw file | `session_2026-06-17_1601_pioneer.log` |
 | Format | Pioneer (Bo1, Play queue — internal `EventName: "Explorer_Play"`; Arena's internal name for Pioneer is still "Explorer") |
@@ -1949,6 +1960,10 @@ Pioneer match via the **Explorer_Play** queue (Bo1, Play; Arena's internal name 
 
 | Metric | Value |
 |--------|------:|
+| Total entries | 713 |
+| Routed | 627 |
+| Unknown | 86 |
+| Timestamp failures | 63 |
 | Total entries | 833 |
 | Routed | 765 |
 | Unknown | 68 |
@@ -1958,16 +1973,19 @@ Pioneer match via the **Explorer_Play** queue (Bo1, Play; Arena's internal name 
 
 | Event Type | Count |
 |------------|------:|
+| ClientAction | 283 |
 | ClientAction | 275 |
 | DeckCollection | 2 |
 | DetailedLoggingStatus | 1 |
 | EventLifecycle | 2 |
 | GameResult | 1 |
+| GameState | 578 |
 | GameState | 769 |
 | MatchState | 2 |
 | Rank | 2 |
 | Session | 1 |
 | Unknown | 10 |
 
+Deck (yours): "Rakdos Fling" (Rakdos prowess/aggro; DeckId `46309f58-...`) — an Explorer/Pioneer-legal build (the `Explorer_Play` queue accepted it) but registered as **Historic**. Submitted via **EventSetDeckV3** with `EventName:"Explorer_Play"`, while the deck `Summary.Attributes` carry `Format:"Historic"`. This is the KEY evidence for `manasight-parser#232`: there is no `Explorer`/`Pioneer` deck-`Format` value — a non-Standard Pioneer deck collapses to `Historic`, so the only Pioneer signal is the queue's `EventName:"Explorer_Play"`. The single (EventName, Format) deck-submission pair in this log is `(Explorer_Play, Historic)`. Pairs with `session_2026-06-17_1601_pioneer` (Standard-registered deck in the same queue → `Format:Standard`) to show deck `Format` reflects deck build legality, NOT match/queue format.
 Deck (yours): "Boros Tokens" (a **Standard-registered** deck). Submitted via **EventSetDeckV3** with `EventName:"Explorer_Play"`; the deck `Summary.Attributes` carry `Format:"Standard"` (the deck's registered build format), even though the match format is Pioneer. This is the corpus's first `Explorer_Play` sample and demonstrates that the deck-submission `Format` attribute can under-report the actual match format — the precise format must be read from `EventName`. Directly relevant to `manasight-parser#232`.
 
