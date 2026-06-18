@@ -102,6 +102,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-06-17 | `session_2026-06-17_1655_timeless.log` | Timeless Bo1 Play match, Mardu Energy (Lurrus companion), 1 game played. First **Timeless** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Timeless"` carried by **EventSetDeckV3** with `EventName:"Timeless_Play"`. Confirms Timeless is a distinct deck-`Format` value (unlike Explorer/Pioneer → `Historic`) |
 | 2026-06-17 | `session_2026-06-17_1615_pioneer-historic.log` | Pioneer Bo1 Play (`EventName:"Explorer_Play"`), Rakdos Fling, 1 game (result not recorded). KEY `manasight-parser#232` evidence — a Pioneer-legal deck submits with deck `Format:"Historic"`, proving non-Standard Pioneer collapses to Historic; only `Explorer_Play` signals Pioneer (`manasight-corpus#36`) |
 | 2026-06-17 | `session_2026-06-17_1601_pioneer.log` | Pioneer Bo1 match via the **Explorer_Play** queue (1 game). First `Explorer_Play` sample (`manasight-corpus#36` / `manasight-parser#232`). FINDING: deck "Boros Tokens" is Standard-registered, so its EventSetDeckV3 `Format` attribute reads **`Standard`**, NOT the queue/match format — deck `Format` = the deck's registered build format, while the precise match format rides on `EventName` (`Explorer_Play`) |
+| 2026-06-17 | `session_2026-06-17_1833_standard-brawl.log` | Standard Brawl Bo1 Play, "Getting the Gaang Together" (60-card singleton + commander). First **Standard Brawl** sample (`manasight-corpus#36` / `manasight-parser#232`) — `EventName:"Play_Brawl"` → deck `Format:"Brawl"` (distinct from `HistoricBrawl`), with populated `Deck.CommandZone`. Resolves the schema-validation 'phantom `Play_Brawl`' hole (previously seen only in `EventGetCoursesV2` course-catalog noise — now the first AUTHORITATIVE `Play_Brawl` submission); pairs with `session_2026-06-17_1708_brawl` (`Play_Brawl_Historic` → `HistoricBrawl`, 100-card) — both Brawl variants now authoritatively confirmed |
 
 ---
 
@@ -1948,6 +1949,10 @@ Pioneer match via the **Explorer_Play** queue (Bo1, Play; Arena's internal name 
 
 **IMPORTANT FINDING for `manasight/manasight-parser#232`:** the submitted deck ("Boros Tokens") is **Standard-registered**, so the EventSetDeckV3 `Format` attribute reads **`Standard`**, NOT the queue/match format. This shows the deck `Format` attribute = the deck's registered/build format (narrowest legal), not the match format; for format-named queues the precise format is carried by `EventName` (`Explorer_Play`), and the deck `Format` can under-report. Contrast with the `2026-06-17_1543_alchemy` session, where the Alchemy-registered deck's `Format` happened to match the queue. Source: archive `UTC_Log - 06-17-2026 23.01.25.log`.
 
+### Session 2026-06-17_1833_standard-brawl
+
+First **Standard Brawl** sample in the corpus. `EventName: "Play_Brawl"` → deck `Format: "Brawl"` (distinct from `HistoricBrawl`). 60-card singleton (59 maindeck + 1 commander; `Deck.CommandZone` populated). RESOLVES the schema-validation 'phantom Play_Brawl' hole: `Play_Brawl` was previously seen only in `EventGetCoursesV2` course-catalog noise; this is the first AUTHORITATIVE `Play_Brawl` submission, so `format=Brawl` is now `format_source=EventName`, not a convention guess. Pairs with `session_2026-06-17_1708_brawl` (`Play_Brawl_Historic` → `HistoricBrawl`, 100-card) — both Brawl variants now authoritatively confirmed, and `is_singleton` (non-empty `Deck.CommandZone`) holds for both. Captured for `manasight/manasight-corpus#36`; design: `docs/architecture/match-format-event-decoding.md`. Source: archive `UTC_Log - 06-18-2026 01.33.29.log`.
+
 | Field | Value |
 |-------|-------|
 | Date | 2026-06-17 |
@@ -1990,6 +1995,15 @@ Pioneer match via the **Explorer_Play** queue (Bo1, Play; Arena's internal name 
 | Session log size (raw, post-strip) | 5,213,839 (4.97 MB) |
 | Session log size (gzip) | 487,372 (~476 KB) |
 | Compression ratio | ~10.7:1 |
+| MTGA Version | TBD |
+| Source | `UTC_Log - 06-18-2026 01.33.29.log` (archive) |
+| Raw file | `session_2026-06-17_1833_standard-brawl.log` |
+| Format | Standard Brawl (Bo1 — `EventName: "Play_Brawl"`); 60-card singleton + commander |
+| Deck | "Getting the Gaang Together" (60-card singleton, commander cardId 97511) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 5,651,607 (5.39 MB) |
+| Session log size (gzip) | 515,178 (~503 KB) |
+| Compression ratio | ~11.0:1 |
 
 #### Parser Coverage
 
@@ -2015,6 +2029,10 @@ Pioneer match via the **Explorer_Play** queue (Bo1, Play; Arena's internal name 
 | Routed | 765 |
 | Unknown | 68 |
 | Timestamp failures | 53 |
+| Total entries | 966 |
+| Routed | 851 |
+| Unknown | 115 |
+| Timestamp failures | 83 |
 
 #### Event Breakdown
 
@@ -2054,4 +2072,17 @@ Deck (yours): **Mardu Energy Timeless** (Lurrus of the Dream-Den companion; Lurr
 Deck (yours): **Hei Bai, Forest Guardian** (100-card singleton commander Brawl deck). Submitted via **EventSetDeckV3** with `EventName:"Play_Brawl_Historic"`; the deck `Summary.Attributes` carry `Format:"HistoricBrawl"`. The submission payload carries a populated `Deck.CommandZone` (`[{cardId: 98284, quantity: 1}]` — the commander) alongside a 99-card `MainDeck`, confirming the command-zone schema for singleton/commander formats. The authoritative submission `EventName` (`Play_Brawl_Historic`) is more specific than the bare `Play_Brawl` seen in `EventGetCoursesV2` course-catalog listings, distinguishing Historic Brawl from Standard Brawl. This completes the corpus's 4-format deck-submission gap set (Alchemy, Pioneer, Timeless, Brawl) — directly relevant to `manasight-parser#232`.
 Deck (yours): "Rakdos Fling" (Rakdos prowess/aggro; DeckId `46309f58-...`) — an Explorer/Pioneer-legal build (the `Explorer_Play` queue accepted it) but registered as **Historic**. Submitted via **EventSetDeckV3** with `EventName:"Explorer_Play"`, while the deck `Summary.Attributes` carry `Format:"Historic"`. This is the KEY evidence for `manasight-parser#232`: there is no `Explorer`/`Pioneer` deck-`Format` value — a non-Standard Pioneer deck collapses to `Historic`, so the only Pioneer signal is the queue's `EventName:"Explorer_Play"`. The single (EventName, Format) deck-submission pair in this log is `(Explorer_Play, Historic)`. Pairs with `session_2026-06-17_1601_pioneer` (Standard-registered deck in the same queue → `Format:Standard`) to show deck `Format` reflects deck build legality, NOT match/queue format.
 Deck (yours): "Boros Tokens" (a **Standard-registered** deck). Submitted via **EventSetDeckV3** with `EventName:"Explorer_Play"`; the deck `Summary.Attributes` carry `Format:"Standard"` (the deck's registered build format), even though the match format is Pioneer. This is the corpus's first `Explorer_Play` sample and demonstrates that the deck-submission `Format` attribute can under-report the actual match format — the precise format must be read from `EventName`. Directly relevant to `manasight-parser#232`.
+
+| ClientAction | 347 |
+| DeckCollection | 2 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 1 |
+| GameState | 821 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 1 |
+| Unknown | 10 |
+
+Deck (yours): **"Getting the Gaang Together"** (60-card singleton Standard Brawl deck — 59 maindeck + 1 commander; commander cardId 97511 in `Deck.CommandZone`). Submitted via **EventSetDeckV3** with `EventName:"Play_Brawl"`; the deck `Summary.Attributes` carry `Format:"Brawl"` (distinct from `HistoricBrawl`). The submission payload carries a non-empty `Deck.CommandZone` (`[{cardId: 97511, quantity: 1}]`) alongside the 59-card `MainDeck`, confirming the command-zone schema holds for Standard Brawl too. RESOLVES the schema-validation 'phantom `Play_Brawl`' hole: `Play_Brawl` was previously only ever seen in `EventGetCoursesV2` course-catalog noise, so `format=Brawl` was a convention guess; this is the first AUTHORITATIVE `Play_Brawl` deck submission, making `format_source=EventName`. The single (EventName, Format) deck-submission pair in this log is `(Play_Brawl, Brawl)`. Pairs with `session_2026-06-17_1708_brawl` (`(Play_Brawl_Historic, HistoricBrawl)`, 100-card) — both Brawl variants now authoritatively confirmed, and `is_singleton` (non-empty `Deck.CommandZone`) holds for both. Captured for `manasight/manasight-corpus#36`; data for `manasight/manasight-parser#232`.
 
