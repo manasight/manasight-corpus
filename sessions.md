@@ -102,6 +102,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-06-17 | `session_2026-06-17_1655_timeless.log` | Timeless Bo1 Play match, Mardu Energy (Lurrus companion), 1 game played. First **Timeless** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Timeless"` carried by **EventSetDeckV3** with `EventName:"Timeless_Play"`. Confirms Timeless is a distinct deck-`Format` value (unlike Explorer/Pioneer → `Historic`) |
 | 2026-06-17 | `session_2026-06-17_1615_pioneer-historic.log` | Pioneer Bo1 Play (`EventName:"Explorer_Play"`), Rakdos Fling, 1 game (result not recorded). KEY `manasight-parser#232` evidence — a Pioneer-legal deck submits with deck `Format:"Historic"`, proving non-Standard Pioneer collapses to Historic; only `Explorer_Play` signals Pioneer (`manasight-corpus#36`) |
 | 2026-06-17 | `session_2026-06-17_1601_pioneer.log` | Pioneer Bo1 match via the **Explorer_Play** queue (1 game). First `Explorer_Play` sample (`manasight-corpus#36` / `manasight-parser#232`). FINDING: deck "Boros Tokens" is Standard-registered, so its EventSetDeckV3 `Format` attribute reads **`Standard`**, NOT the queue/match format — deck `Format` = the deck's registered build format, while the precise match format rides on `EventName` (`Explorer_Play`) |
+| 2026-06-17 | `session_2026-06-17_1847_pioneer-ranked.log` | Pioneer **Ranked** Bo1 via the **`Explorer_Ladder`** queue (Rakdos Fling, 1 game). First authoritative **ranked, non-Standard** sample in the corpus (`manasight-corpus#36`) — `EventName:"Explorer_Ladder"` submitted via **EventSetDeckV3** with deck `Format:"Historic"` (Pioneer collapses to Historic); Bo1 `MatchWinCondition_SingleElimination`. Confirms the `<Fmt>_Ladder` ranked-queue family; pairs with `session_2026-06-17_1615_pioneer-historic` (`Explorer_Play`, unranked) |
 
 ---
 
@@ -2054,4 +2055,49 @@ Deck (yours): **Mardu Energy Timeless** (Lurrus of the Dream-Den companion; Lurr
 Deck (yours): **Hei Bai, Forest Guardian** (100-card singleton commander Brawl deck). Submitted via **EventSetDeckV3** with `EventName:"Play_Brawl_Historic"`; the deck `Summary.Attributes` carry `Format:"HistoricBrawl"`. The submission payload carries a populated `Deck.CommandZone` (`[{cardId: 98284, quantity: 1}]` — the commander) alongside a 99-card `MainDeck`, confirming the command-zone schema for singleton/commander formats. The authoritative submission `EventName` (`Play_Brawl_Historic`) is more specific than the bare `Play_Brawl` seen in `EventGetCoursesV2` course-catalog listings, distinguishing Historic Brawl from Standard Brawl. This completes the corpus's 4-format deck-submission gap set (Alchemy, Pioneer, Timeless, Brawl) — directly relevant to `manasight-parser#232`.
 Deck (yours): "Rakdos Fling" (Rakdos prowess/aggro; DeckId `46309f58-...`) — an Explorer/Pioneer-legal build (the `Explorer_Play` queue accepted it) but registered as **Historic**. Submitted via **EventSetDeckV3** with `EventName:"Explorer_Play"`, while the deck `Summary.Attributes` carry `Format:"Historic"`. This is the KEY evidence for `manasight-parser#232`: there is no `Explorer`/`Pioneer` deck-`Format` value — a non-Standard Pioneer deck collapses to `Historic`, so the only Pioneer signal is the queue's `EventName:"Explorer_Play"`. The single (EventName, Format) deck-submission pair in this log is `(Explorer_Play, Historic)`. Pairs with `session_2026-06-17_1601_pioneer` (Standard-registered deck in the same queue → `Format:Standard`) to show deck `Format` reflects deck build legality, NOT match/queue format.
 Deck (yours): "Boros Tokens" (a **Standard-registered** deck). Submitted via **EventSetDeckV3** with `EventName:"Explorer_Play"`; the deck `Summary.Attributes` carry `Format:"Standard"` (the deck's registered build format), even though the match format is Pioneer. This is the corpus's first `Explorer_Play` sample and demonstrates that the deck-submission `Format` attribute can under-report the actual match format — the precise format must be read from `EventName`. Directly relevant to `manasight-parser#232`.
+
+---
+
+### Session 2026-06-17_1847_pioneer-ranked
+
+First authoritative **ranked, non-Standard** sample in the corpus. `EventName: "Explorer_Ladder"` (Pioneer Ranked Bo1, `ranked=true`) -> deck `Format: "Historic"` (the Rakdos Fling Pioneer deck collapses to Historic, consistent with the unranked `Explorer_Play` capture). Previously `Explorer_Ladder` appeared ONLY in `EventGetCoursesV2` course-catalog noise; this is the first authoritative submission to it, confirming the `<Fmt>_Ladder` ranked-queue family and reaffirming that Pioneer is identifiable only via `EventName` (no `Explorer` deck-`Format` exists). Pairs with `session_2026-06-17_1615_pioneer-historic` (`Explorer_Play`, unranked). Captured for manasight/manasight-corpus#36; design: docs/architecture/match-format-event-decoding.md.
+
+The single (EventName, Format) deck-submission pair in this log is `(Explorer_Ladder, Historic)` — the only `==> EventSetDeckV3` request. The GRE `matchWinCondition` is `MatchWinCondition_SingleElimination` (Bo1).
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | 2026.60.0 (2026.60.0.4950.1282485) |
+| Source | `UTC_Log - 06-18-2026 01.47.31.log` (archive) |
+| Raw file | `session_2026-06-17_1847_pioneer-ranked.log` |
+| Format | Pioneer Ranked Bo1 (`EventName: "Explorer_Ladder"`; deck `Format: "Historic"`; Bo1 `MatchWinCondition_SingleElimination`) |
+| Deck | Rakdos Fling (Pioneer/Explorer-legal; registers as Historic) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 3,714,764 (3.54 MB) |
+| Session log size (gzip) | 407,487 (~398 KB) |
+| Compression ratio | ~9.1:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 478 |
+| Routed | 410 |
+| Unknown | 68 |
+| Timestamp failures | 51 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 232 |
+| DeckCollection | 2 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 1 |
+| GameState | 305 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 1 |
+| Unknown | 9 |
 

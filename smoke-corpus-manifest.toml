@@ -293,3 +293,9 @@ filename      = "session_2026-06-17_1601_pioneer.log"
 sha256        = "76479d7f6f7fbc99578943bbb1ce6bb3e38e89db29c77400c234a4255a58f2d2"
 size_bytes    = 5213839
 date_captured = "2026-06-17"
+
+[[files]]
+filename      = "session_2026-06-17_1847_pioneer-ranked.log"
+sha256        = "ba41283d737730c68adb53ae4ead0971b9f649ba4ea0567f6f0d5f0fc97d00cc"
+size_bytes    = 3714764
+date_captured = "2026-06-17"
