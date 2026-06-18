@@ -97,6 +97,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-05-13 | `session_2026-05-13_0952_recycle-defect-trigger.log` | Canonical example of the truncation→recycle drift defect (manasight-docs#657 epic); 1 `[Message summarized…]` marker + recycled instance_id 549 across the truncation, 53 drift WARNs follow |
 | 2026-06-14 | `session_2026-06-14_1409_name-a-card.log` | Standard play Bo1, 1-0 (Boros aggro vs Mono-B devotion). Regression fixture for `manasight-parser#221` — Petrified Hamlet "name a card" (`AnnotationType_ChoiceResult` Domain=13 / `LinkInfo ChooseLinkType=CardName`, named card = Agna Qel'a, locId 1071244) |
 | 2026-06-17 | `session_2026-06-17_1543_alchemy.log` | Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Alchemy"` carried by **EventSetDeckV3** with `EventName:"Alchemy_Play"` |
+| 2026-06-17 | `session_2026-06-17_1708_brawl.log` | Historic Brawl Bo1 Play, Hei Bai Forest Guardian commander deck. First **Brawl** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"HistoricBrawl"` carried by **EventSetDeckV3** with `EventName:"Play_Brawl_Historic"` (+ populated `CommandZone`). Completes the 4-format gap set |
 
 ---
 
@@ -1922,4 +1923,48 @@ Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** deck-submis
 | Unknown | 6 |
 
 Deck (yours): Bant (G/W/U) control/conjure — "Bant Conjure" (DeckId `aa16b1ab-...`). Submitted via **EventSetDeckV3** with `EventName:"Alchemy_Play"`; the deck `Summary.Attributes` carry `Format:"Alchemy"`. This is the corpus's first sample proving Alchemy's precise format is surfaced through the deck-submission path (not just the generic event/queue name) — directly relevant to `manasight-parser#232`.
+
+---
+
+### Session 2026-06-17_1708_brawl
+
+First **Brawl** deck-submission Format sample in the corpus. `Format:"HistoricBrawl"` via **EventSetDeckV3**, `EventName:"Play_Brawl_Historic"`. NOTE: the authoritative submission EventName `Play_Brawl_Historic` is MORE SPECIFIC than the bare `Play_Brawl` that appears in EventGetCoursesV2 course-catalog listings — it distinguishes Historic Brawl from Standard Brawl. Confirms HistoricBrawl is a distinct deck-`Format` value (commander/singleton deck). Captured for `manasight/manasight-corpus#36`; data for `manasight/manasight-parser#232`. Completes the 4-format gap set (Alchemy, Pioneer, Timeless, Brawl). Source: archive `UTC_Log - 06-18-2026 00.08.00.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | TBD |
+| Source | `UTC_Log - 06-18-2026 00.08.00.log` (archive) |
+| Raw file | `session_2026-06-17_1708_brawl.log` |
+| Format | Historic Brawl (Bo1 — `EventName: "Play_Brawl_Historic"`) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 4,259,777 (4.06 MB) |
+| Session log size (gzip) | 438,647 (~428 KB) |
+| Compression ratio | ~9.7:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 645 |
+| Routed | 567 |
+| Unknown | 78 |
+| Timestamp failures | 59 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 217 |
+| DeckCollection | 2 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 1 |
+| GameState | 549 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 1 |
+| Unknown | 10 |
+
+Deck (yours): **Hei Bai, Forest Guardian** (100-card singleton commander Brawl deck). Submitted via **EventSetDeckV3** with `EventName:"Play_Brawl_Historic"`; the deck `Summary.Attributes` carry `Format:"HistoricBrawl"`. The submission payload carries a populated `Deck.CommandZone` (`[{cardId: 98284, quantity: 1}]` — the commander) alongside a 99-card `MainDeck`, confirming the command-zone schema for singleton/commander formats. The authoritative submission `EventName` (`Play_Brawl_Historic`) is more specific than the bare `Play_Brawl` seen in `EventGetCoursesV2` course-catalog listings, distinguishing Historic Brawl from Standard Brawl. This completes the corpus's 4-format deck-submission gap set (Alchemy, Pioneer, Timeless, Brawl) — directly relevant to `manasight-parser#232`.
 
