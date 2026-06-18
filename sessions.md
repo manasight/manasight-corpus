@@ -97,6 +97,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-05-13 | `session_2026-05-13_0952_recycle-defect-trigger.log` | Canonical example of the truncation→recycle drift defect (manasight-docs#657 epic); 1 `[Message summarized…]` marker + recycled instance_id 549 across the truncation, 53 drift WARNs follow |
 | 2026-06-14 | `session_2026-06-14_1409_name-a-card.log` | Standard play Bo1, 1-0 (Boros aggro vs Mono-B devotion). Regression fixture for `manasight-parser#221` — Petrified Hamlet "name a card" (`AnnotationType_ChoiceResult` Domain=13 / `LinkInfo ChooseLinkType=CardName`, named card = Agna Qel'a, locId 1071244) |
 | 2026-06-17 | `session_2026-06-17_1543_alchemy.log` | Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** Format deck-submission sample (`manasight-corpus#36` / `manasight-parser#232`) — `Format:"Alchemy"` carried by **EventSetDeckV3** with `EventName:"Alchemy_Play"` |
+| 2026-06-17 | `session_2026-06-17_1720_standard-event.log` | Standard constructed Event (Boros Tokens), 1 game. First **`_Event` queue-family** sample (`manasight-corpus#36`) — `EventName:"Constructed_Event_2026"` submitted via **EventSetDeckV3** with deck `Format:"Standard"`; Bo1 `MatchWinCondition_SingleElimination` |
 
 ---
 
@@ -1922,4 +1923,49 @@ Alchemy Bo1 Play match, Bant control/conjure, 1-0. First **Alchemy** deck-submis
 | Unknown | 6 |
 
 Deck (yours): Bant (G/W/U) control/conjure — "Bant Conjure" (DeckId `aa16b1ab-...`). Submitted via **EventSetDeckV3** with `EventName:"Alchemy_Play"`; the deck `Summary.Attributes` carry `Format:"Alchemy"`. This is the corpus's first sample proving Alchemy's precise format is surfaced through the deck-submission path (not just the generic event/queue name) — directly relevant to `manasight-parser#232`.
+
+---
+
+### Session 2026-06-17_1720_standard-event
+
+First authoritative **`_Event` queue-family** sample in the corpus. A Standard constructed EVENT (from the Events tab) submitted its deck to `EventName: "Constructed_Event_2026"` with deck `Format: "Standard"`. Confirms the constructed-event naming form: `Constructed_Event_<year>` — the unprefixed `Constructed_` = Standard (same 'bare = Standard' convention as `Play`/`Ladder`), with a version/year suffix (`_2026`). This is a GENERIC queue (format comes from the deck, like `Constructed_BestOf3`), not a format-bearing one; the format-prefixed event forms (`Alchemy_Event`, `Historic_Event`) remain uncaptured. Validates the `_Event` grammar production flagged as the highest-frequency real-world miss in the schema design (docs/architecture/match-format-event-decoding.md). Captured for `manasight/manasight-corpus#36`. Source: archive `UTC_Log - 06-18-2026 00.20.33.log`.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-06-17 |
+| MTGA Version | 2026.60.0.4 |
+| Source | `UTC_Log - 06-18-2026 00.20.33.log` (archive) |
+| Raw file | `session_2026-06-17_1720_standard-event.log` |
+| Format | Standard constructed Event (`EventName: "Constructed_Event_2026"`; deck `Format: "Standard"`; Bo1 `MatchWinCondition_SingleElimination`) |
+| Deck | Boros Tokens (Standard-registered) |
+| Record | 1 game played (result not recorded) |
+| Session log size (raw, post-strip) | 4,449,576 (4.24 MB) |
+| Session log size (gzip) | 456,832 (~446 KB) |
+| Compression ratio | ~9.7:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 399 |
+| Routed | 316 |
+| Unknown | 83 |
+| Timestamp failures | 69 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| ClientAction | 138 |
+| DeckCollection | 2 |
+| DetailedLoggingStatus | 1 |
+| EventLifecycle | 2 |
+| GameResult | 1 |
+| GameState | 411 |
+| MatchState | 2 |
+| Rank | 2 |
+| Session | 3 |
+| Unknown | 13 |
+
+Deck (yours): "Boros Tokens" (R/W, DeckId `4c088509-...`). Submitted via the **only** `==> EventSetDeckV3` request in the log, with `EventName:"Constructed_Event_2026"`; the deck `Summary.Attributes` carry `Format:"Standard"`. The many other `EventName` strings in the log (`Alchemy_Play`, `Historic_Ladder`, `Constructed_BestOf3`, …) are event-catalog listings from `EventGetCourses`-style payloads, not deck submissions. This is the corpus's first `_Event`-family deck-submission sample, validating the `Constructed_Event_<year>` grammar production for `manasight/manasight-corpus#36`.
 
