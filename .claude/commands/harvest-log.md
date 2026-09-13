@@ -32,6 +32,10 @@ Examples:
 - `/harvest-log 23.57.07` → UTC_Log matching `23.57.07`, no suffix
 - `/harvest-log 23.57.07 _sealed-purchase` → that UTC_Log + suffix
 
+## GitHub-bound text rule
+
+No GitHub-bound text — PR title, PR body, branch name, commit message, or comment — states counts, filenames, field names, or before/after of `scrub` output. Describe the session being added, not what `scrub` changed.
+
 ## Instructions
 
 ### Step 1: Resolve archive directory and select source file
@@ -51,7 +55,7 @@ elif [ "$PLATFORM" = "Linux" ]; then
   # MTGA *install* dir (steamapps/common/MTGA/MTGA_Data/Logs/Logs), NOT the Proton
   # prefix's AppData. Discover the Steam library hosting MTGA (app 2141910) by
   # parsing libraryfolders.vdf — it is not always the default ~/.local/share/Steam.
-  # (Same discovery as manasight-parser's Linux log discovery / PR #793.)
+  # (Same discovery as manasight-parser's Linux log discovery.)
   STEAM_DEFAULT="$HOME/.local/share/Steam"
   VDF="$STEAM_DEFAULT/steamapps/libraryfolders.vdf"
   MTGA_LIB=""
@@ -68,8 +72,8 @@ elif [ "$PLATFORM" = "Linux" ]; then
   if [ -n "$MTGA_LIB" ] && [ -d "$MTGA_LIB/steamapps/common/MTGA/MTGA_Data/Logs/Logs" ]; then
     ARCHIVE_DIR="$MTGA_LIB/steamapps/common/MTGA/MTGA_Data/Logs/Logs"
   else
-    # Lutris fallback (UNVERIFIED — manasight/manasight-docs#772); guarded by the
-    # -d check below, so a wrong guess simply falls through to the error.
+    # Lutris fallback (UNVERIFIED); guarded by the -d check below, so a wrong
+    # guess simply falls through to the error.
     ARCHIVE_DIR="$HOME/Games/magic-the-gathering-arena/drive_c/Program Files/Wizards of the Coast/MTGA/MTGA_Data/Logs/Logs"
   fi
 elif [ "$PLATFORM" = "Darwin" ]; then
@@ -133,7 +137,7 @@ Record the post-strip raw file size in bytes and human-readable form.
 
 ### Step 4: Sanitize
 
-Download the `scrub` binary from the latest `manasight-parser` release and sanitize the log:
+Resolve the latest `manasight-parser` release tag, download the `scrub` binary from that exact release, and sanitize the log. Keep `SCRUB_TAG`: Step 7 records it as `scrub_version` on the manifest entry.
 
 ```bash
 PLATFORM=$(uname -s)
@@ -142,7 +146,8 @@ case "$PLATFORM" in
   Darwin*) ARCH=$(uname -m); if [ "$ARCH" = "arm64" ]; then ASSET="scrub-macos-aarch64.tar.gz"; else ASSET="scrub-macos-x86_64.tar.gz"; fi ;;
 esac
 
-gh release download --repo manasight/manasight-parser --pattern "$ASSET" --dir /tmp --clobber
+SCRUB_TAG=$(gh release view --repo manasight/manasight-parser --json tagName --jq '.tagName')
+gh release download "$SCRUB_TAG" --repo manasight/manasight-parser --pattern "$ASSET" --dir /tmp --clobber
 mkdir -p /tmp/scrub-bin
 tar xzf /tmp/$ASSET -C /tmp/scrub-bin
 SCRUB=$(find /tmp/scrub-bin -name scrub -type f | head -1)
@@ -189,16 +194,17 @@ SHA=$(sha256sum /tmp/harvest-work/${SESSION_NAME}.log | awk '{print $1}')
 SIZE=$(stat --format='%s' /tmp/harvest-work/${SESSION_NAME}.log)
 ```
 
-Append to `smoke-corpus-manifest.toml`:
+Append to `smoke-corpus-manifest.toml` (`scrub_version` is `$SCRUB_TAG` from Step 4):
 ```toml
 [[files]]
 filename      = "<session-name>.log"
 sha256        = "<sha-from-above>"
 size_bytes    = <size-from-above>
 date_captured = "YYYY-MM-DD"
+scrub_version = "<scrub-tag-from-step-4>"
 ```
 
-Commit, push, and open PR:
+Commit, push, and open PR. The commit message, branch name, PR title, and PR body follow the [GitHub-bound text rule](#github-bound-text-rule):
 ```bash
 git add corpus/${SESSION_NAME}.log.gz smoke-corpus-manifest.toml sessions.md
 git commit -m "Add ${SESSION_NAME} to corpus"

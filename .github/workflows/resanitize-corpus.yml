@@ -13,75 +13,180 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Resolve the latest manasight-parser release tag once and download scrub
+      # by that exact tag, so the manifest records the release that was used.
       - name: Download scrub
+        id: scrub
         run: |
-          gh release download --repo manasight/manasight-parser \
-            --pattern 'scrub-linux-x86_64.tar.gz' --dir /tmp --clobber
-          mkdir -p /tmp/scrub-bin
-          tar xzf /tmp/scrub-linux-x86_64.tar.gz -C /tmp/scrub-bin
-          SCRUB=$(find /tmp/scrub-bin -name scrub -type f | head -1)
+          set -euo pipefail
+          TAG=$(gh release view --repo manasight/manasight-parser --json tagName --jq '.tagName')
+          if ! [[ "$TAG" =~ ^[0-9A-Za-z._+-]+$ ]]; then
+            echo "::error::Unexpected manasight-parser release tag format."
+            exit 1
+          fi
+          gh release download "$TAG" --repo manasight/manasight-parser \
+            --pattern 'scrub-linux-x86_64.tar.gz' --dir "$RUNNER_TEMP" --clobber
+          mkdir -p "$RUNNER_TEMP/scrub-bin"
+          tar xzf "$RUNNER_TEMP/scrub-linux-x86_64.tar.gz" -C "$RUNNER_TEMP/scrub-bin"
+          SCRUB=$(find "$RUNNER_TEMP/scrub-bin" -name scrub -type f | head -1)
           chmod +x "$SCRUB"
-          cp "$SCRUB" /tmp/scrub
+          cp "$SCRUB" "$RUNNER_TEMP/scrub"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Re-sanitize all files
+      # Nothing per-file is printed. Each processed file is recorded in
+      # results.tsv as: <manifest filename> TAB <sha256> TAB <size_bytes>,
+      # with sha256 and size_bytes left empty when scrub made no change.
+      # sha256 and size_bytes are computed like /harvest-log does: over the
+      # uncompressed, sanitized log.
+      - name: Re-sanitize corpus and update manifest
         id: sanitize
         run: |
-          DIRTY=false
-          CHANGED=""
+          set -euo pipefail
+          WORK="$RUNNER_TEMP/resanitize"
+          RESULTS="$WORK/results.tsv"
+          mkdir -p "$WORK"
+          : > "$RESULTS"
           shopt -s nullglob
           for file in corpus/*.log.gz; do
-            gunzip -c "$file" > /tmp/original.log
-            /tmp/scrub < /tmp/original.log > /tmp/sanitized.log
-
-            if ! cmp -s /tmp/original.log /tmp/sanitized.log; then
-              echo "Re-sanitized: $file"
-              gzip -c /tmp/sanitized.log > "$file"
-              DIRTY=true
-              CHANGED="$CHANGED\n- $file"
+            gunzip -c "$file" > "$WORK/original.log"
+            "$RUNNER_TEMP/scrub" < "$WORK/original.log" > "$WORK/sanitized.log"
+            entry=$(basename "$file" .gz)
+            if cmp -s "$WORK/original.log" "$WORK/sanitized.log"; then
+              printf '%s\t\t\n' "$entry" >> "$RESULTS"
             else
-              echo "Clean: $file"
+              gzip -c "$WORK/sanitized.log" > "$file"
+              SHA=$(sha256sum "$WORK/sanitized.log" | awk '{print $1}')
+              SIZE=$(stat --format='%s' "$WORK/sanitized.log")
+              printf '%s\t%s\t%s\n' "$entry" "$SHA" "$SIZE" >> "$RESULTS"
             fi
-            rm -f /tmp/original.log /tmp/sanitized.log
+            rm -f "$WORK/original.log" "$WORK/sanitized.log"
           done
-          echo "dirty=$DIRTY" >> "$GITHUB_OUTPUT"
-          {
-            echo "changed<<DELIM"
-            echo -e "$CHANGED"
-            echo "DELIM"
-          } >> "$GITHUB_OUTPUT"
 
-      - name: Create PR with re-sanitized files
+          # Set scrub_version on every processed [[files]] entry and refresh
+          # sha256/size_bytes on re-sanitized ones. Other lines are kept as-is;
+          # the result is checked against a parsed copy before it is written.
+          python3 - "$RESULTS" <<'PY'
+          import os
+          import re
+          import sys
+          import tomllib
+
+          MANIFEST = "smoke-corpus-manifest.toml"
+          TAG = os.environ["SCRUB_TAG"]
+
+
+          def fail(message):
+              print(f"::error::{message}")
+              sys.exit(1)
+
+
+          results = {}
+          with open(sys.argv[1], encoding="utf-8") as fh:
+              for row in fh:
+                  name, sha, size = row.rstrip("\n").split("\t")
+                  if sha and not (re.fullmatch(r"[0-9a-f]{64}", sha) and size.isdigit()):
+                      fail("Unexpected sha256 or size_bytes value.")
+                  results[name] = (sha, size)
+
+          with open(MANIFEST, encoding="utf-8") as fh:
+              text = fh.read()
+
+          expected = tomllib.loads(text)
+          entries = expected.get("files", [])
+          if not set(results) <= {entry.get("filename") for entry in entries}:
+              fail(f"{MANIFEST} has no [[files]] entry for one or more corpus files.")
+          for entry in entries:
+              if entry.get("filename") in results:
+                  sha, size = results[entry["filename"]]
+                  entry["scrub_version"] = TAG
+                  if sha:
+                      entry["sha256"] = sha
+                      entry["size_bytes"] = int(size)
+
+          TABLE = re.compile(r"^\s*\[")
+          FILES_TABLE = re.compile(r"^\s*\[\[\s*files\s*\]\]\s*(#.*)?$")
+          KEY = re.compile(r"^(\s*([A-Za-z0-9_-]+)\s*=\s*)")
+
+          lines = text.splitlines(keepends=True)
+          out = []
+          i = 0
+          while i < len(lines):
+              out.append(lines[i])
+              if not FILES_TABLE.match(lines[i]):
+                  i += 1
+                  continue
+              end = i + 1
+              while end < len(lines) and not TABLE.match(lines[end]):
+                  end += 1
+              body = lines[i + 1:end]
+              name = tomllib.loads("".join(body)).get("filename")
+              if name in results:
+                  sha, size = results[name]
+                  updates = {"scrub_version": f'"{TAG}"'}
+                  if sha:
+                      updates["sha256"] = f'"{sha}"'
+                      updates["size_bytes"] = size
+                  last_key = -1
+                  for n, line in enumerate(body):
+                      match = KEY.match(line)
+                      if not match:
+                          continue
+                      last_key = n
+                      if match.group(2) in updates:
+                          body[n] = match.group(1) + updates.pop(match.group(2)) + "\n"
+                  if updates:
+                      if last_key >= 0 and not body[last_key].endswith("\n"):
+                          body[last_key] += "\n"
+                      body[last_key + 1:last_key + 1] = [
+                          f"{key:<13} = {value}\n" for key, value in updates.items()
+                      ]
+              out.extend(body)
+              i = end
+
+          new_text = "".join(out)
+          if tomllib.loads(new_text) != expected:
+              fail(f"{MANIFEST} update did not produce the expected entries.")
+          with open(MANIFEST, "w", encoding="utf-8") as fh:
+              fh.write(new_text)
+          PY
+
+          if [ -n "$(git status --porcelain -- corpus smoke-corpus-manifest.toml)" ]; then
+            echo "dirty=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "dirty=false" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          SCRUB_TAG: ${{ steps.scrub.outputs.tag }}
+
+      - name: Open pull request
         if: steps.sanitize.outputs.dirty == 'true'
         run: |
-          BRANCH="resanitize/$(date +%Y%m%d-%H%M%S)"
-          git checkout -b "$BRANCH"
+          set -euo pipefail
+          BRANCH="resanitize/$(date -u +%Y%m%d-%H%M%S)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add corpus/
-          git commit -m "Re-sanitize corpus with latest scrub patterns"
-          git push -u origin "$BRANCH"
-          gh pr create \
+          git checkout -q -b "$BRANCH"
+          git add corpus/ smoke-corpus-manifest.toml
+          git commit -q -m "Re-sanitize corpus with latest scrub patterns"
+          git push -q -u origin "$BRANCH"
+          gh pr create --base main --head "$BRANCH" \
             --title "Re-sanitize corpus with latest scrub patterns" \
-            --body "$(cat <<EOF
-          ## Summary
-
-          Automated re-sanitization of the full corpus using the latest \`scrub\` binary from manasight-parser.
-
-          ### Files re-sanitized
-          ${{ steps.sanitize.outputs.changed }}
-
-          Triggered manually via workflow_dispatch.
+            --body-file - > /dev/null <<'EOF'
+          Automated re-sanitization of the corpus with the `scrub` binary from a
+          manasight-parser release, triggered manually via workflow_dispatch.
+          The release tag is recorded as `scrub_version` in `smoke-corpus-manifest.toml`.
           EOF
-          )"
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Report results
+      - name: Report result
         run: |
-          if [ "${{ steps.sanitize.outputs.dirty }}" = "true" ]; then
-            echo "::notice::Re-sanitization complete — PR created with updated files."
+          if [ "$DIRTY" = "true" ]; then
+            echo "::notice::Re-sanitize finished; pull request opened."
           else
-            echo "::notice::All corpus files are already clean. No changes needed."
+            echo "::notice::Re-sanitize finished; no changes, no pull request opened."
           fi
+        env:
+          DIRTY: ${{ steps.sanitize.outputs.dirty }}

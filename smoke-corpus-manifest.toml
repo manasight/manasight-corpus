@@ -1,3 +1,8 @@
+# Optional [[files]] key:
+#   scrub_version  manasight-parser release tag (for example "vX.Y.Z") of the
+#                  `scrub` binary that last processed the file. Written by the
+#                  Re-sanitize Corpus workflow and by /harvest-log; not set by hand.
+
 corpus_tag = "manasight-corpus-v1"
 
 [[files]]
