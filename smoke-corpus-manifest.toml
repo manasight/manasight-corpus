@@ -7,330 +7,385 @@ corpus_tag = "manasight-corpus-v1"
 
 [[files]]
 filename      = "session_2026-02-22_0000_ecl-premier-bg-elves.log"
-sha256        = "eafde00c07476b44235f9f7a08e61586cbe4c7bcc365f33deb3092e7dfea4f14"
-size_bytes    = 31150988
+sha256        = "1bc347363d86be1d685ac04927e09b2bed58bdd7a86fd2c9fc701913b06a686e"
+size_bytes    = 31132460
 date_captured = "2026-02-22"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-02-22_0000_ecl-premier-uw-merfolk.log"
-sha256        = "1c32399c560369cbe37ec06eb68a4daebc08daea6c3e0458c0ffc3452650f18d"
-size_bytes    = 23690624
+sha256        = "b375f0e3861094084c0af39ec542b0d2c0fbc8f0d118a16c1320f9474ab718d8"
+size_bytes    = 23677149
 date_captured = "2026-02-22"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-02-23_0000_standard-bo1.log"
-sha256        = "d84300c94c5c447cd884f6c1a2d2a5304eaf70b1c50ad8eb7bd849424468e095"
-size_bytes    = 16104585
+sha256        = "e1ffb0a232294696871c899f17b01b113557ad18f37445596ff8ba816d12a289"
+size_bytes    = 16092679
 date_captured = "2026-02-23"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-03-05_0000.log"
-sha256        = "a4f2b15dafb2b635d4442d490c4f0492422e5575658664bf8133f8d1d67d7ad2"
-size_bytes    = 7545942
+sha256        = "9afac5e235b7d79f3ecfcdcb8b31a37ddb85651ba36e9448d509e26e941e0df2"
+size_bytes    = 7540874
 date_captured = "2026-03-05"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-03-06_0000_pick2-draft-only.log"
-sha256        = "4a29596428832f3e89daa76954a761c737109df931f70ea9ef7fcf75a53c6c7f"
-size_bytes    = 3276589
+sha256        = "15245b0fdc8483e8bd35e815f3f55b3ab929ae05f7e45cf78f88c1a1438974b9"
+size_bytes    = 3273952
 date_captured = "2026-03-06"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-03-06_0000_pick2-draft-game.log"
-sha256        = "b2b947c96ee15c66b53262dc50b5bce44ecef1e8bb26725f32cb7b4f496007c8"
-size_bytes    = 12031728
+sha256        = "08139a519ebb7c89ce2f6b361ab12a55f340e5b3b736571381c405a0229a555e"
+size_bytes    = 12026371
 date_captured = "2026-03-06"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-03-08_1103_standard-bo1-log-rotated.log"
-sha256        = "ce4e5e729050e7d8a69d0000bef4670d529d8f41c3c9ea38a13f6967ff398e92"
-size_bytes    = 9857419
+sha256        = "ec0e25253b77b639352d234d73d80acc42d50910109ac4a64cb68a8defd66bcb"
+size_bytes    = 9849827
 date_captured = "2026-03-08"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-03-11_1847_quick-draft-selesnya.log"
-sha256        = "73f3f1d57bcdbc5743dd98b716ee9b294869aebea16371aaaa16d153619a9be8"
-size_bytes    = 16409603
+sha256        = "3457e07b12737030d73330281ccbb5c8c54f7e287ca5a25506bf36078088295f"
+size_bytes    = 16401549
 date_captured = "2026-03-11"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-03-11_2124_trad-standard-bo3.log"
-sha256        = "0ea609bb64928a8a17a255675218a254bec03e251d24c91edd6b0e36d99e2065"
-size_bytes    = 11449748
+sha256        = "9c713e1754c13d2ce8a6ade116c421911d0366a966fac40b68fdaed380cf9b8b"
+size_bytes    = 11442262
 date_captured = "2026-03-11"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-03-15_1157_detailed_logs_disabled.log"
 sha256        = "6be4bc61365e26bdf13639d3729fcd12c9bdebbd6728cfabbe945255c34bfa8e"
 size_bytes    = 158660
 date_captured = "2026-03-15"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-03-17_1933_standard-bo1-debug.log"
-sha256        = "e6b0bafd70c6145f688797916fae0a7ddef342cded6ccf884f041d350c0b88f9"
-size_bytes    = 12972583
+sha256        = "886029a309884104de9a5e93d271135e67d5ac7e7c9950df9befc4525af1d7a2"
+size_bytes    = 12962449
 date_captured = "2026-03-17"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-03-21_0905_standard-bo3-skeleton.log"
-sha256        = "6937647819cccb97e2c8175a2bd9753ce8780e0a76ae397ba6f7a61c7d51dd50"
-size_bytes    = 8393062
+sha256        = "058d7bb483ce3f200bc671a3151182a5e8076e697b9aae090ca0e3eb8d56e22c"
+size_bytes    = 8387981
 date_captured = "2026-03-21"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-03-22_1232_debug.log"
-sha256        = "8adbb374652815ce0c70b3f19bbfa1598ae6f68d0e3e014929dd87382330428f"
-size_bytes    = 45991638
+sha256        = "24414d7e6e966f6b4b85871863123182d4f56d4742e99598a7f33d61f3a56a69"
+size_bytes    = 45960668
 date_captured = "2026-03-22"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-03-22_0000_feedback-019d1311.log"
-sha256        = "bcb4978b00ea99b96226dc923ee495dc7e14b81ce6714f9c09e576fc6a284ad4"
-size_bytes    = 10493573
+sha256        = "c2fb8aa0b9b98a2c0374a24738502210092605f8307b3563ab457562f04ef95c"
+size_bytes    = 10489045
 date_captured = "2026-03-22"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-05_1509.log"
-sha256        = "73e5cbd31efffd3a17454bc732b52a963e9c1bb507ba99723daed8057fbfca99"
-size_bytes    = 10585543
+sha256        = "8994107041e9628ed73c798e4aba13babf7e1047335bbe9ace4b0bd9f9da4f2f"
+size_bytes    = 10577956
 date_captured = "2026-04-05"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-05_0000_feedback-019d5e75.log"
-sha256        = "d85a65a808401efb4cd4804419cdfd54a535e6c6c8f9045cd013ae50e67c1e2d"
-size_bytes    = 25865859
+sha256        = "750fef9a80b926ebc68340d9375c349c741cd278238be68ca2f83292b2603db6"
+size_bytes    = 25848132
 date_captured = "2026-04-05"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-11_1108.log"
-sha256        = "285f18a064f7050bd6fa5ef9a9511eb5d8afd94b9e7b2683d89f69a15399c941"
-size_bytes    = 15086275
+sha256        = "26e77ff174976104c5f779e53473184088303115539c66b7c3ad76997d839910"
+size_bytes    = 15076761
 date_captured = "2026-04-11"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-11_1542_adapter-disable.log"
-sha256        = "0561663dd786f61513393f3d341275b3caba74c193fcac0b143a458099ee5668"
-size_bytes    = 14602103
+sha256        = "6eb5c7be731230d9198de1f9b245bbfa644fc89355d10e83dbbbab02bb87102e"
+size_bytes    = 14590222
 date_captured = "2026-04-11"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-11_1835_firewall.log"
-sha256        = "819e7b05fbe15c8559fd59e71eb9cb9dab863849975c0340b01bd8f9d608e668"
-size_bytes    = 11876842
+sha256        = "c357aa9a120219a296a5eec9ca01caef1ed1c67af58cd3e729d797143c9eca10"
+size_bytes    = 11867338
 date_captured = "2026-04-11"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-11_1900_clumsy-directional.log"
-sha256        = "d39ae48e9a9fe96fa3f1dd01760f21aa3e6f142b1abe3be901948148220d25b0"
-size_bytes    = 14737598
+sha256        = "e642c1986c505103af18c9160eb818df15e1a9a6927fe1982e302996f11c0c32"
+size_bytes    = 14725721
 date_captured = "2026-04-11"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-11_1930_clumsy-outbound-ranked.log"
-sha256        = "5e6d29696f628a1d0e0c973250023191aeecaa19c17ec1eb781b4208ea048307"
-size_bytes    = 6260667
+sha256        = "b802ccbc5ac9332095fce5b0cef9c4feca7f95c22b315c097a75e2c4b7e5499a"
+size_bytes    = 6255917
 date_captured = "2026-04-11"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-12_0844_edge-cases.log"
-sha256        = "eb98620e8afa651667b34eea85d328adc0b4c3d8973154b9be2391066ea5d409"
-size_bytes    = 12238957
+sha256        = "f1998dafe64007a0bf3e5b04da295af37bf4f0bed7aa18579cc6fff644802a47"
+size_bytes    = 12231826
 date_captured = "2026-04-12"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-12_1010_pfctl-bidirectional.log"
-sha256        = "205286548dffca55b6c531ce925e076592e9c9ea57eeddd808f069d7d7e544ee"
-size_bytes    = 12490831
+sha256        = "de3c2cfc09cb3e4b0ea7695f053146cff9032f579fe8cd6fa85a4b18afe11140"
+size_bytes    = 12481195
 date_captured = "2026-04-12"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-12_1045_pfctl-directional.log"
-sha256        = "cab6f0d4fd181101cc235c2344f0d80f1aed6df757a09fb796e0ec8237525161"
-size_bytes    = 23458713
+sha256        = "505a7fbbeca3909961719ed8e0b5c58913f008663f4b883e6db1411545cbcd17"
+size_bytes    = 23442046
 date_captured = "2026-04-12"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-12_1145_wifi-disable.log"
-sha256        = "9f0eae40c52e62e064a55594f75db827074e2149df9df199c22b335621002489"
-size_bytes    = 18154742
+sha256        = "b96432b1958ef14306b553dbae1a87680ce9dd94e7317bfd14898a992ceeca04"
+size_bytes    = 18142932
 date_captured = "2026-04-12"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-12_1240_edge-cases.log"
-sha256        = "d53dad78e2f26df0c7dbd77493b4c261ad534c17169b673c1fdd381863d8b05e"
-size_bytes    = 13903912
+sha256        = "6b63b3ed2b4804cefb65c5eaea3e356e26344e68b8fcfe0c649f5b536a4facbc"
+size_bytes    = 13896767
 date_captured = "2026-04-12"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-14_1720.log"
-sha256        = "ff6402797c41ec2683b510fec1101ffdd97dfa586af7fb51ef32c51725fe6383"
-size_bytes    = 4126647
+sha256        = "5d179fa58b9ec9a582f1cd320762daad87ed7399dcc7f9b821c651dee07c7f84"
+size_bytes    = 4097243
 date_captured = "2026-04-14"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-25_0841_deck-management-store.log"
-sha256        = "2c27a9ca78079159d2fb94c2058193a64a0804bda2a46551a9084cf43c9abaaf"
-size_bytes    = 3000051
+sha256        = "d607428c78babad64c0427238f368fc8b16de0615697b399c5f661520427d3d1"
+size_bytes    = 2967867
 date_captured = "2026-04-25"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-26_2209.log"
-sha256        = "3d4bcbe3f50f18a0b20b7a3e01a5406a4eecc24bc553d798e5539ecc9dd517b0"
-size_bytes    = 12071107
+sha256        = "1b4aa7892e35fc979e79c6d7c98644e8c35f7aed4f7588e8901b90a649562e35"
+size_bytes    = 12028729
 date_captured = "2026-04-26"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-27_2230.log"
-sha256        = "47bf62549bdfba2b7ed7b2e1f0d229ae58e5ac14d3bef3eed89bb96ebb9a1ad4"
-size_bytes    = 12070532
+sha256        = "a886b586511d1148632962603c70937d1d5dd8b702c1b354cc01140636fa5e32"
+size_bytes    = 12041106
 date_captured = "2026-04-27"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-29_2128.log"
-sha256        = "a5ca8e090d41cb9a72bb186c49944e41618f0279fdd70792176c6c41904776c8"
-size_bytes    = 8719745
+sha256        = "97f48df8e9a3141dc355f7f239d46109c71bacbea370f5ea0a12baa624ced608"
+size_bytes    = 8690036
 date_captured = "2026-04-29"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-29_2201.log"
-sha256        = "e437b4df27581936c6559be9ac71bac1ae12ebdc8cebe1b61d1aa25c9e7e4ebc"
-size_bytes    = 6043797
+sha256        = "e9201745a3aba1e905279a6128c9233274d9e083b35526f6dc0b91b7b37b46d6"
+size_bytes    = 6016629
 date_captured = "2026-04-29"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-29_2311.log"
-sha256        = "cd5ee9811974c84362807e2c30a6cf580dedfdb8547287a35ed47f792528a68e"
-size_bytes    = 12995334
+sha256        = "0c9854b40cb8bfe75b5ea987b37999c57b5c2d6df5f6c3726d20b3fceb612ccb"
+size_bytes    = 12952176
 date_captured = "2026-04-29"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-30_0000.log"
-sha256        = "1a480d950152965718d5a94ee87360e45097b60c320e6673170f92f95279c3d2"
-size_bytes    = 6656133
+sha256        = "e5fd6345ca806874b3cb73a5f00adb9875a83cb519a908f4e03f35c9d9f7fa95"
+size_bytes    = 6631358
 date_captured = "2026-04-30"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-04-30_2304.log"
-sha256        = "eaab06f035f0e94418941334a1f1bb97d6a915560ca0aa63456562a3e2b7fe8b"
-size_bytes    = 3132390
+sha256        = "ece4a18a9b3020e3db34db0328d95e476703037d18133d745cd2e8fd05603046"
+size_bytes    = 3105193
 date_captured = "2026-04-30"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-05-01_1657_sealed-purchase.log"
-sha256        = "834d5834bc5c76ebe85ade4210cbd0a5bec73acb755461fcb196f288fc0bd717"
-size_bytes    = 2066213
+sha256        = "4432a9ae551a667cb94f5d6af8fc7aed36e1e98230b4222419f4056b4993e0c0"
+size_bytes    = 2044150
 date_captured = "2026-05-01"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-05-01_1715_sealed-deckbuild.log"
-sha256        = "a6fdef62f83651cc7b424a6f61e5367e0726cba0a39e4b74875fea436c5d2274"
-size_bytes    = 2030941
+sha256        = "7fe62dfce7394a14561f9324be947be91d32ffa0493b40d9856192aee505ed57"
+size_bytes    = 2008787
 date_captured = "2026-05-01"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-05-01_1751_sealed-matches.log"
-sha256        = "bd1f178d16755a715b449995378898fc3b621b66cc4aa67a25049aee12c15a37"
-size_bytes    = 8170702
+sha256        = "38f7ca8d648702d63701e1a853e087a2dfe15bb74bc098498a55b3450420edca"
+size_bytes    = 8143010
 date_captured = "2026-05-01"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-05-06_0859_phantom-bootstrap-drift.log"
-sha256        = "c16c1401587e825b1784157b1ad690986226c41f5456b35cec6ded6cb9604edf"
-size_bytes    = 5912404
+sha256        = "aff4207bddf7ec3e8992dac316f030671bd7c849935cdf2484393e91c4b18c97"
+size_bytes    = 5882298
 date_captured = "2026-05-06"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-05-06_1412_rename-collision-cancelled-cast.log"
-sha256        = "a67e7decac0e8658f9fe478f193598769be19b73307157d2bf5160bf384757e3"
-size_bytes    = 5982296
+sha256        = "f4df5d53b4ecf30603cfdac2a39900a348bdfdd4a037484ac033082a674caf2f"
+size_bytes    = 5952362
 date_captured = "2026-05-06"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-05-06_1746_pr554-fix-delayed-collision-disproof.log"
-sha256        = "71486e62d12ef1c0127094d8dd89009c1f2ef2ffabfa94b166c43b6ba0768b32"
-size_bytes    = 5100902
+sha256        = "d2f9c70d1650ba12df7808bd6986bde31a2ad750f70c6666ef8ae6e86b7a908a"
+size_bytes    = 5073568
 date_captured = "2026-05-06"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-05-06_2224_parser-type-field-drop-trigger.log"
-sha256        = "f890a9788628056ec36fb5b1283c6be012194fc6744fc3a9616e9d159009daa5"
-size_bytes    = 3646288
+sha256        = "53f4fb20f67ac0500dfff21cea0b4549497271a243d9926a41b7bb2235e96ed7"
+size_bytes    = 3621635
 date_captured = "2026-05-06"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-05-06_2344_stale-limbo-rollback-overclear.log"
-sha256        = "948f86c56f97917ded4bcad4b43baa70350f384983030be525a342114a04201f"
-size_bytes    = 3366364
+sha256        = "47be04644b4425f0681729c33a5bf90722af0cb872a56f1796a0bd50698cf630"
+size_bytes    = 3341711
 date_captured = "2026-05-06"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-05-13_0952_recycle-defect-trigger.log"
-sha256        = "a7123990a14c8ea3e8e700c41a08b28b9b0c3ade7ef1aea89c4e84725efc301e"
-size_bytes    = 5961034
+sha256        = "c1785e19afae1a98a5cfd33cf1812404c57299499f0cbd1f0428ebba7ec82e30"
+size_bytes    = 5936409
 date_captured = "2026-05-13"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-06-14_1409_name-a-card.log"
-sha256        = "b1bc45d369437d5c632f7d0baae7803d039bff897b7cb4ab04d9d858c77ba8bb"
-size_bytes    = 4294477
+sha256        = "1f884d856a57e672846c49abf5c3fb056be5e16628ecb7c57cdeb6ac4886baf6"
+size_bytes    = 4267023
 date_captured = "2026-06-14"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-06-17_1543_alchemy.log"
-sha256        = "cb5603646163a9d082f1e68e12230ea090e0c07a7816a1e3360f35527f899c4d"
-size_bytes    = 3768657
+sha256        = "31d9ca265a1bb60c8150faf520a58c0c91b94c3356552cc31d7d08aded5cefbe"
+size_bytes    = 3743942
 date_captured = "2026-06-17"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-06-17_1601_pioneer.log"
-sha256        = "76479d7f6f7fbc99578943bbb1ce6bb3e38e89db29c77400c234a4255a58f2d2"
-size_bytes    = 5213839
+sha256        = "61b5446253a2768205a3052d4fc879ae4f698f39ed1ab451ad25c64c055ab470"
+size_bytes    = 5189030
 date_captured = "2026-06-17"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-06-17_1615_pioneer-historic.log"
-sha256        = "c5ce3c406cbb78a44cefcf9c6f38d624cd5e27d87abd8623c0fbf158a5f44fdc"
-size_bytes    = 4700389
+sha256        = "a2389fa2ab05e2981f041281f9bc13aa35af042e08f29af4af31374a101177ce"
+size_bytes    = 4673022
 date_captured = "2026-06-17"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-06-17_1655_timeless.log"
-sha256        = "5f6603572e4061eb9eb1e662c59aab919cf16b12bc84f72c88a7f86a2c4ad706"
-size_bytes    = 4289930
+sha256        = "93af568515a619a57dcccb14a5d025914f7c9033d1b45aa60e33fab53e1bd3ee"
+size_bytes    = 4262460
 date_captured = "2026-06-17"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-06-17_1708_brawl.log"
-sha256        = "82cb74bcab28a55dea70872c4ee4e6ddbfbcc6a44d49891cc90b74c5bdc2fb99"
-size_bytes    = 4259777
+sha256        = "2b7b366d615d600c9fe0af1310664206c6c0b45d4062d3b34e119aab0a9f420c"
+size_bytes    = 4232323
 date_captured = "2026-06-17"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-06-17_1720_standard-event.log"
-sha256        = "c74fa46b584535181bde6b4305e9702cb31568a518a6c31846fad38b79b47142"
-size_bytes    = 4449576
+sha256        = "c1490f34c2847e3f01922aa94aeff247bda931f065155286b37a3ae1a211b468"
+size_bytes    = 4421772
 date_captured = "2026-06-17"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-06-17_1858_pioneer-ranked-bo3.log"
-sha256        = "1ca0eac048874bba19d0fb3676f7a48432322869ed05de38d60c9627002e1b81"
-size_bytes    = 4390963
+sha256        = "da3d22b5991b1970c2a97fe9f39684f23fa540245fe14964f96b6f77cf04b8fb"
+size_bytes    = 4366197
 date_captured = "2026-06-17"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-06-17_1833_standard-brawl.log"
-sha256        = "ba6563b0c5ff98cd3b88f575813a537382bb458714f5146588c061f92691c9b0"
-size_bytes    = 5651607
+sha256        = "1da88b58bb579227c3cc10a0712c8b3cc30c24042810fd95d28326954a3df2f1"
+size_bytes    = 5621194
 date_captured = "2026-06-17"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-06-17_1847_pioneer-ranked.log"
-sha256        = "ba41283d737730c68adb53ae4ead0971b9f649ba4ea0567f6f0d5f0fc97d00cc"
-size_bytes    = 3714764
+sha256        = "5ebb6527089c7d95ad1f09edf909d66b2feb7698a29475821a5fbe3d7a6c4121"
+size_bytes    = 3687387
 date_captured = "2026-06-17"
+scrub_version = "v0.7.2"
 
 [[files]]
 filename      = "session_2026-06-17_2005_pioneer-play-bo3.log"
-sha256        = "ad18eb4b1e26204c7b577cbf2998cfcebb3df318b6b87ad108c076d71d9d6de4"
-size_bytes    = 7925889
+sha256        = "0c356387b73e8a4cce78f61bfdb82eb61ce006c3396aa824f2e499b5394160a7"
+size_bytes    = 7898518
 date_captured = "2026-06-17"
+scrub_version = "v0.7.2"
