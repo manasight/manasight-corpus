@@ -389,3 +389,10 @@ sha256        = "0c356387b73e8a4cce78f61bfdb82eb61ce006c3396aa824f2e499b5394160a
 size_bytes    = 7898518
 date_captured = "2026-06-17"
 scrub_version = "v0.7.2"
+
+[[files]]
+filename      = "session_2026-10-10_1507_quick-draft-fra-ub.log"
+sha256        = "100c5a217e5b56e2be09d42a5f5e7edd3ad6ab47b3a3b4300674575735874e30"
+size_bytes    = 11375720
+date_captured = "2026-10-10"
+scrub_version = "v0.7.3"

@@ -106,6 +106,7 @@ To add a session manually, copy the template below and fill in the fields.
 | 2026-06-17 | `session_2026-06-17_1833_standard-brawl.log` | Standard Brawl Bo1 (`EventName:"Play_Brawl"`), "Getting the Gaang Together" 60-card singleton+commander, 1 game. First **Standard Brawl** sample (`manasight-corpus#36`) — `Format:"Brawl"` (distinct from `HistoricBrawl`) via **EventSetDeckV3**; resolves the phantom-`Play_Brawl` hole; `Deck.CommandZone` populated |
 | 2026-06-17 | `session_2026-06-17_1847_pioneer-ranked.log` | Pioneer Ranked Bo1 (`EventName:"Explorer_Ladder"`, `ranked=true`), Rakdos Fling, 1 game. First authoritative ranked non-Standard `*_Ladder` sample (`manasight-corpus#36`) — deck `Format:"Historic"` (non-Standard Pioneer collapses to Historic) |
 | 2026-06-17 | `session_2026-06-17_2005_pioneer-play-bo3.log` | Pioneer **unranked Bo3** (`EventName:"Traditional_Explorer_Play"`, `ranked=false`), Rakdos Fling, 1 match. First authoritative **`Traditional_<Fmt>_Play`** sample (`manasight-corpus#36`) — deck `Format:"Historic"` (Pioneer deck collapses to Historic), GRE `matchWinCondition: Best2of3`. Confirms `Traditional_<Fmt>_Play` (unranked Bo3) is distinct from `Traditional_<Fmt>_Ladder` (ranked Bo3); completes the four-way Pioneer queue matrix (`Explorer_Play`/`Explorer_Ladder`/`Traditional_Explorer_Play`/`Traditional_Explorer_Ladder`) |
+| 2026-10-10 | `session_2026-10-10_1507_quick-draft-fra-ub.log` | Quick Draft FRA (`QuickDraft_FRA_20261008`), U/B, draft (42 picks) plus 1 Bo1 match, 1-0. Planeswalker *tokens* end to end: loyalty counters added to a token by other cards, loyalty-cost removals, damage to a token planeswalker, token planeswalkers reaching 0 loyalty (`SBA_ZeroLoyalty` then token deletion); +1/+1 counter with matching P/T mod |
 
 ---
 
@@ -2338,3 +2339,56 @@ Pioneer **unranked Bo3** (`EventName: "Traditional_Explorer_Play"`, `ranked=fals
 | Unknown | 10 |
 
 Deck (yours): "Rakdos Fling" — an Explorer/Pioneer-legal build but registered as **Historic**. Submitted via **EventSetDeckV3** with `EventName:"Traditional_Explorer_Play"`, while the deck `Summary.Attributes` carry `Format:"Historic"`. The single (EventName, Format) deck-submission pair is `(Traditional_Explorer_Play, Historic)`; GRE `matchWinCondition: MatchWinCondition_Best2of3` confirms **Bo3**. This is the corpus's first authoritative **`Traditional_<Fmt>_Play`** (unranked Bo3) sample, completing the four-way Pioneer queue matrix: it sits opposite the ranked Bo3 `session_2026-06-17_1858_pioneer-ranked-bo3` (`Traditional_Explorer_Ladder`), and pairs with the Bo1 unranked `session_2026-06-17_1615_pioneer-historic` (`Explorer_Play`) and Bo1 ranked `session_2026-06-17_1847_pioneer-ranked` (`Explorer_Ladder`).
+
+---
+
+### Session 2026-10-10_1507_quick-draft-fra-ub
+
+Draft plus one match. Exercises planeswalker *tokens* end to end: loyalty counters added to a token by other cards, loyalty-cost counter removals, damage to a token planeswalker, and three token planeswalkers reaching 0 loyalty (SBA_ZeroLoyalty zone transfer followed by token deletion); also a +1/+1 counter with its matching P/T mod.
+
+| Field | Value |
+|-------|-------|
+| Date | 2026-10-10 |
+| MTGA Version | 2026.63.20 |
+| Source | `UTC_Log - 10-10-2026 19.07.15.log` (archive) |
+| Raw file | `session_2026-10-10_1507_quick-draft-fra-ub.log` |
+| Format | Quick Draft FRA (`InternalEventName: "QuickDraft_FRA_20261008"`), Bo1 |
+| Deck / archetype | U/B |
+| Record | 1-0 |
+| Session log size (raw, post-strip) | 11,413,779 (10.9 MB) |
+| Session log size (gzip) | 1,112,897 (~1.1 MB) |
+| Compression ratio | ~10.2:1 |
+
+#### Parser Coverage
+
+| Metric | Value |
+|--------|------:|
+| Total entries | 1666 |
+| Routed | 1419 |
+| Unknown | 247 |
+| Timestamp failures | 259 |
+
+#### Event Breakdown
+
+| Event Type | Count |
+|------------|------:|
+| GameState | 1100 |
+| ClientAction | 588 |
+| CourseDeck | 316 |
+| LocalSeat | 184 |
+| DraftBot | 84 |
+| EventLifecycle | 4 |
+| DeckSubmission | 2 |
+| Inventory | 2 |
+| MatchState | 2 |
+| Rank | 2 |
+| GameResult | 1 |
+| DetailedLoggingStatus | 1 |
+| Session | 1 |
+| Unknown | 5 |
+
+#### Games
+
+| # | Format | Your Archetype | Opponent Colors | Result | Turns | P/D | Notes |
+|---|--------|----------------|----------------|--------|:-----:|:---:|-------|
+| 1 | Quick Draft FRA Bo1 | U/B | R/G/U (from lands seen) | Win | 21 | Draw | Opponent conceded |
